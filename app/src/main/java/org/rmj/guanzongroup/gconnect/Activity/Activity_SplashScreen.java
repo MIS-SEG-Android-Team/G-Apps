@@ -28,6 +28,7 @@ public class Activity_SplashScreen extends AppCompatActivity {
     private TextView txt_Status;
     private TextView txt_Version;
     private LinearProgressIndicator progbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

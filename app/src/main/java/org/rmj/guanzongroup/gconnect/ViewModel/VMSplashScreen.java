@@ -68,8 +68,6 @@ public class VMSplashScreen extends AndroidViewModel {
         laPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         laPermissions.add(Manifest.permission.GET_ACCOUNTS);
         laPermissions.add(Manifest.permission.CAMERA);
-        laPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        laPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
 
         return laPermissions;
     }

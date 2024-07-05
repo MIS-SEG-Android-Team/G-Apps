@@ -20,11 +20,13 @@ public class Adapter_MCProductImageSlider extends RecyclerView.Adapter<Adapter_M
     private Context context;
     private HashMap<Integer, String> oSlideLst;
     private AccountInfo loAccount;
+    private TabSelected callback;
 
-    public Adapter_MCProductImageSlider(Context context, HashMap<Integer, String> oSlideLst){
+    public Adapter_MCProductImageSlider(Context context, HashMap<Integer, String> oSlideLst, TabSelected callback){
         this.context = context;
         this.oSlideLst = oSlideLst;
         this.loAccount = new AccountInfo(context);
+        this.callback = callback;
     }
 
     @NonNull
@@ -59,10 +61,13 @@ public class Adapter_MCProductImageSlider extends RecyclerView.Adapter<Adapter_M
                             break;
                     }
 
-                    Intent intent = new Intent(context, Activity_ProductSelection.class);
+                    callback.onSelected(sBrandId, sBrand);
+
+                    /*Intent intent = new Intent(context, Activity_ProductSelection.class);
                     intent.putExtra("lsBrandID", sBrandId);
                     intent.putExtra("lsBrandNm", sBrand);
-                    context.startActivity(intent);
+
+                    context.startActivity(intent);*/
                 }else {
                     Toast.makeText(context, "Unable to use feature. Please login", Toast.LENGTH_LONG).show();
                 }
@@ -72,6 +77,10 @@ public class Adapter_MCProductImageSlider extends RecyclerView.Adapter<Adapter_M
     @Override
     public int getItemCount() {
         return oSlideLst.size();
+    }
+
+    public interface TabSelected{
+        void onSelected(String lsBrandID, String lsBrandNm);
     }
 
     public static class SliderAdapterVH extends RecyclerView.ViewHolder{
