@@ -10,30 +10,23 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
-import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-
-import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGcardApp;
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
 import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
-import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 import org.rmj.g3appdriver.etc.ConnectionUtil;
 import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.etc.Telephony;
 import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.g3appdriver.lib.GCardCore.CodeGenerator;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
+import org.rmj.guanzongroup.digitalgcard.Dialogs.Dialog_TransactionPIN;
 import org.rmj.guanzongroup.digitalgcard.R;
 import org.rmj.guanzongroup.digitalgcard.ViewModel.VMGCardOffline;
 
@@ -46,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 public class Activity_GCardOffline extends AppCompatActivity {
     private VMGCardOffline mviewmodel;
@@ -64,6 +58,7 @@ public class Activity_GCardOffline extends AppCompatActivity {
     private MessageBox poMessage;
     private String loMessage;
     private ConnectionUtil poConn;
+    private String OTP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +79,79 @@ public class Activity_GCardOffline extends AppCompatActivity {
         tie_otp = findViewById(R.id.tie_otp);
         btn_Submit = findViewById(R.id.btn_Submit);
 
+        OTP = GenerateOTP();
+
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
         setListeners();
         SendOfflineEntries();
+        SetGcardNmbrs();
+        SetBranch();
+        SetSource();
+
+        tie_otp.setText(OTP);
+    }
+
+    public String GenerateOTP(){
+        StringBuilder sBuilder = new StringBuilder();
+
+        do {
+            int randomNumber = new Random().nextInt(9);
+            sBuilder.append(randomNumber);
+        }while (sBuilder.toString().length() < 6);
+
+        return sBuilder.toString();
+    }
+
+    private String GetCurrentDate() {
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        Date date = cal.getTime();
+
+        SimpleDateFormat sFormat = new SimpleDateFormat();
+        return sFormat.format(date);
+    }
+
+    private Boolean ValidateEntry() {
+        String cardnumber = tie_gcard_number.getText().toString();
+        String branch = tie_branch.getText().toString();
+        String transdate = tie_date.getText().toString();
+        String srctype = tie_src.getText().toString();
+        String refno = tie_refno.getText().toString();
+        String otp = tie_otp.getText().toString();
+
+        if (cardnumber.isEmpty() || cardnumber == null) {
+            loMessage = "Please select card number";
+            return false;
+        }
+
+        if (branch.isEmpty() || branch == null) {
+            loMessage = "Please select branch";
+            return false;
+        }
+
+        if (transdate.isEmpty() || transdate == null) {
+            loMessage = "Please select transaction date";
+            return false;
+        }
+
+        if (srctype.isEmpty() || srctype == null) {
+            loMessage = "Please select source";
+            return false;
+        }
+
+        if (refno.isEmpty() || refno == null) {
+            loMessage = "Please enter reference number";
+            return false;
+        }
+
+        if (otp.isEmpty() || otp == null) {
+            loMessage = "Please enter otp number";
+            return false;
+        }
+
+        return true;
     }
 
     private void setListeners() {
@@ -103,24 +165,6 @@ public class Activity_GCardOffline extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 GetSelectedDate();
-            }
-        });
-        tie_gcard_number.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setGcardNmbrs();
-            }
-        });
-        tie_branch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setBranch();
-            }
-        });
-        tie_src.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setSource();
             }
         });
         btn_Submit.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +221,10 @@ public class Activity_GCardOffline extends AppCompatActivity {
                                         tie_date.setText("");
                                         tie_src.setText("");
                                         tie_refno.setText("");
+                                        tie_otp.setText("");
+
+                                        Dialog_TransactionPIN loDialog = new Dialog_TransactionPIN(Activity_GCardOffline.this);
+                                        loDialog.initDialog(OTP, "Submit this OTP to nearest branch for claiming your GCard Points");
                                     }
                                 });
                                 poMessage.show();
@@ -205,7 +253,8 @@ public class Activity_GCardOffline extends AppCompatActivity {
             }
         });
     }
-    private void setGcardNmbrs() {
+
+    private void SetGcardNmbrs() {
         mviewmodel.GetCardNumbers().observe(this, new Observer<List<EGcardApp>>() {
             @Override
             public void onChanged(List<EGcardApp> eGcardApps) {
@@ -223,20 +272,20 @@ public class Activity_GCardOffline extends AppCompatActivity {
                         }
                     }
 
-                    tie_gcard_number.setAdapter(new ArrayAdapter<String>(Activity_GCardOffline.this,
-                            R.layout.support_simple_spinner_dropdown_item, Gcards));
-
                     if (Gcards.size() == 1){
                         tie_gcard_number.setText(Gcards.get(0));
                         tie_gcard_number.setEnabled(false);
                     }else if (Gcards.size() > 1){
                         tie_gcard_number.setEnabled(true);
+                        tie_gcard_number.setAdapter(new ArrayAdapter<String>(Activity_GCardOffline.this,
+                                R.layout.support_simple_spinner_dropdown_item, Gcards));
                     }
                 }
             }
         });
     }
-    private void setBranch() {
+
+    private void SetBranch() {
         mviewmodel.getMotorBranches().observe(this, new Observer<List<EBranchInfo>>() {
             @Override
             public void onChanged(List<EBranchInfo> eBranchInfos) {
@@ -255,7 +304,8 @@ public class Activity_GCardOffline extends AppCompatActivity {
             }
         });
     }
-    private void setSource() {
+
+    private void SetSource() {
         //TODO: TEMPORARY HARD CODED
         loSource.put("MC Sales", "M02910000001");
         loSource.put("SP Sales", "M02910000002");
@@ -271,54 +321,6 @@ public class Activity_GCardOffline extends AppCompatActivity {
                 R.layout.support_simple_spinner_dropdown_item, sources));
     }
 
-    private Boolean ValidateEntry() {
-        String cardnumber = tie_gcard_number.getText().toString();
-        String branch = tie_branch.getText().toString();
-        String transdate = tie_date.getText().toString();
-        String srctype = tie_src.getText().toString();
-        String refno = tie_refno.getText().toString();
-        String otp = tie_otp.getText().toString();
-
-        if (cardnumber.isEmpty() || cardnumber == null) {
-            loMessage = "Please select card number";
-            return false;
-        }
-
-        if (branch.isEmpty() || branch == null) {
-            loMessage = "Please select branch";
-            return false;
-        }
-
-        if (transdate.isEmpty() || transdate == null) {
-            loMessage = "Please select transaction date";
-            return false;
-        }
-
-        if (srctype.isEmpty() || srctype == null) {
-            loMessage = "Please select source";
-            return false;
-        }
-
-        if (refno.isEmpty() || refno == null) {
-            loMessage = "Please enter reference number";
-            return false;
-        }
-
-        if (otp.isEmpty() || otp == null) {
-            loMessage = "Please enter otp number";
-            return false;
-        }
-
-        return true;
-    }
-
-    private String GetCurrentDate() {
-        Calendar cal = Calendar.getInstance(Locale.getDefault());
-        Date date = cal.getTime();
-
-        SimpleDateFormat sFormat = new SimpleDateFormat();
-        return sFormat.format(date);
-    }
     private void GetSelectedDate() {
         final Calendar newCalendar = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM dd, yyyy");

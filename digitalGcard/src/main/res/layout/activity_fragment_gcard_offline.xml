@@ -180,7 +180,7 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="OTP given by the counter"
+                        android:text="Generated OTP submit to branch"
                         android:textStyle="italic"
                         android:textSize="12sp"
                         android:layout_marginTop="15dp"
@@ -190,7 +190,8 @@
                         style="@style/TextInputStyle"
                         android:id="@+id/til_otp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:enabled="false">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/tie_otp"

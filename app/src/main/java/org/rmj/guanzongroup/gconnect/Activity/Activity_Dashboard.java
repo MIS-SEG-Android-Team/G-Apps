@@ -397,7 +397,6 @@ public class Activity_Dashboard extends AppCompatActivity {
                     //todo: should complete account to access the ff transactions
                     if (loAccount.getVerificationStatus() > 0){
                         nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(true);
-                        nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(true);
                         nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(true);
                         nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(true);
                         nav_Menu.findItem(R.id.nav_purchases).setVisible(true);
@@ -409,17 +408,24 @@ public class Activity_Dashboard extends AppCompatActivity {
                         nav_Menu.findItem(R.id.nav_promos).setVisible(true);
                         nav_Menu.findItem(R.id.nav_item_cart).setVisible(true);
 
+                        nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
+                        nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
+
                         Thread.sleep(1000);
                         mViewModel.GetActiveGCard().observe(Activity_Dashboard.this, eGcardApp -> {
                             try {
                                 navigationView = findViewById(R.id.nav_view);
                                 if (eGcardApp == null) {
+                                    nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
+                                    nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
                                     nav_Menu.findItem(R.id.nav_raffle_entry).setVisible(false);
                                     nav_Menu.findItem(R.id.nav_redeemables).setVisible(false);
                                     nav_Menu.findItem(R.id.nav_gcard_orders).setVisible(false);
                                     nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(false);
                                     nav_Menu.findItem(R.id.nav_pre_termination).setVisible(false);
                                 } else {
+                                    nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(true);
+                                    nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(true);
                                     nav_Menu.findItem(R.id.nav_raffle_entry).setVisible(true);
                                     nav_Menu.findItem(R.id.nav_redeemables).setVisible(true);
                                     nav_Menu.findItem(R.id.nav_gcard_orders).setVisible(true);
@@ -432,7 +438,6 @@ public class Activity_Dashboard extends AppCompatActivity {
                         });
                     }else {
                         nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
                         nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(false);
                         nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(false);
                         nav_Menu.findItem(R.id.nav_purchases).setVisible(false);
@@ -444,6 +449,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                         nav_Menu.findItem(R.id.nav_promos).setVisible(false);
                         nav_Menu.findItem(R.id.nav_item_cart).setVisible(false);
 
+                        nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
                         nav_Menu.findItem(R.id.nav_raffle_entry).setVisible(false);
                         nav_Menu.findItem(R.id.nav_redeemables).setVisible(false);
                         nav_Menu.findItem(R.id.nav_gcard_orders).setVisible(false);
