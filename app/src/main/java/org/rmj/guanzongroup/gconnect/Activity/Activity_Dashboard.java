@@ -165,6 +165,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+
         mViewModel.GetCartItemCount().observe(Activity_Dashboard.this, count -> {
             try {
                 toolbar = findViewById(R.id.toolbar);
@@ -184,6 +185,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+
         mViewModel.GetToPayOrders().observe(Activity_Dashboard.this, count -> {
             try{
                 lblBadge = (TextView) loInflate.inflate(R.layout.nav_action_badge, null, false);
@@ -199,6 +201,7 @@ public class Activity_Dashboard extends AppCompatActivity {
             poArl.launch(loIntent);
             return false;
         });
+
         navigationView.getMenu().findItem(R.id.nav_gcard_offline).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {
@@ -207,6 +210,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                 return false;
             }
         });
+
         navigationView.getMenu().findItem(R.id.nav_purchases).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {
@@ -214,12 +218,22 @@ public class Activity_Dashboard extends AppCompatActivity {
                 return false;
             }
         });
+
         navigationView.getMenu().findItem(R.id.nav_item_cart).setOnMenuItemClickListener(menuItem -> {
             Intent intent = new Intent(Activity_Dashboard.this, Activity_ItemCart.class);
             intent.putExtra("args", "1");
             startActivity(intent);
             return false;
         });
+
+        navigationView.getMenu().findItem(R.id.nav_redeemables).setOnMenuItemClickListener(menuItem -> {
+            Intent intent = new Intent(this, Activity_ItemCart.class);
+            intent.putExtra("args","2");
+            startActivity(intent);
+
+            return false;
+        });
+
         navigationView.getMenu().findItem(R.id.nav_applyLoan).setOnMenuItemClickListener(menuItem -> {
             mViewModel.ValidateUserVerification(new VMHome.OnValidateVerifiedUser() {
                 @Override
@@ -255,6 +269,7 @@ public class Activity_Dashboard extends AppCompatActivity {
             });
             return false;
         });
+
         navigationView.getMenu().findItem(R.id.nav_raffle_entry).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {
@@ -262,6 +277,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                 return false;
             }
         });
+
         navigationView.getMenu().findItem(R.id.nav_logout).setOnMenuItemClickListener(menuItem -> {
             Dialog_DoubleButton loDialog = new Dialog_DoubleButton(Activity_Dashboard.this);
             loDialog.setButtonText("YES", "NO");
@@ -399,14 +415,6 @@ public class Activity_Dashboard extends AppCompatActivity {
                         nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(true);
                         nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(true);
                         nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(true);
-                        nav_Menu.findItem(R.id.nav_purchases).setVisible(true);
-                        nav_Menu.findItem(R.id.nav_item_cart).setVisible(true);
-                        nav_Menu.findItem(R.id.nav_applyLoan).setVisible(true);
-                        nav_Menu.findItem(R.id.nav_events).setVisible(true);
-                        nav_Menu.findItem(R.id.nav_wishlist).setVisible(true);
-                        nav_Menu.findItem(R.id.nav_pre_termination).setVisible(true);
-                        nav_Menu.findItem(R.id.nav_promos).setVisible(true);
-                        nav_Menu.findItem(R.id.nav_item_cart).setVisible(true);
 
                         nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
                         nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
@@ -418,19 +426,13 @@ public class Activity_Dashboard extends AppCompatActivity {
                                 if (eGcardApp == null) {
                                     nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
                                     nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
-                                    nav_Menu.findItem(R.id.nav_raffle_entry).setVisible(false);
                                     nav_Menu.findItem(R.id.nav_redeemables).setVisible(false);
-                                    nav_Menu.findItem(R.id.nav_gcard_orders).setVisible(false);
                                     nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(false);
-                                    nav_Menu.findItem(R.id.nav_pre_termination).setVisible(false);
                                 } else {
                                     nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(true);
                                     nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(true);
-                                    nav_Menu.findItem(R.id.nav_raffle_entry).setVisible(true);
                                     nav_Menu.findItem(R.id.nav_redeemables).setVisible(true);
-                                    nav_Menu.findItem(R.id.nav_gcard_orders).setVisible(true);
                                     nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(true);
-                                    nav_Menu.findItem(R.id.nav_pre_termination).setVisible(true);
                                 }
                             } catch (Exception e){
                                 e.printStackTrace();
@@ -440,19 +442,9 @@ public class Activity_Dashboard extends AppCompatActivity {
                         nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
                         nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(false);
                         nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_purchases).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_item_cart).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_applyLoan).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_events).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_wishlist).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_pre_termination).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_promos).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_item_cart).setVisible(false);
 
                         nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_raffle_entry).setVisible(false);
                         nav_Menu.findItem(R.id.nav_redeemables).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_gcard_orders).setVisible(false);
                         nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(false);
                     }
                 } else {
@@ -474,20 +466,10 @@ public class Activity_Dashboard extends AppCompatActivity {
                     nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
                     nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(false);
                     nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_purchases).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_item_cart).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_applyLoan).setVisible(false);
                     nav_Menu.findItem(R.id.nav_account_settings).setVisible(false);
                     nav_Menu.findItem(R.id.nav_logout).setVisible(false);
 
-                    nav_Menu.findItem(R.id.nav_events).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_wishlist).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_pre_termination).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_promos).setVisible(false);
-
-                    nav_Menu.findItem(R.id.nav_raffle_entry).setVisible(false);
                     nav_Menu.findItem(R.id.nav_redeemables).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_gcard_orders).setVisible(false);
                     nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(false);
                 }
             } catch(Exception e) {

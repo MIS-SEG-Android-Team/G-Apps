@@ -199,7 +199,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:hint="Minimum Downpayment"
+                            android:hint="Minimum Down Payment"
                             tools:ignore="ExtraText">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -212,9 +212,12 @@
                                 android:id="@+id/txtyourmnmdp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="The required Minimum Downpayment is at least"
+                                android:text="The required Minimum Down Payment is at least"
                                 android:textStyle="italic"
-                                android:textSize="12sp"/>
+                                android:textSize="12sp"
+                                android:fontFamily="@font/roboto_light_italic"
+                                android:textColor="@color/guanzon_digital_red"
+                                android:layout_marginVertical="5dp"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
                     </LinearLayout>
