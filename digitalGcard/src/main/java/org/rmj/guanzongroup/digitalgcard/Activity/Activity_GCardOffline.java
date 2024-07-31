@@ -7,10 +7,13 @@ import androidx.lifecycle.ViewModelProvider;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -50,6 +53,7 @@ public class Activity_GCardOffline extends AppCompatActivity {
     private TextInputEditText tie_date;
     private TextInputEditText tie_refno;
     private TextInputEditText tie_otp;
+    private ImageButton btn_copy;
     private MaterialButton btn_Submit;
     private HashMap<String, String> loCardNmbrs = new HashMap<>();
     private HashMap<String, String> loBranch = new HashMap<>();
@@ -77,6 +81,7 @@ public class Activity_GCardOffline extends AppCompatActivity {
         tie_src = findViewById(R.id.tie_src);
         tie_refno = findViewById(R.id.tie_refno);
         tie_otp = findViewById(R.id.tie_otp);
+        btn_copy = findViewById(R.id.btn_copy);
         btn_Submit = findViewById(R.id.btn_Submit);
 
         OTP = GenerateOTP();
@@ -161,12 +166,29 @@ public class Activity_GCardOffline extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
         tie_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GetSelectedDate();
             }
         });
+
+        btn_copy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                if (tie_otp.getText() != null){
+                    if (!tie_otp.getText().toString().isEmpty()){
+                        clipboardManager.setPrimaryClip(ClipData.newPlainText("No OTP", ""));
+
+                        ClipData clipData = ClipData.newPlainText("OTP Text", tie_otp.getText().toString());
+                        clipboardManager.setPrimaryClip(clipData);
+                    }
+                }
+            }
+        });
+
         btn_Submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
