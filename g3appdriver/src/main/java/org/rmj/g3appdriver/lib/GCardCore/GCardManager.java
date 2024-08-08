@@ -463,7 +463,7 @@ public class GCardManager implements iGCardSystem{
                 if(!lsGcardNox.isEmpty()){
                     //TODO: VALIDATE AND DISPLAY OTP
                     if (src.equalsIgnoreCase("OTP")){
-                        if (poGCard.getCardNmbr(poCode.GetOTPCardNmbr()).isEmpty()){
+                        if (poGCard.getCardNmbr(poCode.GetOTPCardNmbr()) == null || poGCard.getCardNmbr(poCode.GetOTPCardNmbr()).isEmpty()){
                             callback.OnFailed("GCard Number is not registered on this account.");
                         }else {
                             callback.TransactionResult(src, poCode.GetOTP());

@@ -592,6 +592,8 @@ public class Activity_Dashboard extends AppCompatActivity {
             public void TransactionResult(String src, Object args) {
                 String message;
 
+                Log.d(TAG, args.toString());
+
                 if (src.equalsIgnoreCase("OTP")){
                     message = "Transaction PIN. \n \n Note: Please submit your OTP as requested by the counter.";
                 }else {

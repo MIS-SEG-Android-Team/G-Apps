@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.R;
@@ -141,6 +142,53 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                         }
                     });
                     break;
+                case 2:
+                    findViewById(R.id.constraint_updateAccount).setVisibility(View.VISIBLE);
+                    lblUpdate.setText("Enter Gcash No");
+                    btnSubmit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mViewModel.getClientInfo().observe(Activity_AccountUpdate.this, eClientInfo -> {
+                                if (eClientInfo != null){
+                                    //TODO: UPDATE GCASH NO FROM EXISTING DATA AND SEND TO SERVER FOR UPDATE
+                                    eClientInfo.setGCashNo(tieUpdate.getText().toString().trim());
+
+                                    mViewModel.completeClientInfo(eClientInfo, new VMAccountDetails.OnTransactionCallBack() {
+                                        @Override
+                                        public void onLoading() {
+                                            poLoading.initDialog("Account Update", "Sending Gcash No Update");
+                                            poLoading.show();
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String fsMessage) {
+                                            poLoading.dismiss();
+
+                                            poDialogx.setButtonText("Dismiss");
+                                            poDialogx.initDialog("Account Update", fsMessage, () -> {
+                                                isClicked = false;
+                                                poDialogx.dismiss();
+                                            });
+                                            poDialogx.show();
+                                        }
+
+                                        @Override
+                                        public void onFailed(String fsMessage) {
+                                            poLoading.dismiss();
+
+                                            poDialogx.setButtonText("Dismiss");
+                                            poDialogx.initDialog("Account Update", fsMessage, () -> {
+                                                isClicked = false;
+                                                poDialogx.dismiss();
+                                            });
+                                            poDialogx.show();
+                                        }
+                                    });
+
+                                }
+                            });
+                        }
+                    });
                 default:
                     findViewById(R.id.constraint_updatePassword).setVisibility(View.VISIBLE);
                     btnSubmit.setText("Submit");

@@ -172,10 +172,11 @@ public class RClientInfo {
                     String lsFrstNm = loAcc.getFirstName();
                     String lsBirthD = loAcc.getBirthdate();
                     String lsBirthP = loAcc.getBirthplace();
+                    String lsMobileNo = loAcc.getMobileNo();
 
                     if(lsClient.isEmpty()){
                         if(lsLastNm.isEmpty() && lsFrstNm.isEmpty() &&
-                                lsBirthD.isEmpty() && lsBirthP.isEmpty()) {
+                                lsBirthD.isEmpty() && lsBirthP.isEmpty() && lsMobileNo.isEmpty()) {
                             loAcc.setVerifiedStatus(0);
                         } else {
                             loAcc.setVerifiedStatus(2);

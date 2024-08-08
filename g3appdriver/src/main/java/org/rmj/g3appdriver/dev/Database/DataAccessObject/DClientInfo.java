@@ -135,6 +135,7 @@ public interface DClientInfo {
             "a.cCvilStat, " +
             "a.sEmailAdd, " +
             "a.sMobileNo, " +
+            "a.sGCashNox, " +
             "a.sImagePth, " +
             "a.cVerified FROM Client_Profile_Info a " +
             "LEFT JOIN Town_Info b ON a.sBirthPlc = b.sTownIDxx LEFT JOIN Province_Info c ON b.sProvIDxx = c.sProvIDxx")
@@ -182,6 +183,7 @@ public interface DClientInfo {
         public String cCvilStat;
         public String sEmailAdd;
         public String sMobileNo;
+        public String sGCashNox;
         public String sImagePth;
         public String cVerified;
     }

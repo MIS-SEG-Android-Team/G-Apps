@@ -142,9 +142,18 @@ public class Activity_AccountDetails extends AppCompatActivity {
                         startActivity(loIntent);
                     });
 
-                    findViewById(R.id.lbl_editPassword).setOnClickListener(v -> {
+                    TextView lblGcash = findViewById(R.id.lbl_gcash);
+                    lblGcash.setText(clientInfo.sGCashNox);
+
+                    findViewById(R.id.lbl_editGcashNo).setOnClickListener(v -> {
                         Intent loIntent = new Intent(Activity_AccountDetails.this, Activity_AccountUpdate.class);
                         loIntent.putExtra("sUpdatexx", 2);
+                        startActivity(loIntent);
+                    });
+
+                    findViewById(R.id.lbl_editPassword).setOnClickListener(v -> {
+                        Intent loIntent = new Intent(Activity_AccountDetails.this, Activity_AccountUpdate.class);
+                        loIntent.putExtra("sUpdatexx", 3);
                         startActivity(loIntent);
                     });
 
