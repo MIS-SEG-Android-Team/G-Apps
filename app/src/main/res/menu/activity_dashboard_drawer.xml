@@ -53,19 +53,20 @@
         <item android:title="Kita Moto"
             android:checkable="false"
             android:icon="@drawable/ic_baseline_info_24"
-            android:id="@+id/product_inquiry_expanded"
-            android:visible="false">
+            android:id="@+id/product_inquiry_expanded">
 
             <menu>
                 <item
                     android:id="@+id/nav_product_inquiry"
                     android:icon="@drawable/ic_baseline_inquiry_24"
-                    android:title="Submit" />
+                    android:title="Submit"
+                    android:visible="false"/>
 
                 <item
                     android:id="@+id/nav_product_inquiry_history"
                     android:icon="@drawable/ic_baseline_info_24"
-                    android:title="History" />
+                    android:title="History"
+                    android:visible="false"/>
             </menu>
         </item>
 

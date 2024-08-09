@@ -41,18 +41,20 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Activity_ProductInquiry extends AppCompatActivity {
+
     private VMProductInquiry mViewModel;
     private MessageBox poMessage;
-    private MaterialTextView txtBranchNm, txtBrandNm, txtModelNm, txtModelCd, txtMinDP;
+    private MaterialTextView txtBrandNm, txtModelNm, txtModelCd, txtMinDP;
     private TextInputEditText txtDownPymnt,txtDownPymnt1, txtAmort, txtDTarget,txtCashPrice;
     private MaterialAutoCompleteTextView spn_color, spnPayment, spnPayment1, spnAcctTerm;
     private LinearLayout linearInstallment;
-    private MaterialButton btnContinue,btnCalculate;
+    private MaterialButton btnContinue;
     private ShapeableImageView imgMC;
     private TextView myMP;
-    private String MP;
-    private String lsModelID, lsBrandID, lsImgLink, lsBrandNm,Buwanan;
+    private String lsModelID, lsBrandID, lsImgLink;
+
     private double minimumDownpayment, lnInput;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,28 +71,31 @@ public class Activity_ProductInquiry extends AppCompatActivity {
 
         mViewModel.setBrandID(getIntent().getStringExtra("lsBrandID"));
         mViewModel.setModelID(getIntent().getStringExtra("lsModelID"));
+
         lsBrandID = getIntent().getStringExtra("lsBrandID");
         lsModelID = getIntent().getStringExtra("lsModelID");
         lsImgLink = getIntent().getStringExtra("lsImgLink");
-        lsBrandNm = getIntent().getStringExtra("lsBrandNm");
 
         mViewModel.getModel().setBrandIDx(lsBrandID);
         mViewModel.getModel().setModelIDx(lsModelID);
         mViewModel.getModel().setTermIDxx("36");
         mViewModel.getModel().setPaymForm("0");
+
         mViewModel.GetModelColor(lsModelID).observe(Activity_ProductInquiry.this, colorList->{
             mViewModel.getModel().setColorIDx(colorList.get(0).getColorIDx());
 
         });
+
+
         mViewModel.GetModelBrand(lsBrandID, lsModelID).observe(Activity_ProductInquiry.this, eMcModel -> {
             try {
                 txtModelCd.setText(eMcModel.getModelCde());
                 txtModelNm.setText(eMcModel.getModelNme());
                 txtBrandNm.setText(getIntent().getStringExtra("lsBrandNm"));
-                String imgLink = (lsImgLink == null)? "": lsImgLink;
 
+                //TODO: LOAD IMAGE
                 ImageFileManager.LoadImageToView(lsImgLink, imgMC);
-                Log.d("image mo ito",lsImgLink);
+
             }catch (NullPointerException e){
                 e.printStackTrace();
             }catch (Exception e){
@@ -274,8 +279,9 @@ public class Activity_ProductInquiry extends AppCompatActivity {
         txtMinDP = findViewById(R.id.txtyourmnmdp);
 
         btnContinue = findViewById(R.id.btnContinue);
-        btnCalculate = findViewById(R.id.btnCalculate);
+
         loadInstallment(View.GONE);
+
         txtDownPymnt1.setEnabled(false);
     }
     private  void  msgBox(){

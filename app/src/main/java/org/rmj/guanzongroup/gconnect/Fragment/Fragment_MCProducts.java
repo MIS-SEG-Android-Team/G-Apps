@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EMcBrand;
 import org.rmj.g3appdriver.etc.MessageBox;
+import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.guanzongroup.ganado.Activities.Activity_ProductSelection;
 import org.rmj.guanzongroup.ganado.Dialog.DialogDisclosure;
 import org.rmj.guanzongroup.ganado.ViewModel.VMBrandList;

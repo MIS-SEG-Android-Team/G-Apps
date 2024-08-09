@@ -21,23 +21,28 @@ import org.rmj.guanzongroup.useraccount.R;
 
 public class Activity_AccountDetails extends AppCompatActivity {
     private static final String TAG = Activity_AccountDetails.class.getSimpleName();
+    private static final String[] descriptionData = {"Basic Account", "Account Verified", "Fully Verified"};
+
     private VMAccountDetails mViewModel;
     private Dialog_Loading poLoading;
     private Dialog_SingleButton poDialogx;
     private Toolbar toolbar;
-    String[] descriptionData = {"Basic Account", "Account Verified", "Fully Verified"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_account_details);
+
         mViewModel = new ViewModelProvider(Activity_AccountDetails.this)
                 .get(VMAccountDetails.class);
+
         initViews();
         setUpToolbar();
         importAccountInfo();
         setAdapter();
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == android.R.id.home){
@@ -45,10 +50,12 @@ public class Activity_AccountDetails extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onBackPressed() {
         finish();
     }
+
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
         poDialogx = new Dialog_SingleButton(Activity_AccountDetails.this);
@@ -56,18 +63,22 @@ public class Activity_AccountDetails extends AppCompatActivity {
         StateProgressBar progressBar = findViewById(R.id.your_state_progress_bar_id);
         progressBar.setStateDescriptionData(descriptionData);
     }
+
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Account Details");
     }
+
     private void setAdapter() {
         try {
+
             mViewModel.GetClientDetailForPreview().observe(this, clientInfo -> {
                 try {
                     TextView lblUserNm = findViewById(R.id.lbl_username);
                     TextView lblInfoVerify= findViewById(R.id.lbl_Info_verify);
                     lblUserNm.setText(clientInfo.sUserName);
+
                     if(clientInfo.cVerified.equalsIgnoreCase("1")) {
                         lblInfoVerify.setVisibility(View.GONE);
                         Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_user_24);
@@ -80,9 +91,11 @@ public class Activity_AccountDetails extends AppCompatActivity {
 
                     TextView lblFullNm = findViewById(R.id.lbl_fullName);
                     String lsFullNme = clientInfo.sLastName + ", " + clientInfo.sFrstName;
+
                     if(!clientInfo.sMiddName.trim().isEmpty()){
                         lsFullNme = lsFullNme + " " + clientInfo.sMiddName;
                     }
+
                     if(!clientInfo.sSuffixNm.trim().isEmpty()){
                         lsFullNme = lsFullNme + ", " + clientInfo.sSuffixNm;
                     }
@@ -105,6 +118,7 @@ public class Activity_AccountDetails extends AppCompatActivity {
 
                     TextView lblEmailx = findViewById(R.id.lbl_email);
                     lblEmailx.setText(clientInfo.sEmailAdd);
+
                     mViewModel.GetEmailInfo(clientInfo.sEmailAdd, args -> {
                         if(args != null){
                             if(args.getIsVerifd() == 1){
@@ -123,6 +137,7 @@ public class Activity_AccountDetails extends AppCompatActivity {
 
                     TextView lblMobile = findViewById(R.id.lbl_mobile);
                     lblMobile.setText(clientInfo.sMobileNo);
+
                     mViewModel.GetMobileInfo(clientInfo.sMobileNo, new VMAccountDetails.OnRetrieveMobileInfo() {
                         @Override
                         public void OnRetrieve(EMobileInfo args) {

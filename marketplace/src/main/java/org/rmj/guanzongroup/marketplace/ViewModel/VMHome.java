@@ -404,7 +404,7 @@ public class VMHome extends AndroidViewModel {
                         return 2;
                     }
 
-                    message = "Account verified. Proceed to loan application.";
+                    message = "Account verified. Proceed to application.";
                     return 1;
                 } catch (Exception e) {
                     e.printStackTrace();

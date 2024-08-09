@@ -69,6 +69,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class Activity_Dashboard extends AppCompatActivity {
+
+    private static final int GCARD_APPLICATION = 1;
+
     private String TAG = getClass().getSimpleName();
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityDashboardBinding binding;
@@ -80,10 +83,10 @@ public class Activity_Dashboard extends AppCompatActivity {
     private Toolbar toolbar;
     private BadgeDrawable loBadge;
     private TextView lblBadge;
-    private static final int GCARD_APPLICATION = 1;
     private DashboardActionReceiver poLogRcv = new DashboardActionReceiver();
     private ConnectionUtil poConn;
     private AccountInfo loAccount;
+
     private final ActivityResultLauncher<Intent> poArl = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -111,9 +114,11 @@ public class Activity_Dashboard extends AppCompatActivity {
 
         DrawerLayout drawer = binding.drawerLayout;
 
+        loInflate = LayoutInflater.from(Activity_Dashboard.this);
         mViewModel = new ViewModelProvider(Activity_Dashboard.this).get(VMHome.class);
         poLoading = new Dialog_Loading(Activity_Dashboard.this);
         poDialog = new Dialog_SingleButton(Activity_Dashboard.this);
+
         navigationView = binding.navView;
 
         loAccount = new AccountInfo(this);
@@ -144,11 +149,22 @@ public class Activity_Dashboard extends AppCompatActivity {
                 .build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_activity_dashboard);
+
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
         setupIntentArguments(navController);
 
-        loInflate = LayoutInflater.from(Activity_Dashboard.this);
+        //TODO: SET DRAWER MENUS
+        setUpHeader(navigationView);
+
+        //TODO: SET NOTIFICATIONS
+        setUpNotifications();
+
+        //TODO: UPLOAD UNSENT GCARD OFFLINE ENTRIES
+        if (loAccount.getVerificationStatus() > 0){
+            SendOfflineEntries();
+        }
 
         mViewModel.GetUnreadMessagesCount().observe(Activity_Dashboard.this, count -> {
             try{
@@ -173,6 +189,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                 lblBadge = (TextView) loInflate.inflate(R.layout.nav_action_badge, null, false);
                 navigationView.getMenu().findItem(R.id.nav_item_cart).setActionView(lblBadge);
                 lblBadge.setText(GetBadgeValue(count));
+
                 if(count > 0) {
                     loBadge = BadgeDrawable.create(Activity_Dashboard.this);
                     loBadge.setNumber(count);
@@ -235,6 +252,7 @@ public class Activity_Dashboard extends AppCompatActivity {
         });
 
         navigationView.getMenu().findItem(R.id.nav_applyLoan).setOnMenuItemClickListener(menuItem -> {
+
             mViewModel.ValidateUserVerification(new VMHome.OnValidateVerifiedUser() {
                 @Override
                 public void OnValidate(String title, String message) {
@@ -279,15 +297,19 @@ public class Activity_Dashboard extends AppCompatActivity {
         });
 
         navigationView.getMenu().findItem(R.id.nav_logout).setOnMenuItemClickListener(menuItem -> {
+
             Dialog_DoubleButton loDialog = new Dialog_DoubleButton(Activity_Dashboard.this);
             loDialog.setButtonText("YES", "NO");
+
             loDialog.initDialog("Confirm Logout", "Do you want to log out?", new Dialog_DoubleButton.OnDialogConfirmation() {
                 @Override
                 public void onConfirm(AlertDialog dialog) {
+
                     mViewModel.LogoutUserSession(() -> {
                         Intent loIntent = new Intent(Activity_Dashboard.this, Activity_Dashboard.class);
                         startActivity(loIntent);
                     });
+
                     dialog.dismiss();
                 }
                 @Override
@@ -295,17 +317,14 @@ public class Activity_Dashboard extends AppCompatActivity {
                     dialog.dismiss();
                 }
             });
+
             loDialog.show();
+
             return false;
         });
 
-        setUpHeader(navigationView);
-        setUpNotifications();
-
-        if (loAccount.getVerificationStatus() > 0){
-            SendOfflineEntries();
-        }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -329,9 +348,11 @@ public class Activity_Dashboard extends AppCompatActivity {
         });
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent loIntent;
+
         if(item.getItemId() == android.R.id.home){
 
         } else if (item.getItemId() == R.id.item_search) {
@@ -347,6 +368,7 @@ public class Activity_Dashboard extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onBackPressed() {
         Dialog_DoubleButton loDialog = new Dialog_DoubleButton(Activity_Dashboard.this);
@@ -364,6 +386,7 @@ public class Activity_Dashboard extends AppCompatActivity {
         });
         loDialog.show();
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -375,11 +398,13 @@ public class Activity_Dashboard extends AppCompatActivity {
             registerReceiver(poLogRcv, intentFilter);
         }
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(poLogRcv);
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_activity_dashboard);
@@ -479,6 +504,7 @@ public class Activity_Dashboard extends AppCompatActivity {
     }
     private void setUpNotifications(){
         Intent loIntent = null;
+
         if(getIntent().hasExtra("notification")){
             String lsArgs = getIntent().getStringExtra("notification");
             switch (lsArgs){
@@ -520,7 +546,9 @@ public class Activity_Dashboard extends AppCompatActivity {
 
                     break;
             }
+
             startActivity(loIntent);
+
         }else{
             mViewModel.CheckPromotions(new VMHome.OnCheckPromotions() {
                 @Override
@@ -567,6 +595,7 @@ public class Activity_Dashboard extends AppCompatActivity {
             }
         }
     }
+
     private String GetBadgeValue(int val){
         if(val > 0){
             lblBadge.setVisibility(View.VISIBLE);

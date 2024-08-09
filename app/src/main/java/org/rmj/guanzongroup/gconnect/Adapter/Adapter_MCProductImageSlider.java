@@ -42,32 +42,32 @@ public class Adapter_MCProductImageSlider extends RecyclerView.Adapter<Adapter_M
             @Override
             public void onClick(View v) {
                 if (loAccount.getLoginStatus()){
-                    String sBrand = "";
-                    String sBrandId = oSlideLst.get(oSlideLst.keySet().toArray()[position]);
 
-                    Integer logo = (Integer) oSlideLst.keySet().toArray()[position];
-                    switch (logo) {
-                        case R.drawable.apple_logo:
-                            sBrand = "HONDA";
-                            break;
-                        case R.drawable.huawei_logo:
-                            sBrand = "SUZUKI";
-                            break;
-                        case R.drawable.honor_logo:
-                            sBrand = "KAWASAKI";
-                            break;
-                        case R.drawable.oppo_logo:
-                            sBrand = "YAMAHA";
-                            break;
+                    if (loAccount.getVerificationStatus() > 0){
+                        String sBrand = "";
+                        String sBrandId = oSlideLst.get(oSlideLst.keySet().toArray()[position]);
+
+                        Integer logo = (Integer) oSlideLst.keySet().toArray()[position];
+                        switch (logo) {
+                            case R.drawable.apple_logo:
+                                sBrand = "HONDA";
+                                break;
+                            case R.drawable.huawei_logo:
+                                sBrand = "SUZUKI";
+                                break;
+                            case R.drawable.honor_logo:
+                                sBrand = "KAWASAKI";
+                                break;
+                            case R.drawable.oppo_logo:
+                                sBrand = "YAMAHA";
+                                break;
+                        }
+
+                        callback.onSelected(sBrandId, sBrand);
+                    }else {
+                        Toast.makeText(context, "Unable to use feature. Please complete and verify your account", Toast.LENGTH_LONG).show();
                     }
 
-                    callback.onSelected(sBrandId, sBrand);
-
-                    /*Intent intent = new Intent(context, Activity_ProductSelection.class);
-                    intent.putExtra("lsBrandID", sBrandId);
-                    intent.putExtra("lsBrandNm", sBrand);
-
-                    context.startActivity(intent);*/
                 }else {
                     Toast.makeText(context, "Unable to use feature. Please login", Toast.LENGTH_LONG).show();
                 }

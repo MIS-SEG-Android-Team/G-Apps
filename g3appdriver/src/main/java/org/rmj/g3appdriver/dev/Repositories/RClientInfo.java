@@ -175,8 +175,8 @@ public class RClientInfo {
                     String lsMobileNo = loAcc.getMobileNo();
 
                     if(lsClient.isEmpty()){
-                        if(lsLastNm.isEmpty() && lsFrstNm.isEmpty() &&
-                                lsBirthD.isEmpty() && lsBirthP.isEmpty() && lsMobileNo.isEmpty()) {
+                        if(lsLastNm.isEmpty() || lsFrstNm.isEmpty() ||
+                                lsBirthD.isEmpty() || lsBirthP.isEmpty() || lsMobileNo.isEmpty()) {
                             loAcc.setVerifiedStatus(0);
                         } else {
                             loAcc.setVerifiedStatus(2);

@@ -23,6 +23,8 @@ import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.R;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMAccountDetails;
 
+import java.util.Objects;
+
 public class Activity_AccountUpdate extends AppCompatActivity {
 
     private VMAccountDetails mViewModel;
@@ -63,11 +65,14 @@ public class Activity_AccountUpdate extends AppCompatActivity {
             switch (getIntent().getIntExtra("sUpdatexx", 0)){
                 case 0:
                     findViewById(R.id.constraint_updateAccount).setVisibility(View.VISIBLE);
+
                     lblUpdate.setText("Enter Email Address");
+
                     btnSubmit.setOnClickListener(v -> {
                         if(!isClicked){
                             isClicked = true;
-                            mViewModel.UpdateEmailAdd(tieUpdate.getText().toString().trim(), new VMAccountDetails.OnTransactionCallBack() {
+
+                            mViewModel.UpdateEmailAdd(Objects.requireNonNull(tieUpdate.getText()).toString().trim(), new VMAccountDetails.OnTransactionCallBack() {
                                 @Override
                                 public void onLoading() {
                                     poLoading.initDialog("Account Update", "Sending email update request. Please wait...");
@@ -103,12 +108,16 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                     break;
                 case 1:
                     findViewById(R.id.constraint_updateAccount).setVisibility(View.VISIBLE);
+
                     lblUpdate.setText("Enter Mobile No");
+
                     tieUpdate.setFilters(new InputFilter[] {new InputFilter.LengthFilter(11)});
+
                     btnSubmit.setOnClickListener(v -> {
                         if(!isClicked){
                             isClicked = true;
-                            mViewModel.UpdateMobileNo(tieUpdate.getText().toString().trim(), new VMAccountDetails.OnTransactionCallBack() {
+
+                            mViewModel.UpdateMobileNo(Objects.requireNonNull(tieUpdate.getText()).toString().trim(), new VMAccountDetails.OnTransactionCallBack() {
                                 @Override
                                 public void onLoading() {
                                     poLoading.initDialog("Account Update", "Sending mobile no update request. Please wait...");
@@ -144,51 +153,63 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                     break;
                 case 2:
                     findViewById(R.id.constraint_updateAccount).setVisibility(View.VISIBLE);
+
                     lblUpdate.setText("Enter Gcash No");
+
                     btnSubmit.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+
                             mViewModel.getClientInfo().observe(Activity_AccountUpdate.this, eClientInfo -> {
                                 if (eClientInfo != null){
-                                    //TODO: UPDATE GCASH NO FROM EXISTING DATA AND SEND TO SERVER FOR UPDATE
-                                    eClientInfo.setGCashNo(tieUpdate.getText().toString().trim());
+                                    if (!Objects.requireNonNull(tieUpdate.getText()).toString().isEmpty()){
+                                        //TODO: UPDATE GCASH NO FROM EXISTING DATA AND SEND TO SERVER FOR UPDATE
+                                        eClientInfo.setGCashNo(Objects.requireNonNull(tieUpdate.getText()).toString().trim());
 
-                                    mViewModel.completeClientInfo(eClientInfo, new VMAccountDetails.OnTransactionCallBack() {
-                                        @Override
-                                        public void onLoading() {
-                                            poLoading.initDialog("Account Update", "Sending Gcash No Update");
-                                            poLoading.show();
-                                        }
+                                        mViewModel.completeClientInfo(eClientInfo, new VMAccountDetails.OnTransactionCallBack() {
+                                            @Override
+                                            public void onLoading() {
+                                                poLoading.initDialog("Account Update", "Sending New Gcash No Update");
+                                                poLoading.show();
+                                            }
 
-                                        @Override
-                                        public void onSuccess(String fsMessage) {
-                                            poLoading.dismiss();
+                                            @Override
+                                            public void onSuccess(String fsMessage) {
+                                                poLoading.dismiss();
 
-                                            poDialogx.setButtonText("Dismiss");
-                                            poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                                isClicked = false;
-                                                poDialogx.dismiss();
-                                            });
-                                            poDialogx.show();
-                                        }
+                                                poDialogx.setButtonText("Dismiss");
+                                                poDialogx.initDialog("Account Update", fsMessage, () -> {
+                                                    isClicked = false;
+                                                    poDialogx.dismiss();
+                                                });
+                                                poDialogx.show();
+                                            }
 
-                                        @Override
-                                        public void onFailed(String fsMessage) {
-                                            poLoading.dismiss();
+                                            @Override
+                                            public void onFailed(String fsMessage) {
+                                                poLoading.dismiss();
 
-                                            poDialogx.setButtonText("Dismiss");
-                                            poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                                isClicked = false;
-                                                poDialogx.dismiss();
-                                            });
-                                            poDialogx.show();
-                                        }
-                                    });
-
+                                                poDialogx.setButtonText("Dismiss");
+                                                poDialogx.initDialog("Account Update", fsMessage, () -> {
+                                                    isClicked = false;
+                                                    poDialogx.dismiss();
+                                                });
+                                                poDialogx.show();
+                                            }
+                                        });
+                                    }else {
+                                        poDialogx.setButtonText("Dismiss");
+                                        poDialogx.initDialog("Account Update", "Please enter gcash no", () -> {
+                                            isClicked = false;
+                                            poDialogx.dismiss();
+                                        });
+                                        poDialogx.show();
+                                    }
                                 }
                             });
                         }
                     });
+                    break;
                 default:
                     findViewById(R.id.constraint_updatePassword).setVisibility(View.VISIBLE);
                     btnSubmit.setText("Submit");

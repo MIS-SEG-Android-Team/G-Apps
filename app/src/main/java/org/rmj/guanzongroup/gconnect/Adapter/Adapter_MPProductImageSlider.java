@@ -40,42 +40,47 @@ public class Adapter_MPProductImageSlider extends RecyclerView.Adapter<Adapter_M
             @Override
             public void onClick(View v) {
                 if (loAccount.getLoginStatus()){
-                    String sBrand = "";
 
-                    Integer logo = oSlideLst.get(position);
-                    switch (logo){
-                        case R.drawable.apple_logo:
-                            sBrand = "Apple";
-                            break;
-                        case R.drawable.huawei_logo:
-                            sBrand = "HUAWEI";
-                            break;
-                        case R.drawable.honor_logo:
-                            sBrand = "Honor";
-                            break;
-                        case R.drawable.oppo_logo:
-                            sBrand = "Oppo";
-                            break;
-                        case R.drawable.realme_logo:
-                            sBrand = "Realme";
-                            break;
-                        case R.drawable.samsung_logo:
-                            sBrand = "Samsung";
-                            break;
-                        case R.drawable.tecno_logo:
-                            sBrand = "Tecno";
-                            break;
-                        case R.drawable.vivo_logo:
-                            sBrand = "Vivo";
-                            break;
-                        case R.drawable.xiaomi_logo:
-                            sBrand = "Xiaomi";
-                            break;
+                    if (loAccount.getVerificationStatus() > 0){
+                        String sBrand = "";
+
+                        Integer logo = oSlideLst.get(position);
+                        switch (logo){
+                            case R.drawable.apple_logo:
+                                sBrand = "Apple";
+                                break;
+                            case R.drawable.huawei_logo:
+                                sBrand = "HUAWEI";
+                                break;
+                            case R.drawable.honor_logo:
+                                sBrand = "Honor";
+                                break;
+                            case R.drawable.oppo_logo:
+                                sBrand = "Oppo";
+                                break;
+                            case R.drawable.realme_logo:
+                                sBrand = "Realme";
+                                break;
+                            case R.drawable.samsung_logo:
+                                sBrand = "Samsung";
+                                break;
+                            case R.drawable.tecno_logo:
+                                sBrand = "Tecno";
+                                break;
+                            case R.drawable.vivo_logo:
+                                sBrand = "Vivo";
+                                break;
+                            case R.drawable.xiaomi_logo:
+                                sBrand = "Xiaomi";
+                                break;
+                        }
+
+                        Intent loIntent = new Intent(context, Activity_ProductList.class);
+                        loIntent.putExtra("xBrandNme", sBrand);
+                        context.startActivity(loIntent);
+                    }else {
+                        Toast.makeText(context, "Unable to use feature. Please complete and verify your account", Toast.LENGTH_LONG).show();
                     }
-
-                    Intent loIntent = new Intent(context, Activity_ProductList.class);
-                    loIntent.putExtra("xBrandNme", sBrand);
-                    context.startActivity(loIntent);
                 }else {
                     Toast.makeText(context, "Unable to use feature. Please login", Toast.LENGTH_LONG).show();
                 }
