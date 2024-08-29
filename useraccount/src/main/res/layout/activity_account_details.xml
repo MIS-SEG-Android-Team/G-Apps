@@ -49,7 +49,7 @@
                     <ImageView
                         android:layout_width="65dp"
                         android:layout_height="65dp"
-                        android:src="@drawable/sample_user_img_profile"/>
+                        android:src="@drawable/kay"/>
 
                 </androidx.cardview.widget.CardView>
 
@@ -494,7 +494,8 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:paddingHorizontal="19dp"
-                android:paddingVertical="17dp">
+                android:paddingVertical="17dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="0dp"

@@ -35,6 +35,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class VMAccountDetails extends AndroidViewModel {
     private static final String TAG = VMAccountDetails.class.getSimpleName();
@@ -322,6 +323,7 @@ public class VMAccountDetails extends AndroidViewModel {
                         loResult = "Please enter mobile no.";
                         isSuccess =  false;
                     } else {
+
                         String mobileKey = lsMobileNo.substring(0, 1);
 
                         if(!mobileKey.equals("09".substring(0,1))){
@@ -329,7 +331,10 @@ public class VMAccountDetails extends AndroidViewModel {
                             isSuccess =  false;
                         } else if(lsMobileNo.length() < 11) {
                             loResult = "Mobile number must be 11 characters";
-                            isSuccess =  false;
+                            isSuccess = false;
+                        } else if (Pattern.matches("[a-zA-Z]", lsMobileNo)) {
+                            loResult = "Mobile number must only contain numbers";
+                            isSuccess = false;
                         } else {
                             if (!poConnect.isDeviceConnected()) {
                                 loResult = "Not connected to internet.";

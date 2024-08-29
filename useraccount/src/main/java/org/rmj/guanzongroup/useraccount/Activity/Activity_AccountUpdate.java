@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import org.rmj.guanzongroup.useraccount.R;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMAccountDetails;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class Activity_AccountUpdate extends AppCompatActivity {
 
@@ -115,8 +117,8 @@ public class Activity_AccountUpdate extends AppCompatActivity {
 
                     btnSubmit.setOnClickListener(v -> {
                         if(!isClicked){
-                            isClicked = true;
 
+                            isClicked = true;
                             mViewModel.UpdateMobileNo(Objects.requireNonNull(tieUpdate.getText()).toString().trim(), new VMAccountDetails.OnTransactionCallBack() {
                                 @Override
                                 public void onLoading() {
@@ -160,53 +162,60 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
 
-                            mViewModel.getClientInfo().observe(Activity_AccountUpdate.this, eClientInfo -> {
-                                if (eClientInfo != null){
-                                    if (!Objects.requireNonNull(tieUpdate.getText()).toString().isEmpty()){
+                            String gcashno = Objects.requireNonNull(tieUpdate.getText()).toString().trim();
+
+                            if (ValidateGcashNo(gcashno)){
+
+                                mViewModel.getClientInfo().observe(Activity_AccountUpdate.this, eClientInfo -> {
+                                    if (eClientInfo != null){
+
                                         //TODO: UPDATE GCASH NO FROM EXISTING DATA AND SEND TO SERVER FOR UPDATE
-                                        eClientInfo.setGCashNo(Objects.requireNonNull(tieUpdate.getText()).toString().trim());
+                                        eClientInfo.setGCashNo(gcashno);
 
-                                        mViewModel.completeClientInfo(eClientInfo, new VMAccountDetails.OnTransactionCallBack() {
-                                            @Override
-                                            public void onLoading() {
-                                                poLoading.initDialog("Account Update", "Sending New Gcash No Update");
-                                                poLoading.show();
-                                            }
+                                        try {
 
-                                            @Override
-                                            public void onSuccess(String fsMessage) {
-                                                poLoading.dismiss();
+                                            Thread.sleep(1000);
 
-                                                poDialogx.setButtonText("Dismiss");
-                                                poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                                    isClicked = false;
-                                                    poDialogx.dismiss();
-                                                });
-                                                poDialogx.show();
-                                            }
+                                            mViewModel.completeClientInfo(eClientInfo, new VMAccountDetails.OnTransactionCallBack() {
+                                                @Override
+                                                public void onLoading() {
+                                                    poLoading.initDialog("Account Update", "Sending New Gcash No Update");
+                                                    poLoading.show();
+                                                }
 
-                                            @Override
-                                            public void onFailed(String fsMessage) {
-                                                poLoading.dismiss();
+                                                @Override
+                                                public void onSuccess(String fsMessage) {
+                                                    poLoading.dismiss();
 
-                                                poDialogx.setButtonText("Dismiss");
-                                                poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                                    isClicked = false;
-                                                    poDialogx.dismiss();
-                                                });
-                                                poDialogx.show();
-                                            }
-                                        });
-                                    }else {
-                                        poDialogx.setButtonText("Dismiss");
-                                        poDialogx.initDialog("Account Update", "Please enter gcash no", () -> {
-                                            isClicked = false;
-                                            poDialogx.dismiss();
-                                        });
-                                        poDialogx.show();
+                                                    poDialogx.setButtonText("Dismiss");
+                                                    poDialogx.initDialog("Account Update", fsMessage, () -> {
+                                                        isClicked = false;
+                                                        poDialogx.dismiss();
+                                                    });
+                                                    poDialogx.show();
+                                                }
+
+                                                @Override
+                                                public void onFailed(String fsMessage) {
+                                                    poLoading.dismiss();
+
+                                                    poDialogx.setButtonText("Dismiss");
+                                                    poDialogx.initDialog("Account Update", fsMessage, () -> {
+                                                        isClicked = false;
+                                                        poDialogx.dismiss();
+                                                    });
+                                                    poDialogx.show();
+                                                }
+                                            });
+
+                                        }catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+
                                     }
-                                }
-                            });
+                                });
+
+                            }
                         }
                     });
                     break;
@@ -255,6 +264,56 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    public Boolean ValidateGcashNo(String gcashno){
+
+        poDialogx.setButtonText("Dismiss");
+
+        if (gcashno.isEmpty()){
+
+            poDialogx.initDialog("Account Update", "Please enter gcash number", () -> {
+                isClicked = false;
+                poDialogx.dismiss();
+            });
+
+            poDialogx.show();
+
+            return false;
+        }else {
+
+            if (!gcashno.substring(0, 2).contentEquals("09")){
+
+                poDialogx.initDialog("Account Update", "Gcash number must start with 09", () -> {
+                    isClicked = false;
+                    poDialogx.dismiss();
+                });
+
+                poDialogx.show();
+
+                return false;
+
+            }else if (gcashno.length() < 11) {
+
+                poDialogx.initDialog("Account Update", "Mobile number must be 11 characters", () -> {
+                    isClicked = false;
+                    poDialogx.dismiss();
+                });
+                poDialogx.show();
+
+                return false;
+            } else if (Pattern.matches("[a-zA-Z]", gcashno)) {
+
+                poDialogx.initDialog("Account Update", "Mobile number must only contain numbers", () -> {
+                    isClicked = false;
+                    poDialogx.dismiss();
+                });
+                poDialogx.show();
+
+            }
+        }
+
+        return true;
     }
 
     @Override

@@ -164,7 +164,8 @@ public class Activity_ProductInquiry extends AppCompatActivity {
                     @Override
                     public void OnRetrieve(InstallmentInfo loResult) {
                         txtDownPymnt1.setText(String.valueOf(loResult.getMinimumDownpayment()));
-                        txtMinDP.setText("The required Minimum Downpayment is at least " + String.valueOf(loResult.getMinimumDownpayment()) + " Pesos");
+                        txtMinDP.setText("The required Minimum DP is at least ₱" + String.valueOf(loResult.getMinimumDownpayment()) + ".\n" +
+                                "Note: Registration fee is not included in the down payment.");
                         minimumDownpayment = loResult.getMinimumDownpayment();
                     }
                     @Override
