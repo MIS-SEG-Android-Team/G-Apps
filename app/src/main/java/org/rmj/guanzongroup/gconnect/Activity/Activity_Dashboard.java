@@ -2,6 +2,7 @@ package org.rmj.guanzongroup.gconnect.Activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
@@ -387,6 +388,7 @@ public class Activity_Dashboard extends AppCompatActivity {
         loDialog.show();
     }
 
+    @SuppressLint("NewApi")
     @Override
     protected void onStart() {
         super.onStart();
@@ -395,7 +397,7 @@ public class Activity_Dashboard extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(poLogRcv, intentFilter, RECEIVER_EXPORTED);
         }else {
-            registerReceiver(poLogRcv, intentFilter);
+            registerReceiver(poLogRcv, intentFilter, RECEIVER_EXPORTED);
         }
     }
 

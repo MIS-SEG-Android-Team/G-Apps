@@ -77,6 +77,7 @@ public class RClientInfo {
     public String getMessage() {
         return message;
     }
+
     public String getClientId() {
         return new AccountInfo(mContext).getClientID();
     }
@@ -88,6 +89,7 @@ public class RClientInfo {
         }
         return loGender;
     }
+
     public ArrayList<String> getCivilStatusList() {
         ArrayList<String> loCivilSt = new ArrayList<>();
         for(int x = 0; x < CIVIL_STATUS.length; x++) {
@@ -99,6 +101,7 @@ public class RClientInfo {
     public void insert(EClientInfo foInfo){
         poDao.insert(foInfo);
     }
+
     public boolean HasCompleteInfo(){
         try{
             EClientInfo loClient = poDao.GetClientCompleteDetail();
@@ -119,9 +122,11 @@ public class RClientInfo {
     public EClientInfo GetClientInfo(){
         return poDao.GetClientInfo();
     }
+
     public EEmailInfo GetEmailInfo(String args){
         return poDao.GetEmailInfo(args);
     }
+
     public EMobileInfo GetMobileInfo(String args){
         return poDao.GetMobileInfo(args);
     }

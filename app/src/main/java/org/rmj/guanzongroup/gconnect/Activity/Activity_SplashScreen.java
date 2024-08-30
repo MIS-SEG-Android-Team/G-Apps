@@ -21,6 +21,7 @@ import org.rmj.guanzongroup.gconnect.Service.GMessagingService;
 import org.rmj.guanzongroup.gconnect.ViewModel.VMSplashScreen;
 
 public class Activity_SplashScreen extends AppCompatActivity {
+
     private static final String TAG = Activity_SplashScreen.class.getSimpleName();
     private VMSplashScreen mViewModel;
     private Dialog_DoubleButton poDialog;
@@ -72,6 +73,7 @@ public class Activity_SplashScreen extends AppCompatActivity {
         });
         poDialog.show();
     }
+
     private void InitializeData(){
         mViewModel.setsAppVrsnCd(String.valueOf(BuildConfig.VERSION_CODE));
         mViewModel.setsAppVrsnNm(BuildConfig.VERSION_NAME);
@@ -126,6 +128,7 @@ public class Activity_SplashScreen extends AppCompatActivity {
             }
         });
     }
+
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

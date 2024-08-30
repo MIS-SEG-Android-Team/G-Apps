@@ -156,6 +156,8 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                 case 2:
                     findViewById(R.id.constraint_updateAccount).setVisibility(View.VISIBLE);
 
+                    tieUpdate.setFilters(new InputFilter[] {new InputFilter.LengthFilter(11)});
+
                     lblUpdate.setText("Enter Gcash No");
 
                     btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -166,54 +168,55 @@ public class Activity_AccountUpdate extends AppCompatActivity {
 
                             if (ValidateGcashNo(gcashno)){
 
-                                mViewModel.getClientInfo().observe(Activity_AccountUpdate.this, eClientInfo -> {
-                                    if (eClientInfo != null){
+                                EClientInfo clientInfo = mViewModel.getNonliveClientInfo();
 
-                                        //TODO: UPDATE GCASH NO FROM EXISTING DATA AND SEND TO SERVER FOR UPDATE
-                                        eClientInfo.setGCashNo(gcashno);
+                                if (clientInfo != null){
 
-                                        try {
+                                    //TODO: UPDATE GCASH NO FROM EXISTING DATA AND SEND TO SERVER FOR UPDATE
+                                    clientInfo.setGCashNo(gcashno);
 
-                                            Thread.sleep(1000);
-
-                                            mViewModel.completeClientInfo(eClientInfo, new VMAccountDetails.OnTransactionCallBack() {
-                                                @Override
-                                                public void onLoading() {
-                                                    poLoading.initDialog("Account Update", "Sending New Gcash No Update");
-                                                    poLoading.show();
-                                                }
-
-                                                @Override
-                                                public void onSuccess(String fsMessage) {
-                                                    poLoading.dismiss();
-
-                                                    poDialogx.setButtonText("Dismiss");
-                                                    poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                                        isClicked = false;
-                                                        poDialogx.dismiss();
-                                                    });
-                                                    poDialogx.show();
-                                                }
-
-                                                @Override
-                                                public void onFailed(String fsMessage) {
-                                                    poLoading.dismiss();
-
-                                                    poDialogx.setButtonText("Dismiss");
-                                                    poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                                        isClicked = false;
-                                                        poDialogx.dismiss();
-                                                    });
-                                                    poDialogx.show();
-                                                }
-                                            });
-
-                                        }catch (Exception e){
-                                            e.printStackTrace();
+                                    mViewModel.completeClientInfo(clientInfo, new VMAccountDetails.OnTransactionCallBack() {
+                                        @Override
+                                        public void onLoading() {
+                                            poLoading.initDialog("Account Update", "Sending New Gcash No Update");
+                                            poLoading.show();
                                         }
 
-                                    }
-                                });
+                                        @Override
+                                        public void onSuccess(String fsMessage) {
+                                            poLoading.dismiss();
+
+                                            poDialogx.setButtonText("Dismiss");
+                                            poDialogx.initDialog("Account Update", fsMessage, () -> {
+                                                isClicked = false;
+                                                poDialogx.dismiss();
+                                            });
+                                            poDialogx.show();
+                                        }
+
+                                        @Override
+                                        public void onFailed(String fsMessage) {
+                                            poLoading.dismiss();
+
+                                            poDialogx.setButtonText("Dismiss");
+                                            poDialogx.initDialog("Account Update", fsMessage, () -> {
+                                                isClicked = false;
+                                                poDialogx.dismiss();
+                                            });
+                                            poDialogx.show();
+                                        }
+                                    });
+
+                                }else {
+
+                                    poDialogx.setButtonText("Dismiss");
+                                    poDialogx.initDialog("Account Update", "Account detail not found", () -> {
+                                        isClicked = false;
+                                        poDialogx.dismiss();
+                                    });
+                                    poDialogx.show();
+
+                                }
 
                             }
                         }
@@ -293,7 +296,7 @@ public class Activity_AccountUpdate extends AppCompatActivity {
 
                 return false;
 
-            }else if (gcashno.length() < 11) {
+            }else if (gcashno.length() != 11) {
 
                 poDialogx.initDialog("Account Update", "Mobile number must be 11 characters", () -> {
                     isClicked = false;
@@ -302,13 +305,15 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                 poDialogx.show();
 
                 return false;
-            } else if (Pattern.matches("[a-zA-Z]", gcashno)) {
+            } else if (!Pattern.matches(String.format("[0-9]{%s}?", gcashno.length()), gcashno)) {
 
                 poDialogx.initDialog("Account Update", "Mobile number must only contain numbers", () -> {
                     isClicked = false;
                     poDialogx.dismiss();
                 });
                 poDialogx.show();
+
+                return false;
 
             }
         }

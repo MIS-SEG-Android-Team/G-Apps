@@ -54,6 +54,10 @@ public class VMAccountDetails extends AndroidViewModel {
         this.poAddress = new RAddressMobile(application);
     }
 
+    public EClientInfo getNonliveClientInfo(){
+        return poClientx.GetClientInfo();
+    }
+
     public LiveData<EClientInfo> getClientInfo(){
         return poClientx.getClientInfo();
     }
@@ -165,6 +169,7 @@ public class VMAccountDetails extends AndroidViewModel {
             }
         });
     }
+
     public void importClientInfo(String ClientID, String SourceCD, String SourceNo, OnClientInfoCallBack foCallBck) {
         TaskExecutor.Execute(null, new OnTaskExecuteListener() {
             @Override
@@ -206,6 +211,7 @@ public class VMAccountDetails extends AndroidViewModel {
             }
         });
     }
+
     public void completeClientInfo(EClientInfo foClientx, OnTransactionCallBack foCallBck) {
         TaskExecutor.Execute(foClientx, new OnTaskExecuteListener() {
             @Override
@@ -257,6 +263,7 @@ public class VMAccountDetails extends AndroidViewModel {
             }
         });
     }
+
     public void updateAccountInfo(EClientInfo foClientx, OnTransactionCallBack foCallBck) {
         TaskExecutor.Execute(foClientx, new OnTaskExecuteListener() {
             @Override
@@ -306,7 +313,9 @@ public class VMAccountDetails extends AndroidViewModel {
             }
         });
     }
+
     public void UpdateMobileNo(String fsArgs, OnTransactionCallBack foCallBck){
+
         TaskExecutor.Execute(fsArgs, new OnTaskExecuteListener() {
             @Override
             public void OnPreExecute() {
@@ -329,10 +338,10 @@ public class VMAccountDetails extends AndroidViewModel {
                         if(!mobileKey.equals("09".substring(0,1))){
                             loResult = "Mobile number must start with 09";
                             isSuccess =  false;
-                        } else if(lsMobileNo.length() < 11) {
+                        } else if(lsMobileNo.length() != 11) {
                             loResult = "Mobile number must be 11 characters";
                             isSuccess = false;
-                        } else if (Pattern.matches("[a-zA-Z]", lsMobileNo)) {
+                        } else if (!Pattern.matches(String.format("[0-9]{%s}?", lsMobileNo.length()), lsMobileNo)) {
                             loResult = "Mobile number must only contain numbers";
                             isSuccess = false;
                         } else {
@@ -369,6 +378,7 @@ public class VMAccountDetails extends AndroidViewModel {
             }
         });
     }
+
     public void UpdateEmailAdd(String fsArgs, OnTransactionCallBack foCallBck){
 
         TaskExecutor.Execute(fsArgs, new OnTaskExecuteListener() {
@@ -416,6 +426,7 @@ public class VMAccountDetails extends AndroidViewModel {
             }
         });
     }
+
     public void UpdatePassword(String fsOld, String fsNew, String fsNew1, OnTransactionCallBack callBack){
 
         ArrayList<String> lsParams = new ArrayList<>();
@@ -485,6 +496,7 @@ public class VMAccountDetails extends AndroidViewModel {
             }
         });
     }
+
     public void GetMobileInfo(String args, OnRetrieveMobileInfo listener){
 
         TaskExecutor.Execute(args, new OnDoBackgroundTaskListener() {
