@@ -120,6 +120,7 @@ public class VMGCardSystem extends AndroidViewModel {
     }
 
     public void addGcard(GcardCredentials foCardDta, GcardTransactionCallback foCallBck) {
+
         TaskExecutor.Execute(foCardDta, new OnTaskExecuteListener() {
             @Override
             public void OnPreExecute() {
