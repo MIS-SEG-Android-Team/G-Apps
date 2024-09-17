@@ -50,13 +50,9 @@ public class Activity_ClientInfo extends AppCompatActivity {
     private MaterialAutoCompleteTextView txtMunicipl,txtBPlace;
     private RadioGroup rgGender;
     private MaterialAutoCompleteTextView spinner_relation;
-    private MaterialButton btnContinue, btnPrev;
-    private MaterialCheckBox txtMobileType1, txtMobileType2, txtMobileType3;
+    private MaterialButton btnContinue;
 
     private MaterialToolbar toolbar;
-    private String sTansNox = "";
-
-    private Boolean hasLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -122,9 +122,13 @@ public class Activity_ProductInquiry extends AppCompatActivity {
             }
         });
         spn_color.setSelection(0);
+
         spn_color.setOnItemClickListener(new OnItemClickListener(spn_color));
+
         spnAcctTerm.setOnItemClickListener(new OnItemClickListener(spnAcctTerm));
+
         txtDownPymnt.addTextChangedListener(new FormatUIText.CurrencyFormat(txtDownPymnt));
+
         txtDownPymnt1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -144,6 +148,7 @@ public class Activity_ProductInquiry extends AppCompatActivity {
                 }
             }
         });
+
         txtDTarget.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -153,6 +158,7 @@ public class Activity_ProductInquiry extends AppCompatActivity {
                 }
             }
         });
+
         mViewModel.GetModelID().observe(Activity_ProductInquiry.this, modelID -> {
             try{
                 mViewModel.GetCashPrice(modelID).observe(this, cashPrice -> {
@@ -179,6 +185,7 @@ public class Activity_ProductInquiry extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+
         txtDTarget.setOnClickListener(v -> {
             final Calendar newCalendar = Calendar.getInstance();
             @SuppressLint("SimpleDateFormat") final SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM dd, yyyy");
@@ -224,8 +231,27 @@ public class Activity_ProductInquiry extends AppCompatActivity {
             StartTime.show();
 
         });
+
         btnContinue.setOnClickListener(view ->{
+
             lnInput = Double.parseDouble(txtDownPymnt1.getText().toString().trim());
+
+            if (lnInput <= 0.00){
+
+                poMessage.initDialog();
+                poMessage.setTitle("Ganado");
+                poMessage.setMessage("0 minimum downpayment detected!");
+                poMessage.setPositiveButton("Okay", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
+                });
+
+                poMessage.show();
+
+                return;
+            }
 
             Calculate();
 
@@ -234,9 +260,12 @@ public class Activity_ProductInquiry extends AppCompatActivity {
                 public void OnSave(String args) {
 
                     Log.e("TransNox", args);
+
                     Intent loIntent = new Intent(Activity_ProductInquiry.this, Activity_ClientInfo.class);
                     loIntent.putExtra("sTransNox", args);
+
                     startActivity(loIntent);
+
                     overridePendingTransition(R.anim.anim_intent_slide_in_right, R.anim.anim_intent_slide_out_left);
                     finish();
                 }
@@ -285,6 +314,7 @@ public class Activity_ProductInquiry extends AppCompatActivity {
 
         txtDownPymnt1.setEnabled(false);
     }
+
     private  void  msgBox(){
         if (lnInput<minimumDownpayment){
             poMessage.initDialog();
@@ -295,9 +325,11 @@ public class Activity_ProductInquiry extends AppCompatActivity {
             txtDownPymnt1.setText(String.valueOf(minimumDownpayment));
         }
     }
+
     private void loadInstallment(int isLoad){
         linearInstallment.setVisibility(isLoad);
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -381,12 +413,15 @@ public class Activity_ProductInquiry extends AppCompatActivity {
             }
         }
     }
+
     private void Calculate(){
         String lsInput = Objects.requireNonNull(txtDownPymnt1.getText()).toString().trim();
         lnInput = FormatUIText.getParseDouble(lsInput);
+
         mViewModel.getModel().setDownPaym(String.valueOf(lnInput));
 
         msgBox();
+
         mViewModel.CalculateNewDownpayment(lsModelID, Integer.parseInt(mViewModel.getModel().getTermIDxx()), lnInput, new VMProductInquiry.OnCalculateNewDownpayment() {
 
             public void OnCalculate(double lnResult) {
