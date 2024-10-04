@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdk 34
+    compileSdk 35
     defaultConfig {
         applicationId "org.rmj.guanzongroup.gconnect"
         minSdk 21
-        targetSdk 34
-        versionCode 19
+        targetSdk 35
+        versionCode 20
         versionName "Guanzon Connect v6.04.11.19 a"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
