@@ -114,6 +114,7 @@ public interface DItemCart {
 
     @Query("SELECT a.sListIDxx AS sListIDxx, " +
             "a.nQuantity AS nQuantity, " +
+            "'' AS cCheckOut, " +
             "b.xModelNme AS xModelNme, " +
             "b.xDescript AS xDescript," +
             "b.sImagesxx," +
@@ -144,10 +145,10 @@ public interface DItemCart {
     class oMarketplaceCartItem{
         public String sListIDxx;
         public String nQuantity;
+        public String cCheckOut;
         public String xModelNme;
         public String xDescript;
         public String sImagesxx;
         public String nUnitPrce;
-        public String cCheckOut;
     }
 }
