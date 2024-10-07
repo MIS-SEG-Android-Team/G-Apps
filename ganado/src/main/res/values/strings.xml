@@ -8,4 +8,6 @@
     <string name="honda_adv_160">HONDA ADV 160</string>
     <string name="close">Close</string>
     <string name="inquire">Inquire</string>
+    <string name="requiredfields">* Below are required. Please fill up the ff information.*</string>
+    <string name="optional_fields">(Optional fields. You can leave it blank)</string>
 </resources>

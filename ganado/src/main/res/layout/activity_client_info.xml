@@ -81,6 +81,12 @@
                 android:layout_marginBottom="30dp"
                 android:orientation="vertical">
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/requiredfields"
+                    android:textColor="@color/guanzon_digital_red"/>
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/CustomDropDownTilStyle"
                     android:layout_width="match_parent"
@@ -129,6 +135,12 @@
                         android:nextFocusForward="@+id/txt_middname" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/optional_fields"
+                    android:layout_marginTop="5dp"/>
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/TextInputStyle"
                     android:layout_width="match_parent"
@@ -176,12 +188,26 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <com.google.android.material.textview.MaterialTextView
-                            style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto"
-                            android:text="Gender" />
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto"
+                                android:text="Gender" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="* Required"
+                                android:textColor="@color/guanzon_digital_red"
+                                android:gravity="center_horizontal"/>
+
+                        </LinearLayout>
 
                         <RadioGroup
                             android:id="@+id/rg_gender"
@@ -206,6 +232,12 @@
                         </RadioGroup>
                     </LinearLayout>
                 </LinearLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/optional_fields"
+                    android:layout_marginTop="5dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/TextInputStyle"
@@ -276,6 +308,13 @@
                         android:nextFocusForward="@+id/txt_town" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/requiredfields"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/guanzon_digital_red"/>
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/TextInputStyle"
                     android:layout_width="match_parent"
@@ -295,7 +334,6 @@
                         tools:ignore="LabelFor" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/TextInputStyle"
                     android:layout_width="match_parent"
@@ -311,6 +349,12 @@
                         android:maxLength="11"
                         android:nextFocusForward="@+id/txt_emailAdd" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="(Optional field. You can leave it blank)"
+                    android:layout_marginTop="5dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/TextInputStyle"
