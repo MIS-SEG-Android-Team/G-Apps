@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.multidex.BuildConfig;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -15,7 +16,6 @@ import android.widget.TextView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
-import org.rmj.guanzongroup.gconnect.BuildConfig;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.guanzongroup.gconnect.Service.GMessagingService;
 import org.rmj.guanzongroup.gconnect.ViewModel.VMSplashScreen;
@@ -45,7 +45,7 @@ public class Activity_SplashScreen extends AppCompatActivity {
 
         txt_Version.setText(BuildConfig.VERSION_NAME);
 
-        if (!isMyServiceRunning(GMessagingService.class)) {
+        if (!isMyServiceRunning()) {
             startService(new Intent(Activity_SplashScreen.this, GMessagingService.class));
         }
 
@@ -129,10 +129,10 @@ public class Activity_SplashScreen extends AppCompatActivity {
         });
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
+    private boolean isMyServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
+            if (GMessagingService.class.getName().equals(service.service.getClassName())) {
                 return true;
             }
         }

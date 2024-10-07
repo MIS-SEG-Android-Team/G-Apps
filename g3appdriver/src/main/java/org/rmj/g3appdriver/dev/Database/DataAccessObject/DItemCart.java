@@ -28,7 +28,9 @@ public interface DItemCart {
     @Query("SELECT dTimeStmp FROM MarketPlace_Cart ORDER BY dTimeStmp DESC LIMIT 1")
     String GetLatestCartTimeStamp();
 
-    @Query("SELECT * FROM MarketPlace_Cart WHERE cBuyNowxx = '1' AND cCheckOut = '1'")
+    @Query("SELECT sListIDxx, nQuantity, cCheckOut, '' AS xModelNme, " +
+            "'' AS xDescript,'' AS sImagesxx, '' AS nUnitPrce " +
+            " FROM MarketPlace_Cart WHERE cBuyNowxx = '1' AND cCheckOut = '1'")
     LiveData<List<oMarketplaceCartItem>> CheckCartIfHasForPlaceOrder();
 
     @Query("SELECT COUNT(*) FROM MarketPlace_Cart " +

@@ -55,7 +55,7 @@ public class VMLoanProductList extends AndroidViewModel {
         }
     }
 
-    public void StartActivity(Class<?> activity) {
+    /*public void StartActivity(Class<?> activity) {
         try {
             String lsDetail = Objects.requireNonNull(poCredApp.getValue()).getData();
             Intent loIntent = new Intent(mContext, activity);
@@ -66,7 +66,7 @@ public class VMLoanProductList extends AndroidViewModel {
         } catch (Exception e){
             e.printStackTrace();
         }
-    }
+    }*/
 
     public LiveData<MpCreditApp> getCreditAppData(){
         return poCredApp;
