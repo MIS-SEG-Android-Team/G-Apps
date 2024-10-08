@@ -2,7 +2,6 @@ package org.rmj.guanzongroup.ganado.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -16,13 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.imageview.ShapeableImageView;
 
-//import org.rmj.g3appdriver.GCircle.room.Entities.EMcModel;
-import org.rmj.g3appdriver.dev.Database.Entities.EMcModel;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DClientInfo;
+import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.guanzongroup.ganado.Adapter.ProductSelectionAdapter;
 import org.rmj.guanzongroup.ganado.R;
 import org.rmj.guanzongroup.ganado.ViewModel.VMProductSelection;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Activity_ProductSelection extends AppCompatActivity {
@@ -36,12 +35,15 @@ public class Activity_ProductSelection extends AppCompatActivity {
     private int backgroundResId;
     private String backgroundResIdCat;
 
+    private MessageBox poMessage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_selection);
 
         mViewModel = new ViewModelProvider(Activity_ProductSelection.this).get(VMProductSelection.class);
+        poMessage = new MessageBox(Activity_ProductSelection.this);
 
         initView();
 
@@ -49,11 +51,26 @@ public class Activity_ProductSelection extends AppCompatActivity {
 
         String lsBrandID = getIntent().getStringExtra("lsBrandID");
         mViewModel.GetModelsList(lsBrandID).observe(Activity_ProductSelection.this, eMcModels -> {
+
             if (eMcModels.size() > 0){
+
                 brandselectedimg.setImageResource(getBrandImageResource(lsBrandID));
                 adapter = new ProductSelectionAdapter(eMcModels, new ProductSelectionAdapter.OnModelClickListener() {
                     @Override
                     public void OnClick(String ModelID, String BrandID, String ImgLink) {
+
+                        //notify user that gcash number must be registered to earn rewards
+                        if (mViewModel.GetGcashNox() == null || mViewModel.GetGcashNox().isEmpty()){
+                            poMessage.initDialog();
+                            poMessage.setTitle("GCash Number");
+                            poMessage.setMessage("Warning! Gcash number not detected. You must register it to earn your rewards.");
+                            poMessage.setPositiveButton("Dismiss", (view, dialog) -> {
+                                dialog.dismiss();
+                            });
+
+                            poMessage.show();
+                        }
+
                         Intent intent = new Intent(Activity_ProductSelection.this, Activity_ProductInquiry.class);
                         intent.putExtra("lsBrandID", BrandID);
                         intent.putExtra("lsModelID", ModelID);

@@ -36,17 +36,6 @@ public class VMInstallmentSummary extends AndroidViewModel implements GanadoUI {
     private String TransNox;
     private final MutableLiveData<String> psBrandID = new MutableLiveData<>();
     private final MutableLiveData<String> psModelID = new MutableLiveData<>();
-    private final MutableLiveData<DGanadoOnline.McAmortization> poAmort = new MutableLiveData<>();
-
-    public interface OnRetrieveInstallmentInfo{
-        void OnRetrieve(InstallmentInfo loResult);
-        void OnFailed(String message);
-    }
-
-    public interface OnCalculateNewDownpayment{
-        void OnCalculate(double lnResult);
-        void OnFailed(String message);
-    }
 
     private String message;
 
@@ -57,19 +46,9 @@ public class VMInstallmentSummary extends AndroidViewModel implements GanadoUI {
         this.oApp = new Ganado(instance);
         poModel.setGanadoTp("1");
     }
-    public String getTransNox() {
-        return TransNox;
-    }
+
     public InquiryInfo getModel() {
         return poModel;
-    }
-
-    public void setBrandID(String args) {
-        this.psBrandID.setValue(args);
-    }
-
-    public LiveData<String> GetBrandID() {
-        return psBrandID;
     }
 
     public void setModelID(String args) {
@@ -80,105 +59,13 @@ public class VMInstallmentSummary extends AndroidViewModel implements GanadoUI {
         return psModelID;
     }
 
-    public LiveData<List<EMCColor>> GetModelColor(String ModelID){
-        return poApp.GetModelColor(ModelID);
-    }
-
-    public void setModelAmortization(DGanadoOnline.McAmortization args) {
-        this.poAmort.setValue(args);
-    }
-
-    public LiveData<List<EMcBrand>> GetAllMcBrand() {
-        return poApp.GetMotorcycleBrands();
-    }
-
-    public String[] GetPaymentForm() {
-        return poApp.getPaymentForm();
-    }
-
-    public DGanadoOnline.McAmortization GetMonthlyPayment(String args, int args1) {
-        return poApp.GetMonthlyPayment(args, args1);
-    }
-
-    public LiveData<EMcModel> GetModelBrand(String BrandID, String ModelID){
-        return poApp.GetModel(BrandID, ModelID);
-    }
     public DGanadoOnline.CashPrice GetCashInfo(String ModelID){
         return poApp.GetCashInfo(ModelID);
     }
 
-    public double GetMonthlyPayment(double args1) {
-        return poApp.GetMonthlyAmortization(poAmort.getValue(), args1);
-    }
-
-    public DGanadoOnline.McDownpayment GetInstallmentPlanDetail(String args) {
-        return poApp.GetInstallmentPlanDetail(args);
-    }
     public LiveData<EGanadoOnline> GetInquiryDetail() {
         return poApp.GetInquiryDetail(TransNox);
     }
-
-public void GetMinimumDownpayment(String ModelID, int Term, OnRetrieveInstallmentInfo listener) {
-    TaskExecutor.Execute(null, new OnDoBackgroundTaskListener() {
-        @Override
-        public Object DoInBackground(Object args) {
-            InstallmentInfo loResult = poApp.GetMinimumDownpayment(ModelID, Term);
-
-            if(loResult == null){
-                message = poApp.getMessage();
-                return null;
-            }
-
-            return loResult;
-        }
-
-        @Override
-        public void OnPostExecute(Object object) {
-            InstallmentInfo loResult = (InstallmentInfo) object;
-            if(loResult == null){
-                listener.OnFailed(message);
-                return;
-            }
-
-            listener.OnRetrieve(loResult);
-        }
-    });
-}
-    public void CalculateNewDownpayment(String ModelID, int terms, double Downpayment, OnCalculateNewDownpayment listener){
-
-        Log.d("CalculateNewDownpayment",ModelID + " " + terms + " " +  String.valueOf(Downpayment));
-        TaskExecutor.Execute(null, new OnDoBackgroundTaskListener() {
-            @Override
-            public Object DoInBackground(Object args) {
-                double lnResult = poApp.GetMonthlyAmortization(String.valueOf(psModelID), terms, Downpayment);
-                Log.d("CalculateNewDown res", String.valueOf(lnResult));
-                if(lnResult == 0.0){
-                    message = poApp.getMessage();
-                    Log.d("CalculateNewDown resx", String.valueOf(lnResult));
-                    return 0.0;
-                }
-                Log.d("CalculateNewDown resx", String.valueOf(lnResult));
-                return lnResult;
-            }
-
-            @Override
-            public void OnPostExecute(Object object) {
-                double lnResult = (double) object;
-                if(lnResult == 0.0){
-                    listener.OnFailed(message);
-                    return;
-                }
-                Log.d("CalculateNewDown ope", String.valueOf(lnResult));
-                listener.OnCalculate(lnResult);
-            }
-        });
-
-    }
-
-    public double GetMonthlyAmortization(int args1) {
-        return poApp.GetMonthlyAmortization(psModelID.getValue(), args1);
-    }
-
 
     @Override
     public void InitializeApplication(Intent params) {
@@ -199,10 +86,8 @@ public void GetMinimumDownpayment(String ModelID, int Term, OnRetrieveInstallmen
     public void Validate(Object args) {
     }
 
-
     @Override
     public void SaveData(OnSaveInfoListener listener) {
-//        new CreateNewApplicationTask(listener).execute(poModel);
         TaskExecutor.Execute(listener, new OnTaskExecuteListener() {
             @Override
             public void OnPreExecute() {

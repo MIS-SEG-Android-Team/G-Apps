@@ -139,6 +139,9 @@
 
     <string name="descServiceDate">Your next service date:</string>
 
+    <string name="lblmale">Male</string>
+    <string name="lblfemale">Female</string>
+
     <string name="hintReviewProduct">Write product review here…</string>
     <string name="hintProductInquiry">Enter your question(s) here…</string>
     <string name="hintReply">Enter your message here…</string>

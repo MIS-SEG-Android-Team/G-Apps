@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -51,6 +53,7 @@ public class Activity_AccountDetails extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
         finish();
@@ -81,7 +84,7 @@ public class Activity_AccountDetails extends AppCompatActivity {
 
                     if(clientInfo.cVerified.equalsIgnoreCase("1")) {
                         lblInfoVerify.setVisibility(View.GONE);
-                        Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_user_24);
+                        @SuppressLint("UseCompatLoadingForDrawables") Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_user_24);
                         img.setBounds(0, 0, 60, 60);
                         lblUserNm.setCompoundDrawables(null, null, img, null);
                     }
@@ -122,7 +125,7 @@ public class Activity_AccountDetails extends AppCompatActivity {
                     mViewModel.GetEmailInfo(clientInfo.sEmailAdd, args -> {
                         if(args != null){
                             if(args.getIsVerifd() == 1){
-                                Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_24);
+                                @SuppressLint("UseCompatLoadingForDrawables") Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_24);
                                 img.setBounds(0, 0, 60, 60);
                                 lblEmailx.setCompoundDrawables(null, null, img, null);
                             }
@@ -143,7 +146,7 @@ public class Activity_AccountDetails extends AppCompatActivity {
                         public void OnRetrieve(EMobileInfo args) {
                             if(args != null){
                                 if(args.getVerified().equalsIgnoreCase("1")){
-                                    Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_24);
+                                    @SuppressLint("UseCompatLoadingForDrawables") Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_24);
                                     img.setBounds(0, 0, 60, 60);
                                     lblMobile.setCompoundDrawables(null, null, img, null);
                                 }

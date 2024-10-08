@@ -87,6 +87,16 @@
         <item name="boxCornerRadiusTopEnd">10dp</item>
     </style>
 
+    <style name="TextInputStyleRequired" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusBottomEnd">10dp</item>
+        <item name="boxCornerRadiusBottomStart">10dp</item>
+        <item name="boxCornerRadiusTopStart">10dp</item>
+        <item name="boxCornerRadiusTopEnd">10dp</item>
+        <item name="boxStrokeColor">@color/custom_focus_color</item>
+        <item name="android:textColorHint">@color/custom_focus_color_hint</item>
+        <item name="hintTextColor">@color/guanzon_digital_red</item>
+    </style>
+
     <style name="AutoCompleteStyleTheme" parent="TextInputStyle">
         <item name="android:paddingTop">18dp</item>
         <item name="android:paddingBottom">18dp</item>

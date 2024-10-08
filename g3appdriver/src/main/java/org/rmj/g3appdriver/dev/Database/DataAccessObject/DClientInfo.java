@@ -147,6 +147,9 @@ public interface DClientInfo {
     @Query("SELECT * FROM App_User_Mobile WHERE sMobileNo =:args")
     EMobileInfo GetMobileInfo(String args);
 
+    @Query("SELECT sGCashNox FROM Client_Profile_Info")
+    String GetGCashNo();
+
     class ClientBSAddress{
         public String sHouseNo1;
         public String sAddress1;

@@ -28,34 +28,56 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/lbl_dialogTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textSize="21sp"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:paddingTop="20dp"
-            android:fontFamily="@font/roboto_bold"/>
-
-        <ScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/data_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/msg_icon"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/baseline_circle_notifications_24"
+                android:paddingHorizontal="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/lbl_dialogTitle"
+                app:layout_constraintBottom_toBottomOf="@+id/message_view"
+                app:layout_constraintWidth_percent="0.15"/>
+
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/lbl_dialogMessage"
-                android:layout_width="match_parent"
+                android:id="@+id/lbl_dialogTitle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Message"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:text="Title"
+                android:textSize="21sp"
                 android:gravity="center"
                 android:textAlignment="center"
-                android:fontFamily="@font/roboto"
-                android:paddingTop="25dp"
-                android:paddingBottom="30dp"/>
-        </ScrollView>
+                android:paddingVertical="5dp"
+                android:fontFamily="@font/roboto_bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/msg_icon"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ScrollView
+                android:id="@+id/message_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/msg_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lbl_dialogTitle">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/lbl_dialogMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Message"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/roboto"/>
+            </ScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -65,7 +87,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginVertical="5dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_dialogPositive"
@@ -74,14 +97,8 @@
                 android:layout_weight="1"
                 android:text="YES"
                 android:fontFamily="@font/roboto_medium"
-                android:visibility="visible"/>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/view_midBorder"
-                android:layout_width="0.7dp"
-                android:layout_height="match_parent"
-                android:background="@color/marketplace_orange"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                android:layout_marginHorizontal="2dp"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_dialogNegative"
@@ -90,7 +107,8 @@
                 android:layout_weight="1"
                 android:text="NO"
                 android:fontFamily="@font/roboto_medium"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                android:layout_marginHorizontal="5dp"/>
 
         </LinearLayout>
 
