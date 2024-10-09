@@ -62,25 +62,28 @@ public class Activity_ProductSelection extends AppCompatActivity {
                         //notify user that gcash number must be registered to earn rewards
                         if (mViewModel.GetGcashNox() == null || mViewModel.GetGcashNox().isEmpty()){
                             poMessage.initDialog();
-                            poMessage.setTitle("GCash Number");
-                            poMessage.setMessage("Warning! Gcash number not detected. You must register it to earn your rewards.");
-                            poMessage.setPositiveButton("Dismiss", (view, dialog) -> {
+                            poMessage.setIcon(R.drawable.ic_toast_warning);
+                            poMessage.setTitle("Kita Moto");
+                            poMessage.setMessage("Warning! Gcash number is not set. You must register to earn your rewards.");
+                            poMessage.setPositiveButton("Continue", (view, dialog) -> {
+
                                 dialog.dismiss();
+
+                                Intent intent = new Intent(Activity_ProductSelection.this, Activity_ProductInquiry.class);
+                                intent.putExtra("lsBrandID", BrandID);
+                                intent.putExtra("lsModelID", ModelID);
+                                intent.putExtra("lsBrandNm", getIntent().getStringExtra("lsBrandNm"));
+                                intent.putExtra("lsImgLink", ImgLink);
+                                intent.putExtra("bgbrandimage", backgroundResId);
+                                intent.putExtra("backgroundold", backgroundResIdCat);
+
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.anim_intent_slide_in_right, R.anim.anim_intent_slide_out_left);
+
                             });
 
                             poMessage.show();
                         }
-
-                        Intent intent = new Intent(Activity_ProductSelection.this, Activity_ProductInquiry.class);
-                        intent.putExtra("lsBrandID", BrandID);
-                        intent.putExtra("lsModelID", ModelID);
-                        intent.putExtra("lsBrandNm", getIntent().getStringExtra("lsBrandNm"));
-                        intent.putExtra("lsImgLink", ImgLink);
-                        intent.putExtra("bgbrandimage", backgroundResId);
-                        intent.putExtra("backgroundold", backgroundResIdCat);
-                        
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.anim_intent_slide_in_right, R.anim.anim_intent_slide_out_left);
                     }
                 });
 

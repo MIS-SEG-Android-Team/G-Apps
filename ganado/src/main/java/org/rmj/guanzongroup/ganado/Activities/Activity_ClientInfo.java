@@ -305,8 +305,9 @@ public class Activity_ClientInfo extends AppCompatActivity {
 
         });
         poMessage.setNegativeButton("No", (view, dialog) -> dialog.dismiss());
-        poMessage.setTitle("Benta");
-        poMessage.setMessage("Do you really want to close the client information module? Every detail entered will be removed.");
+        poMessage.setIcon(R.drawable.baseline_contact_support_24);
+        poMessage.setTitle("Kita Moto");
+        poMessage.setMessage("Do you really want to exit? Every detail entered will be removed.");
         poMessage.show();
     }
 }

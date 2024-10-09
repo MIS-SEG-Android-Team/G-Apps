@@ -20,6 +20,7 @@ import android.view.View;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.divider.MaterialDivider;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
 import org.rmj.g3appdriver.R;
@@ -32,6 +33,7 @@ public class MessageBox {
     private MaterialButton btnNegative;
     private MaterialTextView lblTitle;
     private MaterialTextView lblMsgxx;
+    private ShapeableImageView msg_icon;
 
     private final Context context;
 
@@ -47,12 +49,21 @@ public class MessageBox {
         poDialogx = poBuilder.create();
         poDialogx.setCancelable(false);
 
+        msg_icon = view.findViewById(R.id.msg_icon);
         lblTitle = view.findViewById(R.id.lbl_dialogTitle);
         lblMsgxx = view.findViewById(R.id.lbl_dialogMessage);
         btnPositive = view.findViewById(R.id.btn_dialogPositive);
         btnPositive.setVisibility(View.GONE);
         btnNegative = view.findViewById(R.id.btn_dialogNegative);
         btnNegative.setVisibility(View.GONE);
+    }
+
+    public void setIcon(int psIconx) {
+        try {
+            msg_icon.setImageResource(psIconx);
+        } catch(NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     public void setMessage(String psMessage) {
