@@ -145,8 +145,9 @@ public class Activity_BrandSelection extends AppCompatActivity {
 
                 MessageBox loMessage = new MessageBox(Activity_BrandSelection.this);
                 loMessage.initDialog();
+                loMessage.setIcon(R.drawable.baseline_error_24);
                 loMessage.setTitle("Disclosure");
-                loMessage.setMessage("Disclosure denied. Unable to retrieve product brands");
+                loMessage.setMessage("Permission denied. Unable to retrieve product brands");
                 loMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {

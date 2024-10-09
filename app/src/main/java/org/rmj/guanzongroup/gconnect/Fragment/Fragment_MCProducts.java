@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EMcBrand;
 import org.rmj.g3appdriver.etc.MessageBox;
-import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.guanzongroup.ganado.Activities.Activity_ProductSelection;
 import org.rmj.guanzongroup.ganado.Dialog.DialogDisclosure;
 import org.rmj.guanzongroup.ganado.ViewModel.VMBrandList;
@@ -134,8 +133,9 @@ public class Fragment_MCProducts extends Fragment {
 
                 MessageBox loMessage = new MessageBox(requireActivity());
                 loMessage.initDialog();
+                loMessage.setIcon(R.drawable.baseline_error_24);
                 loMessage.setTitle("Disclosure");
-                loMessage.setMessage("Disclosure denied. Unable to retrieve product brands");
+                loMessage.setMessage("Permission denied. Unable to retrieve product brands");
                 loMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {

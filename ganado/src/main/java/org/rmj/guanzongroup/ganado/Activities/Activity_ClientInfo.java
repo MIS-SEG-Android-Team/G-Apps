@@ -184,7 +184,8 @@ public class Activity_ClientInfo extends AppCompatActivity {
 
             if (!mViewModel.InitGeoLocation(Activity_ClientInfo.this)){
                 poMessage.initDialog();
-                poMessage.setTitle("Benta");
+                poMessage.setIcon(R.drawable.baseline_error_24);
+                poMessage.setTitle("Kita Moto");
                 poMessage.setMessage(mViewModel.GetMessage());
                 poMessage.setPositiveButton("Dismiss", (view, dialog) -> {
                     dialog.dismiss();
@@ -203,9 +204,10 @@ public class Activity_ClientInfo extends AppCompatActivity {
 
                         poDialogx.dismiss();
                         poMessage.initDialog();
-                        poMessage.setTitle("Benta");
+                        poMessage.setIcon(R.drawable.ic_baseline_message_24);
+                        poMessage.setTitle("Kita Moto");
                         poMessage.setMessage("Motorcycle inquiry saved successfully!");
-                        poMessage.setPositiveButton("Okay", (view, dialog) -> {
+                        poMessage.setPositiveButton("Dismiss", (view, dialog) -> {
                             poMessage.dismiss();
                             Intent loIntent = new Intent(Activity_ClientInfo.this, Activity_Installment_Summary.class);
                             loIntent.putExtra("sTransNox", args);
@@ -220,9 +222,10 @@ public class Activity_ClientInfo extends AppCompatActivity {
                     public void OnFailed(String message) {
                         poDialogx.dismiss();
                         poMessage.initDialog();
-                        poMessage.setTitle("Benta");
+                        poMessage.setIcon(R.drawable.baseline_error_24);
+                        poMessage.setTitle("Kita Moto");
                         poMessage.setMessage(message);
-                        poMessage.setPositiveButton("Okay", (view1, dialog) -> dialog.dismiss());
+                        poMessage.setPositiveButton("Dismiss", (view1, dialog) -> dialog.dismiss());
                         poMessage.show();
                     }
                 });

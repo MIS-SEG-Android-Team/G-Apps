@@ -230,6 +230,7 @@ public class Activity_GCardOffline extends AppCompatActivity {
                             public void onFinished(String result) {
                                 poDialog.dismiss();
 
+                                poMessage.setIcon(R.drawable.ic_baseline_message_24);
                                 poMessage.setMessage(result);
                                 poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                                     @Override
@@ -253,6 +254,7 @@ public class Activity_GCardOffline extends AppCompatActivity {
                             }
                         });
                     } else {
+                        poMessage.setIcon(R.drawable.baseline_error_24);
                         poMessage.setMessage(loMessage);
                         poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                             @Override
@@ -263,6 +265,7 @@ public class Activity_GCardOffline extends AppCompatActivity {
                         poMessage.show();
                     }
                 }catch (Exception e){
+                    poMessage.setIcon(R.drawable.baseline_error_24);
                     poMessage.setMessage(e.getMessage());
                     poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                         @Override

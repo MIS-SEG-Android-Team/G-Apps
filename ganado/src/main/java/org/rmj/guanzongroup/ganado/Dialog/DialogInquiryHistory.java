@@ -51,9 +51,11 @@ public class DialogInquiryHistory {
     private final Context context;
     private String message = "";
     private String nMAort = "";
+
     public DialogInquiryHistory(Context context){
         this.context = Objects.requireNonNull(context);
     }
+
     public void initDialog(Application apps, EGanadoOnline foDetail){
         AlertDialog.Builder poBuilder = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_inquiry_history, null);
@@ -105,6 +107,7 @@ public class DialogInquiryHistory {
             lblMonthAmrt.setText(FormatUIText.getCurrencyUIFormat("0.00"));
         }
     }
+
     private void initView(View v){
         lblDate = v.findViewById(R.id.lblDate);
         lblStatus = v.findViewById(R.id.lblStatus);
@@ -121,6 +124,7 @@ public class DialogInquiryHistory {
         lnInstTerm = v.findViewById(R.id.lnInstTerm);
         btnClose = v.findViewById(R.id.btn_close);
     }
+
     public void setMessage(String psMessage) {
         try {
             lblMsgxx.setText(Objects.requireNonNull(psMessage));
@@ -128,6 +132,7 @@ public class DialogInquiryHistory {
             e.printStackTrace();
         }
     }
+
     public void setPositiveButton(String psBtnPost, final DialogButton listener) {
         btnClose.setVisibility(View.VISIBLE);
         btnClose.setText(psBtnPost);
@@ -135,6 +140,7 @@ public class DialogInquiryHistory {
             listener.OnButtonClick(view, poDialogx);
         });
     }
+
     public void show() {
         if(!poDialogx.isShowing()) {
             poDialogx.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -142,6 +148,7 @@ public class DialogInquiryHistory {
             poDialogx.show();
         }
     }
+
     public interface DialogButton{
         void OnButtonClick(View view, AlertDialog dialog);
     }

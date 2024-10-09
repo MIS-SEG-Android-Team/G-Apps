@@ -135,9 +135,10 @@ public class Activity_ProductInquiry extends AppCompatActivity {
                 if (!hasFocus) {
                     if(txtDownPymnt1.getText().toString().trim().isEmpty()){
                         poMessage.initDialog();
-                        poMessage.setTitle("Ganado");
+                        poMessage.setIcon(R.drawable.baseline_error_24);
+                        poMessage.setTitle("Kita Moto");
                         poMessage.setMessage("Downpayment field is required!");
-                        poMessage.setPositiveButton("Okay", new MessageBox.DialogButton() {
+                        poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                             @Override
                             public void OnButtonClick(View view, AlertDialog dialog) {
                                 dialog.dismiss();
@@ -239,9 +240,10 @@ public class Activity_ProductInquiry extends AppCompatActivity {
             if (lnInput <= 0.00){
 
                 poMessage.initDialog();
-                poMessage.setTitle("Ganado");
+                poMessage.setIcon(R.drawable.baseline_error_24);
+                poMessage.setTitle("Kita Moto");
                 poMessage.setMessage("0 minimum downpayment detected!");
-                poMessage.setPositiveButton("Okay", new MessageBox.DialogButton() {
+                poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {
                         dialog.dismiss();
@@ -273,9 +275,10 @@ public class Activity_ProductInquiry extends AppCompatActivity {
                 @Override
                 public void OnFailed(String message) {
                     poMessage.initDialog();
-                    poMessage.setTitle("Product Inquiry");
+                    poMessage.setIcon(R.drawable.baseline_error_24);
+                    poMessage.setTitle("Kita Moto");
                     poMessage.setMessage(message);
-                    poMessage.setPositiveButton("Okay", (view1, dialog) -> dialog.dismiss());
+                    poMessage.setPositiveButton("Dismiss", (view1, dialog) -> dialog.dismiss());
                     poMessage.show();
                 }
             });
@@ -318,9 +321,10 @@ public class Activity_ProductInquiry extends AppCompatActivity {
     private  void  msgBox(){
         if (lnInput<minimumDownpayment){
             poMessage.initDialog();
-            poMessage.setTitle("Product Inquiry");
+            poMessage.setIcon(R.drawable.baseline_error_24);
+            poMessage.setTitle("Kita Moto");
             poMessage.setMessage("The minimum down payment is less than the required minimum amount.");
-            poMessage.setPositiveButton("Okay", (view1, dialog) -> dialog.dismiss());
+            poMessage.setPositiveButton("Dismiss", (view1, dialog) -> dialog.dismiss());
             poMessage.show();
             txtDownPymnt1.setText(String.valueOf(minimumDownpayment));
         }

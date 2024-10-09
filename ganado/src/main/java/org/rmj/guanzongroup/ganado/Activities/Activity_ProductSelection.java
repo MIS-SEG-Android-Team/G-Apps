@@ -69,21 +69,16 @@ public class Activity_ProductSelection extends AppCompatActivity {
 
                                 dialog.dismiss();
 
-                                Intent intent = new Intent(Activity_ProductSelection.this, Activity_ProductInquiry.class);
-                                intent.putExtra("lsBrandID", BrandID);
-                                intent.putExtra("lsModelID", ModelID);
-                                intent.putExtra("lsBrandNm", getIntent().getStringExtra("lsBrandNm"));
-                                intent.putExtra("lsImgLink", ImgLink);
-                                intent.putExtra("bgbrandimage", backgroundResId);
-                                intent.putExtra("backgroundold", backgroundResIdCat);
-
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.anim_intent_slide_in_right, R.anim.anim_intent_slide_out_left);
+                                intentToSelection(BrandID, ModelID, ImgLink);
 
                             });
 
                             poMessage.show();
+
+                        }else {
+                            intentToSelection(BrandID, ModelID, ImgLink);
                         }
+
                     }
                 });
 
@@ -109,6 +104,21 @@ public class Activity_ProductSelection extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void intentToSelection(String BrandID, String ModelID, String ImgLink){
+
+        Intent intent = new Intent(Activity_ProductSelection.this, Activity_ProductInquiry.class);
+        intent.putExtra("lsBrandID", BrandID);
+        intent.putExtra("lsModelID", ModelID);
+        intent.putExtra("lsBrandNm", getIntent().getStringExtra("lsBrandNm"));
+        intent.putExtra("lsImgLink", ImgLink);
+        intent.putExtra("bgbrandimage", backgroundResId);
+        intent.putExtra("backgroundold", backgroundResIdCat);
+
+        startActivity(intent);
+        overridePendingTransition(R.anim.anim_intent_slide_in_right, R.anim.anim_intent_slide_out_left);
+
     }
 
     private void initView() {

@@ -128,7 +128,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
         EMcTermCategory.class,
         EGCardPoints.class,
         EGCard_Ledger.class,
-        EPointsRequest.class}, version = 2, exportSchema = false)
+        EPointsRequest.class}, version = 3, exportSchema = false)
 public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     private static final String TAG = "GuanzonApp_DB_Manager";
     private static GGC_GuanzonAppDB instance;
