@@ -14,11 +14,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.rmj.g3appdriver.etc.FragmentAdapter;
-import org.rmj.guanzongroup.digitalgcard.Fragment.Fragment_MyGcard;
 import org.rmj.guanzongroup.gconnect.R;
-import org.rmj.guanzongroup.marketplace.Fragment.Fragment_MPItemCart;
 import org.rmj.guanzongroup.notifications.Fragment.Fragment_Promotion;
-import org.rmj.guanzongroup.panalo.Fragment.Fragment_Panalo;
 
 public class Fragment_Dashboard extends Fragment {
     private static final String TAG = Fragment_Dashboard.class.getSimpleName();

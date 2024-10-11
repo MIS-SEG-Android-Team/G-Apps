@@ -242,20 +242,26 @@ public class Fragment_MPItemCart extends Fragment {
         });
 
         btnDelete.setOnClickListener(v12 -> {
-            poMessage.setButtonText("Yes", "No");
-            poMessage.initDialog("Marketplace Item Cart", "Remove selected items?", new Dialog_DoubleButton.OnDialogConfirmation() {
+            poDialogx.setIcon(R.drawable.baseline_contact_support_24);
+            poDialogx.setTitle("Marketplace Item Cart");
+            poDialogx.setMessage("Remove selected items?");
+
+            poDialogx.setPositiveButton("Yes", new MessageBox.DialogButton() {
                 @Override
-                public void onConfirm(AlertDialog dialog) {
+                public void OnButtonClick(View view, AlertDialog dialog) {
                     dialog.dismiss();
                     DeleteAllItemOnCart();
                 }
+            });
 
+            poDialogx.setNegativeButton("No", new MessageBox.DialogButton() {
                 @Override
-                public void onCancel(AlertDialog dialog) {
+                public void OnButtonClick(View view, AlertDialog dialog) {
                     dialog.dismiss();
                 }
             });
-            poMessage.show();
+
+            poDialogx.show();
         });
 
         btnCheckOut.setOnClickListener(view ->{

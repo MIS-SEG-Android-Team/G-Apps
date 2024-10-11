@@ -257,7 +257,7 @@ public class Activity_PlaceOrder extends AppCompatActivity {
                 poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {
-                        poDialogx.dismiss()
+                        poDialogx.dismiss();
                     }
                 });
 
