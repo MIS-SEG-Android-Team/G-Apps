@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,8 +15,8 @@ import android.view.View;
 import android.widget.TextView;
 import com.kofigyan.stateprogressbar.StateProgressBar;
 import org.rmj.g3appdriver.dev.Database.Entities.EMobileInfo;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMAccountDetails;
 import java.util.Objects;
 import org.rmj.guanzongroup.useraccount.R;
@@ -27,7 +28,7 @@ public class Activity_AccountDetails extends AppCompatActivity {
 
     private VMAccountDetails mViewModel;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
     private Toolbar toolbar;
 
     @Override
@@ -61,7 +62,9 @@ public class Activity_AccountDetails extends AppCompatActivity {
 
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
-        poDialogx = new Dialog_SingleButton(Activity_AccountDetails.this);
+        poDialogx = new MessageBox(Activity_AccountDetails.this);
+
+        poDialogx.initDialog();
 
         StateProgressBar progressBar = findViewById(R.id.your_state_progress_bar_id);
         progressBar.setStateDescriptionData(descriptionData);
@@ -207,12 +210,20 @@ public class Activity_AccountDetails extends AppCompatActivity {
                 @Override
                 public void onFailed(String fsMessage) {
                     poLoading.dismiss();
-                    poDialogx.setButtonText("Okay");
-                    poDialogx.initDialog("Account Details", fsMessage, () -> {
-                        poDialogx.dismiss();
-                        finish();
+
+                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                    poDialogx.setTitle("Account Details");
+                    poDialogx.setMessage(fsMessage);
+                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
+                            finish();
+                        }
                     });
+
                     poDialogx.show();
+
                 }
             });
         } catch (Exception e) {

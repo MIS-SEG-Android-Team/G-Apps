@@ -3,6 +3,7 @@ package org.rmj.guanzongroup.digitalgcard.Fragment;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -18,17 +19,15 @@ import android.widget.TextView;
 import com.google.android.material.button.MaterialButton;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
-import org.rmj.g3appdriver.etc.ConnectionUtil;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_UserInfo;
 import org.rmj.guanzongroup.digitalgcard.Activity.Activity_AddGcard;
 import org.rmj.guanzongroup.digitalgcard.Activity.Activity_ManageGcard;
 import org.rmj.guanzongroup.digitalgcard.R;
 import org.rmj.guanzongroup.digitalgcard.ViewModel.VMGCardSystem;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Fragment_MyGcard extends Fragment{
@@ -39,7 +38,7 @@ public class Fragment_MyGcard extends Fragment{
     private MaterialButton btnAddCrd;
     private ImageButton btn_refresh;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialog;
+    private MessageBox poDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -47,7 +46,10 @@ public class Fragment_MyGcard extends Fragment{
 
         view = inflater.inflate(R.layout.fragment_my_gcard, container, false);
         mViewModel = new ViewModelProvider(requireActivity()).get(VMGCardSystem.class);
-        poDialog = new Dialog_SingleButton(requireActivity());
+
+        poDialog = new MessageBox(requireActivity());
+        poDialog.initDialog();
+        poDialog.setTitle("GCard Information");
 
         mViewModel.setmContext(GCardSystem.CoreFunctions.GCARD);
 
@@ -67,6 +69,7 @@ public class Fragment_MyGcard extends Fragment{
         btnAddCrd = view.findViewById(R.id.btnAddGcard);
         btn_refresh = view.findViewById(R.id.btn_refresh);
     }
+
     private void initGCardInfo(){
         mViewModel.downloadGcardNumbers(new VMGCardSystem.GcardTransactionCallback() {
             @Override
@@ -84,8 +87,15 @@ public class Fragment_MyGcard extends Fragment{
             public void onFailed(String fsMessage) {
                 poLoading.dismiss();
 
-                poDialog.setButtonText("Dismiss");
-                poDialog.initDialog("GCard Information Error", fsMessage, () -> poDialog.dismiss());
+                poDialog.setIcon(R.drawable.baseline_error_24);
+                poDialog.setMessage(fsMessage);
+                poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        poDialog.dismiss();
+                    }
+                });
+
                 poDialog.show();
             }
             @Override

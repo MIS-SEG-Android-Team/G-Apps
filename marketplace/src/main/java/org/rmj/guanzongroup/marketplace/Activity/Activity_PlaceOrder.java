@@ -3,7 +3,6 @@ package org.rmj.guanzongroup.marketplace.Activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,33 +10,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import org.json.JSONObject;
-import org.rmj.g3appdriver.dev.Database.DataAccessObject.DClientInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DItemCart;
 import org.rmj.g3appdriver.etc.CashFormatter;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.marketplace.Adapter.Adapter_OrderList;
 import org.rmj.guanzongroup.marketplace.Etc.OnTransactionsCallback;
 import org.rmj.guanzongroup.marketplace.R;
 import org.rmj.guanzongroup.marketplace.ViewModel.VMPlaceOrder;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_AddressUpdate;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Activity_PlaceOrder extends AppCompatActivity {
+
     private static final String TAG = Activity_PlaceOrder.class.getSimpleName();
 
     private VMPlaceOrder mViewModel;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
     private Dialog_Loading poLoading;
     private RecyclerView recyclerView;
     private Toolbar toolbar;
@@ -62,12 +59,17 @@ public class Activity_PlaceOrder extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_place_order);
+
         mViewModel = new ViewModelProvider(Activity_PlaceOrder.this).get(VMPlaceOrder.class);
+
         getExtras();
         initViews();
         setUpToolbar();
         setOrderPreview();
+
+        poDialogx.initDialog();
 
         findViewById(R.id.lbl_chg_ship_address).setOnClickListener(v -> {
             Intent loIntent = new Intent(Activity_PlaceOrder.this, Activity_AddressUpdate.class);
@@ -105,7 +107,7 @@ public class Activity_PlaceOrder extends AppCompatActivity {
 
     private void initViews() {
         poLoading = new Dialog_Loading(Activity_PlaceOrder.this);
-        poDialogx = new Dialog_SingleButton(Activity_PlaceOrder.this);
+        poDialogx = new MessageBox(Activity_PlaceOrder.this);
         toolbar = findViewById(R.id.toolbar);
         txtClient = findViewById(R.id.txt_client_name);
         txtMobile = findViewById(R.id.txt_mobile_no);
@@ -232,13 +234,12 @@ public class Activity_PlaceOrder extends AppCompatActivity {
                 poLoading.dismiss();
                 try{
                     JSONObject loResult = new JSONObject(result);
+
                     Intent loIntent = new Intent(Activity_PlaceOrder.this, Activity_PayOrder.class);
                     loIntent.putExtra("sTransNox", loResult.getString("sTransNox"));
                     loIntent.putExtra("nSubTotal", Double.parseDouble(loResult.getString("nTrantotl")));
                     loIntent.putExtra("nShipFeex", nShipFee);
-                    Log.d(TAG, "Arguments: " + result);
-                    Log.d(TAG, "SubTotal: " + loResult.getString("nTrantotl"));
-                    Log.d(TAG, "Shipping Fee: " + nShipFee);
+
                     startActivity(loIntent);
                     finish();
                 } catch (Exception e){
@@ -249,21 +250,34 @@ public class Activity_PlaceOrder extends AppCompatActivity {
             @Override
             public void onFailed(String fsMessage) {
                 poLoading.dismiss();
-                poDialogx.setButtonText("Okay");
-                poDialogx.initDialog("Place Order", fsMessage, () -> poDialogx.dismiss());
+
+                poDialogx.setIcon(R.drawable.baseline_error_24);
+                poDialogx.setTitle("Place Order");
+                poDialogx.setMessage(fsMessage);
+                poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        poDialogx.dismiss()
+                    }
+                });
+
                 poDialogx.show();
             }
         });
     }
 
     private void popUpCloseConfirmationDialog() {
-        Dialog_DoubleButton loDblDiag = new Dialog_DoubleButton(Activity_PlaceOrder.this);
-        loDblDiag.setButtonText("Yes", "No");
-        loDblDiag.initDialog("Marketplace", "Are you sure you want to cancel placing your order?",
-                new Dialog_DoubleButton.OnDialogConfirmation() {
+
+        poDialogx.setIcon(R.drawable.baseline_contact_support_24);
+        poDialogx.setTitle("Marketplace");
+        poDialogx.setMessage("Are you sure you want to cancel placing your order?");
+
+        poDialogx.setPositiveButton("Yes", new MessageBox.DialogButton() {
             @Override
-            public void onConfirm(AlertDialog dialog) {
+            public void OnButtonClick(View view, AlertDialog dialog) {
+
                 dialog.dismiss();
+
                 mViewModel.cancelBuyNow(cIsBuyNow, new OnTransactionsCallback() {
                     @Override
                     public void onLoading() {
@@ -280,19 +294,32 @@ public class Activity_PlaceOrder extends AppCompatActivity {
                     @Override
                     public void onFailed(String fsMessage) {
                         poLoading.dismiss();
-                        poDialogx.setButtonText("Okay");
-                        poDialogx.initDialog("Marketplace", fsMessage, () -> poDialogx.dismiss());
+
+                        poDialogx.setIcon(R.drawable.baseline_error_24);
+                        poDialogx.setTitle("Marketplace");
+                        poDialogx.setMessage(fsMessage);
+                        poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                            @Override
+                            public void OnButtonClick(View view, AlertDialog dialog) {
+                                poDialogx.dismiss();
+                            }
+                        });
+
                         poDialogx.show();
                     }
                 });
             }
+        });
 
+        poDialogx.setNegativeButton("No", new MessageBox.DialogButton() {
             @Override
-            public void onCancel(AlertDialog dialog) {
+            public void OnButtonClick(View view, AlertDialog dialog) {
                 dialog.dismiss();
             }
+
         });
-        loDblDiag.show();
+
+        poDialogx.show();
     }
 
     private double CalculateGrandTotal(){

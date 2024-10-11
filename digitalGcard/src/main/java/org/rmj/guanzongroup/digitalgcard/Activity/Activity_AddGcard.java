@@ -14,8 +14,8 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -24,13 +24,11 @@ import com.google.android.material.textfield.TextInputEditText;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.rmj.g3appdriver.lib.Account.AccountInfo;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
 import org.rmj.g3appdriver.lib.GCardCore.iGCardSystem;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.digitalgcard.R;
 import org.rmj.guanzongroup.digitalgcard.ViewModel.VMGCardSystem;
 
@@ -42,7 +40,7 @@ public class Activity_AddGcard extends AppCompatActivity {
     private VMGCardSystem mViewModel;
     private Toolbar toolbar;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialog;
+    private MessageBox poDialog;
     private TextInputEditText txtBdatex, txtGcardN;
     private MaterialButton btnAddCrd, btnScanGc;
     private static final int SCAN_GCARD = 1;
@@ -70,6 +68,10 @@ public class Activity_AddGcard extends AppCompatActivity {
 
         mViewModel = new ViewModelProvider(Activity_AddGcard.this).get(VMGCardSystem.class);
         mViewModel.setmContext(GCardSystem.CoreFunctions.GCARD);
+
+        poDialog = new MessageBox(Activity_AddGcard.this);
+        poDialog.initDialog();
+        poDialog.setTitle("Add GCard");
 
         initViews();
         setUpToolbar();
@@ -141,7 +143,6 @@ public class Activity_AddGcard extends AppCompatActivity {
         txtBdatex = findViewById(R.id.tie_birth_date);
         btnAddCrd = findViewById(R.id.btnAddGcard);
         btnScanGc = findViewById(R.id.btnScanGcard);
-        poDialog = new Dialog_SingleButton(Activity_AddGcard.this);
     }
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
@@ -166,12 +167,18 @@ public class Activity_AddGcard extends AppCompatActivity {
                     @Override
                     public void onSuccess(String fsMessage) {
                         poLoading.dismiss();
-                        poDialog.setButtonText("Okay");
-                        poDialog.initDialog("Add GCard", "GCard Successfully Added.", () -> {
-                            isClicked = false;
-                            poDialog.dismiss();
-                            finish();
+
+                        poDialog.setIcon(R.drawable.ic_baseline_message_24);
+                        poDialog.setMessage(fsMessage);
+                        poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                            @Override
+                            public void OnButtonClick(View view, AlertDialog dialog) {
+                                isClicked = false;
+                                poDialog.dismiss();
+                                finish();
+                            }
                         });
+
                         poDialog.show();
                     }
 
@@ -183,38 +190,55 @@ public class Activity_AddGcard extends AppCompatActivity {
                             String lsErrCode = "";
 
                             try {
+
                                 JSONObject loJson = new JSONObject(fsMessage);
                                 lsErrCode = loJson.getString("code");
-                                if("CNF".equalsIgnoreCase(lsErrCode)) {
-                                    Dialog_DoubleButton loDialog = new Dialog_DoubleButton(Activity_AddGcard.this);
-                                    loDialog.setButtonText("Confirm", "Cancel");
-                                    loDialog.initDialog("GCard Confirmation", loJson.getString("message")
-                                            , new Dialog_DoubleButton.OnDialogConfirmation() {
-                                                @Override
-                                                public void onConfirm(AlertDialog dialog) {
-                                                    confirmAddGcard(loGcard);
-                                                    isClicked = false;
-                                                    dialog.dismiss();
-                                                }
 
-                                                @Override
-                                                public void onCancel(AlertDialog dialog) {
-                                                    isClicked = false;
-                                                    dialog.dismiss();
-                                                }
-                                            });
-                                    loDialog.show();
+                                if("CNF".equalsIgnoreCase(lsErrCode)) {
+
+                                    poDialog.setIcon(R.drawable.baseline_contact_support_24);
+                                    poDialog.setMessage(loJson.getString("message"));
+                                    poDialog.setPositiveButton("Confirm", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+
+                                            confirmAddGcard(loGcard);
+                                            isClicked = false;
+                                            dialog.dismiss();
+
+                                            }
+                                    });
+
+                                    poDialog.setNegativeButton("Cancel", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+
+                                            isClicked = false;
+                                            dialog.dismiss();
+
+                                        }
+                                    });
+
+                                    poDialog.show();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            poDialog.setButtonText("Okay");
-                            poDialog.initDialog("Add GCard Failed", fsMessage, () -> {
-                                isClicked = false;
-                                poDialog.dismiss();
+
+                            poDialog.setIcon(R.drawable.baseline_error_24);
+                            poDialog.setMessage(fsMessage);
+                            poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                @Override
+                                public void OnButtonClick(View view, AlertDialog dialog) {
+                                    isClicked = false;
+                                    poDialog.dismiss();
+                                    finish();
+                                }
                             });
+
                             poDialog.show();
+
                         }
                     }
 
@@ -227,11 +251,17 @@ public class Activity_AddGcard extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else {
-            poDialog.setButtonText("Okay");
-            poDialog.initDialog("Add GCard Failed", loGcard.getMessage(), () -> {
-                isClicked = false;
-                poDialog.dismiss();
+            poDialog.setIcon(R.drawable.baseline_error_24);
+            poDialog.setMessage("Add GCard Failed");
+            poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                @Override
+                public void OnButtonClick(View view, AlertDialog dialog) {
+                    isClicked = false;
+                    poDialog.dismiss();
+                    finish();
+                }
             });
+
             poDialog.show();
         }
     }
@@ -246,11 +276,17 @@ public class Activity_AddGcard extends AppCompatActivity {
             @Override
             public void onSuccess(String fsMessage) {
                 poLoading.dismiss();
-                poDialog.setButtonText("Okay");
-                poDialog.initDialog("Add GCard", "GCard Successfully Added.", () -> {
-                    poDialog.dismiss();
-                    finish();
+
+                poDialog.setIcon(R.drawable.ic_baseline_message_24);
+                poDialog.setMessage(fsMessage);
+                poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        poDialog.dismiss();
+                        finish();
+                    }
                 });
+
                 poDialog.show();
             }
             @Override
@@ -264,20 +300,35 @@ public class Activity_AddGcard extends AppCompatActivity {
                         lsErrCode = loJson.getString("code");
 
                         if("CNF".equalsIgnoreCase(lsErrCode)) {
-                            poDialog.setButtonText("Okay");
-                            poDialog.initDialog("Add GCard", "GCard is already registered to other account. Please add GCard number manually and confirm to register the GCard on your account.", () -> {
-                                poDialog.dismiss();
-                                finish();
+
+                            poDialog.setIcon(R.drawable.baseline_error_24);
+                            poDialog.setMessage("GCard is already registered to other account. Please add GCard number manually and confirm to register the GCard on your account.");
+                            poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                @Override
+                                public void OnButtonClick(View view, AlertDialog dialog) {
+                                    poDialog.dismiss();
+                                    finish();
+                                }
                             });
+
                             poDialog.show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    poDialog.setButtonText("Okay");
-                    poDialog.initDialog("Add GCard Failed", fsMessage, () -> poDialog.dismiss());
+
+                    poDialog.setIcon(R.drawable.baseline_error_24);
+                    poDialog.setMessage(fsMessage);
+                    poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            poDialog.dismiss();
+                        }
+                    });
+
                     poDialog.show();
+
                 }
             }
             @Override
@@ -298,20 +349,36 @@ public class Activity_AddGcard extends AppCompatActivity {
                 @Override
                 public void onSuccess(String fsMessage) {
                     poLoading.dismiss();
-                    poDialog.setButtonText("Okay");
-                    poDialog.initDialog("Add GCard", "GCard Successfully Added.", () -> {
-                        poDialog.dismiss();
-                        finish();
+
+                    poDialog.setIcon(R.drawable.ic_baseline_message_24);
+                    poDialog.setMessage(fsMessage);
+                    poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            poDialog.dismiss();
+                            finish();
+                        }
                     });
+
                     poDialog.show();
+
                 }
 
                 @Override
                 public void onFailed(String fsMessage) {
                     poLoading.dismiss();
-                    poDialog.setButtonText("Okay");
-                    poDialog.initDialog("Add GCard Failed", fsMessage, () -> poDialog.dismiss());
+
+                    poDialog.setIcon(R.drawable.baseline_error_24);
+                    poDialog.setMessage(fsMessage);
+                    poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            poDialog.dismiss();
+                        }
+                    });
+
                     poDialog.show();
+
                 }
 
                 @Override
@@ -327,6 +394,7 @@ public class Activity_AddGcard extends AppCompatActivity {
         Intent loIntent = new Intent(Activity_AddGcard.this, Activity_QrCodeScanner.class);
         poArl.launch(loIntent);
     }
+
     private void datePicker() {
         final Calendar newCalendar = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat")

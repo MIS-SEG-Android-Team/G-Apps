@@ -10,21 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.google.android.material.textfield.TextInputEditText;
-
 import org.guanzongroup.com.creditapp.Adapter.Adapter_LoanProductList;
 import org.guanzongroup.com.creditapp.R;
 import org.guanzongroup.com.creditapp.ViewModel.VMLoanProductList;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 
 import java.util.Objects;
 
@@ -37,17 +30,15 @@ public class Activity_LoanProductList extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayout lnLoading;
     private TextView lblNoItem;
-    private Dialog_Loading poLoad;
-    private Dialog_SingleButton poDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(Activity_LoanProductList.this).get(VMLoanProductList.class);
+
         setContentView(R.layout.activity_loan_product_list);
 
-        poLoad = new Dialog_Loading(Activity_LoanProductList.this);
-        poDialog = new Dialog_SingleButton(Activity_LoanProductList.this);
+        mViewModel = new ViewModelProvider(Activity_LoanProductList.this).get(VMLoanProductList.class);
+
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Apply For A Loan");

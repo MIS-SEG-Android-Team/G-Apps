@@ -22,8 +22,8 @@ import com.kofigyan.stateprogressbar.StateProgressBar;
 import org.rmj.g3appdriver.etc.AppConstants;
 import org.rmj.g3appdriver.etc.CashFormatter;
 import org.rmj.g3appdriver.etc.DateTimeFormatter;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_TextInput;
 import org.rmj.guanzongroup.marketplace.Adapter.Adapter_OrderedItems;
 import org.rmj.guanzongroup.marketplace.R;
@@ -58,7 +58,7 @@ public class Activity_Purchases extends AppCompatActivity {
     private MaterialButton btnCancel;
 
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
 
     private VMOrders mViewModel;
 
@@ -67,18 +67,23 @@ public class Activity_Purchases extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(Activity_Purchases.this).get(VMOrders.class);
+
         setContentView(R.layout.activity_purchases);
+
+        mViewModel = new ViewModelProvider(Activity_Purchases.this).get(VMOrders.class);
 
         toolbar = findViewById(R.id.toolbar_purchases);
         toolbar.setTitle("Order Detail");
+
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         StateProgressBar progressBar = findViewById(R.id.your_state_progress_bar_id);
         progressBar.setStateDescriptionData(descriptionData);
+
         String lsOrderIDx = getIntent().getStringExtra("sOrderIDx");
         MaterialButton btnPay = findViewById(R.id.btn_Pay);
+
         recyclerView = findViewById(R.id.recyclerview_Orders);
         lblOrderID = findViewById(R.id.lbl_orderID);
         lblTrackNox = findViewById(R.id.lbl_trackNo);
@@ -98,8 +103,10 @@ public class Activity_Purchases extends AppCompatActivity {
         txtTotalx = findViewById(R.id.txt_total_price);
         cvCanclDetl = findViewById(R.id.cv_cancellation_detail);
         btnCancel = findViewById(R.id.btn_cancel);
+
         LinearLayoutManager loManager = new LinearLayoutManager(Activity_Purchases.this);
         loManager.setOrientation(RecyclerView.VERTICAL);
+
         recyclerView.setLayoutManager(loManager);
 
         if(getIntent().hasExtra("cReimport")){
@@ -107,7 +114,9 @@ public class Activity_Purchases extends AppCompatActivity {
         }
 
         mViewModel.GetDetailOrderHistory(lsOrderIDx).observe(Activity_Purchases.this, foOrder -> {
+
             try{
+
                 if(foOrder == null) {
                     findViewById(R.id.lblNoOrderInfo).setVisibility(View.VISIBLE);
                 } else {
@@ -242,14 +251,18 @@ public class Activity_Purchases extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+
         btnCancel.setOnClickListener(v -> {
             Dialog_TextInput loDialog = new Dialog_TextInput(Activity_Purchases.this);
             loDialog.initDialog("Remarks", new Dialog_TextInput.OnDialogConfirmation() {
                 @Override
                 public void onConfirm(String fsInputx, AlertDialog dialog) {
                     dialog.dismiss();
+
                     poLoading = new Dialog_Loading(Activity_Purchases.this);
-                    poDialogx = new Dialog_SingleButton(Activity_Purchases.this);
+                    poDialogx = new MessageBox(Activity_Purchases.this);
+                    poDialogx.initDialog();
+
                     mViewModel.CancelOrder(lsOrderIDx, fsInputx, new VMOrders.OnCancelCallback() {
                         @Override
                         public void OnLoad() {
@@ -260,22 +273,43 @@ public class Activity_Purchases extends AppCompatActivity {
                         @Override
                         public void OnSuccess(String args) {
                             poLoading.dismiss();
-                            poDialogx.setButtonText("Okay");
-                            poDialogx.initDialog("Order Cancellation", args, () -> {
-                                poDialogx.dismiss();
-                                Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
-                                intent.putExtra("args", "purchase");
-                                sendBroadcast(intent);
+
+                            poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                            poDialogx.setTitle("Order Cancellation");
+                            poDialogx.setMessage(args);
+                            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                @Override
+                                public void OnButtonClick(View view, AlertDialog dialog) {
+
+                                    dialog.dismiss();
+                                    Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
+                                    intent.putExtra("args", "purchase");
+                                    sendBroadcast(intent);
+
+                                }
                             });
+
                             poDialogx.show();
+
                         }
 
                         @Override
                         public void OnFailed(String message) {
                             poLoading.dismiss();
-                            poDialogx.setButtonText("Okay");
-                            poDialogx.initDialog("Order Cancellation", message, () -> poDialogx.dismiss());
+
+                            poDialogx.setIcon(R.drawable.baseline_error_24);
+                            poDialogx.setTitle("Order Cancellation");
+                            poDialogx.setMessage(message);
+                            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                @Override
+                                public void OnButtonClick(View view, AlertDialog dialog) {
+
+                                    dialog.dismiss();
+                                }
+                            });
+
                             poDialogx.show();
+
                         }
                     });
                 }

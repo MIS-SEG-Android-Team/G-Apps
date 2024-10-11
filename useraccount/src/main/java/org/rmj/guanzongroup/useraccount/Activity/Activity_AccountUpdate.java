@@ -5,11 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -19,8 +17,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.R;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMAccountDetails;
 
@@ -32,7 +30,7 @@ public class Activity_AccountUpdate extends AppCompatActivity {
     private VMAccountDetails mViewModel;
 
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
 
     private Toolbar toolbar;
 
@@ -60,8 +58,10 @@ public class Activity_AccountUpdate extends AppCompatActivity {
         tieNew = findViewById(R.id.tie_newPassword);
         tieNw1 = findViewById(R.id.tie_rtPassword);
 
-        poDialogx = new Dialog_SingleButton(Activity_AccountUpdate.this);
+        poDialogx = new MessageBox(Activity_AccountUpdate.this);
         poLoading = new Dialog_Loading(Activity_AccountUpdate.this);
+
+        poDialogx.initDialog();
 
         if(getIntent().hasExtra("sUpdatexx")){
             switch (getIntent().getIntExtra("sUpdatexx", 0)){
@@ -84,23 +84,40 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                        isClicked = false;
-                                        poDialogx.dismiss();
+
+                                    poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                                    poDialogx.setTitle("Account Update");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+                                            isClicked = false;
+                                            dialog.dismiss();
+                                        }
                                     });
+
+
                                     poDialogx.show();
                                 }
 
                                 @Override
                                 public void onFailed(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                        isClicked = false;
-                                        poDialogx.dismiss();
+
+                                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                                    poDialogx.setTitle("Account Update");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+                                            isClicked = false;
+                                            dialog.dismiss();
+                                        }
                                     });
+
+
                                     poDialogx.show();
+
                                 }
                             });
                         } else {
@@ -129,23 +146,40 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                        isClicked = false;
-                                        poDialogx.dismiss();
+
+                                    poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                                    poDialogx.setTitle("Account Update");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+                                            isClicked = false;
+                                            dialog.dismiss();
+                                        }
                                     });
+
+
                                     poDialogx.show();
                                 }
 
                                 @Override
                                 public void onFailed(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                        isClicked = false;
-                                        poDialogx.dismiss();
+
+                                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                                    poDialogx.setTitle("Account Update");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+                                            isClicked = false;
+                                            dialog.dismiss();
+                                        }
                                     });
+
+
                                     poDialogx.show();
+
                                 }
                             });
                         } else {
@@ -186,11 +220,18 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                                         public void onSuccess(String fsMessage) {
                                             poLoading.dismiss();
 
-                                            poDialogx.setButtonText("Dismiss");
-                                            poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                                isClicked = false;
-                                                poDialogx.dismiss();
+                                            poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                                            poDialogx.setTitle("Account Update");
+                                            poDialogx.setMessage(fsMessage);
+                                            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                                @Override
+                                                public void OnButtonClick(View view, AlertDialog dialog) {
+                                                    isClicked = false;
+                                                    dialog.dismiss();
+                                                }
                                             });
+
+
                                             poDialogx.show();
                                         }
 
@@ -198,22 +239,36 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                                         public void onFailed(String fsMessage) {
                                             poLoading.dismiss();
 
-                                            poDialogx.setButtonText("Dismiss");
-                                            poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                                isClicked = false;
-                                                poDialogx.dismiss();
+                                            poDialogx.setIcon(R.drawable.baseline_error_24);
+                                            poDialogx.setTitle("Account Update");
+                                            poDialogx.setMessage(fsMessage);
+                                            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                                @Override
+                                                public void OnButtonClick(View view, AlertDialog dialog) {
+                                                    isClicked = false;
+                                                    dialog.dismiss();
+                                                }
                                             });
+
+
                                             poDialogx.show();
+
                                         }
                                     });
 
                                 }else {
 
-                                    poDialogx.setButtonText("Dismiss");
-                                    poDialogx.initDialog("Account Update", "Account detail not found", () -> {
-                                        isClicked = false;
-                                        poDialogx.dismiss();
+                                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                                    poDialogx.setTitle("Account Update");
+                                    poDialogx.setMessage("Account detail not found");
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+                                            isClicked = false;
+                                            dialog.dismiss();
+                                        }
                                     });
+
                                     poDialogx.show();
 
                                 }
@@ -241,23 +296,40 @@ public class Activity_AccountUpdate extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                        isClicked = false;
-                                        poDialogx.dismiss();
+
+                                    poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                                    poDialogx.setTitle("Account Update");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+                                            isClicked = false;
+                                            dialog.dismiss();
+                                        }
                                     });
+
+
                                     poDialogx.show();
                                 }
 
                                 @Override
                                 public void onFailed(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Account Update", fsMessage, () -> {
-                                        isClicked = false;
-                                        poDialogx.dismiss();
+
+                                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                                    poDialogx.setTitle("Account Update");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+                                            isClicked = false;
+                                            dialog.dismiss();
+                                        }
                                     });
+
+
                                     poDialogx.show();
+
                                 }
                             });
                         } else {
@@ -271,13 +343,17 @@ public class Activity_AccountUpdate extends AppCompatActivity {
 
     public Boolean ValidateGcashNo(String gcashno){
 
-        poDialogx.setButtonText("Dismiss");
-
         if (gcashno.isEmpty()){
 
-            poDialogx.initDialog("Account Update", "Please enter gcash number", () -> {
-                isClicked = false;
-                poDialogx.dismiss();
+            poDialogx.setIcon(R.drawable.baseline_error_24);
+            poDialogx.setTitle("Account Update");
+            poDialogx.setMessage("Please enter gcash number");
+            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                @Override
+                public void OnButtonClick(View view, AlertDialog dialog) {
+                    isClicked = false;
+                    dialog.dismiss();
+                }
             });
 
             poDialogx.show();
@@ -287,9 +363,15 @@ public class Activity_AccountUpdate extends AppCompatActivity {
 
             if (!gcashno.substring(0, 2).contentEquals("09")){
 
-                poDialogx.initDialog("Account Update", "Gcash number must start with 09", () -> {
-                    isClicked = false;
-                    poDialogx.dismiss();
+                poDialogx.setIcon(R.drawable.baseline_error_24);
+                poDialogx.setTitle("Account Update");
+                poDialogx.setMessage("Gcash number must start with 09");
+                poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        isClicked = false;
+                        dialog.dismiss();
+                    }
                 });
 
                 poDialogx.show();
@@ -298,19 +380,33 @@ public class Activity_AccountUpdate extends AppCompatActivity {
 
             }else if (gcashno.length() != 11) {
 
-                poDialogx.initDialog("Account Update", "Mobile number must be 11 characters", () -> {
-                    isClicked = false;
-                    poDialogx.dismiss();
+                poDialogx.setIcon(R.drawable.baseline_error_24);
+                poDialogx.setTitle("Account Update");
+                poDialogx.setMessage("Mobile number must be 11 characters");
+                poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        isClicked = false;
+                        dialog.dismiss();
+                    }
                 });
+
                 poDialogx.show();
 
                 return false;
             } else if (!Pattern.matches(String.format("[0-9]{%s}?", gcashno.length()), gcashno)) {
 
-                poDialogx.initDialog("Account Update", "Mobile number must only contain numbers", () -> {
-                    isClicked = false;
-                    poDialogx.dismiss();
+                poDialogx.setIcon(R.drawable.baseline_error_24);
+                poDialogx.setTitle("Account Update");
+                poDialogx.setMessage("Mobile number must only contain numbers");
+                poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        isClicked = false;
+                        dialog.dismiss();
+                    }
                 });
+
                 poDialogx.show();
 
                 return false;

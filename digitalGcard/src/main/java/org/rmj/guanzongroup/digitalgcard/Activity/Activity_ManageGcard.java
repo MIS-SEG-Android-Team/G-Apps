@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -16,9 +17,9 @@ import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.digitalgcard.Adapter.Adapter_GcardList;
 import org.rmj.guanzongroup.digitalgcard.R;
 import org.rmj.guanzongroup.digitalgcard.ViewModel.VMGCardSystem;
@@ -28,7 +29,7 @@ import java.util.Objects;
 public class Activity_ManageGcard extends AppCompatActivity {
     private VMGCardSystem mViewModel;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
     private Adapter_GcardList poAdapter;
     private MaterialButton btnAddGcard;
     private Toolbar toolbar;
@@ -42,6 +43,10 @@ public class Activity_ManageGcard extends AppCompatActivity {
 
         mViewModel = new ViewModelProvider(Activity_ManageGcard.this).get(VMGCardSystem.class);
         mViewModel.setmContext(GCardSystem.CoreFunctions.GCARD);
+
+        poDialogx = new MessageBox(Activity_ManageGcard.this);
+        poDialogx.initDialog();
+        poDialogx.setTitle("GCard Activation");
 
         initViews();
         setUpToolbar();
@@ -121,22 +126,30 @@ public class Activity_ManageGcard extends AppCompatActivity {
                             @Override
                             public void onSuccess(String fsMessage) {
                                 poLoading.dismiss();
-                                poDialogx = new Dialog_SingleButton(Activity_ManageGcard.this);
-                                poDialogx.setButtonText("Okay");
-                                poDialogx.initDialog("GCard Activation", fsMessage, () -> {
-                                    poDialogx.dismiss();
+
+                                poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                                poDialogx.setMessage(fsMessage);
+                                poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                    @Override
+                                    public void OnButtonClick(View view, AlertDialog dialog) {
+                                        poDialogx.dismiss();
+                                    }
                                 });
+
                                 poDialogx.show();
                             }
 
                             @Override
                             public void onFailed(String fsMessage) {
-                                poLoading.dismiss();
-                                poDialogx = new Dialog_SingleButton(Activity_ManageGcard.this);
-                                poDialogx.setButtonText("Okay");
-                                poDialogx.initDialog("GCard Activation", fsMessage, () -> {
-                                    poDialogx.dismiss();
+                                poDialogx.setIcon(R.drawable.baseline_error_24);
+                                poDialogx.setMessage(fsMessage);
+                                poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                    @Override
+                                    public void OnButtonClick(View view, AlertDialog dialog) {
+                                        poDialogx.dismiss();
+                                    }
                                 });
+
                                 poDialogx.show();
                             }
 

@@ -15,37 +15,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.rmj.g3appdriver.utils.Dialogs.BottomDialog_AddToCart;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
-import org.rmj.guanzongroup.marketplace.Activity.Activity_ProductOverview;
 import org.rmj.guanzongroup.marketplace.Adapter.Adapter_Wishlist;
-import org.rmj.guanzongroup.marketplace.Etc.OnTransactionsCallback;
 import org.rmj.guanzongroup.marketplace.Model.WishListModel;
 import org.rmj.guanzongroup.marketplace.R;
-import org.rmj.guanzongroup.marketplace.ViewModel.VMWishlist;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Fragment_Wishlist extends Fragment {
-    private VMWishlist mViewModel;
     private TextView lblPriceDrop,lblPercent;
-    private TextView lblPrice,lblProductName;
-    private ImageView imgProduct;
     private Adapter_Wishlist adapter;
     private List<WishListModel> itemList;
     private RecyclerView recyclerView;
-    private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wishlist, container, false);
-        poDialogx = new Dialog_SingleButton(requireActivity());
 
         initViews(view);
         setData();
@@ -56,9 +43,11 @@ public class Fragment_Wishlist extends Fragment {
     private void initViews(View v) {
         recyclerView = v.findViewById(R.id.recyclerView_WishList);
     }
+
     private void strikePrice(){
         SpannableString spannableString=new SpannableString("3.1 StrikeThrough Using SpannableString");
         spannableString.setSpan(new StrikethroughSpan(),0,spannableString.length(), 0);
+
         lblPriceDrop.setText(spannableString);
     }
 

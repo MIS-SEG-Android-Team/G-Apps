@@ -5,16 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.R;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMAccountAuthentication;
 
@@ -25,15 +26,21 @@ public class Activity_AccountVerification extends AppCompatActivity {
 
     private VMAccountAuthentication mViewModel;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
 
     private String lsOtpxxx = "", lsVerify = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(Activity_AccountVerification.this).get(VMAccountAuthentication.class);
+
         setContentView(R.layout.activity_account_verification);
+
+        mViewModel = new ViewModelProvider(Activity_AccountVerification.this).get(VMAccountAuthentication.class);
+        poDialogx = new MessageBox(Activity_AccountVerification.this);
+
+        poDialogx.initDialog();
+
         if(getIntent().hasExtra("otp")){
             lsOtpxxx = getIntent().getStringExtra("otp");
             lsVerify = getIntent().getStringExtra("verify");
@@ -82,24 +89,40 @@ public class Activity_AccountVerification extends AppCompatActivity {
                 public void onSuccess(String fsMessage) {
                     poLoading.dismiss();
 
-                    poDialogx = new Dialog_SingleButton(Activity_AccountVerification.this);
-                    poDialogx.setButtonText("Okay");
-                    poDialogx.initDialog("Activate Account", fsMessage, () -> {
-                        poDialogx.dismiss();
-                        Intent loIntent = new Intent();
-                        loIntent.putExtra("result", "success");
-                        setResult(111, loIntent);
-                        finish();
+                    poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                    poDialogx.setTitle("Activate Account");
+                    poDialogx.setMessage(fsMessage);
+                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
+
+                            Intent loIntent = new Intent();
+                            loIntent.putExtra("result", "success");
+                            setResult(111, loIntent);
+                            finish();
+                        }
                     });
+
+
                     poDialogx.show();
                 }
 
                 @Override
                 public void onFailed(String fsMessage) {
                     poLoading.dismiss();
-                    poDialogx = new Dialog_SingleButton(Activity_AccountVerification.this);
-                    poDialogx.setButtonText("Okay");
-                    poDialogx.initDialog("Activate Account", fsMessage, () -> poDialogx.dismiss());
+
+
+                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                    poDialogx.setTitle("Activate Account");
+                    poDialogx.setMessage(fsMessage);
+                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
+                        }
+                    });
+
                     poDialogx.show();
                 }
             });

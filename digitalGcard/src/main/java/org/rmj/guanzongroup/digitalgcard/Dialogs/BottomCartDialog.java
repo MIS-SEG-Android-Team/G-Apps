@@ -18,10 +18,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.digitalgcard.R;
 import org.rmj.guanzongroup.digitalgcard.ViewModel.VMGCardSystem;
 
@@ -44,7 +44,7 @@ public class BottomCartDialog extends BottomSheetDialogFragment {
     private MaterialButton btnAddToCart;
 
     private Dialog_Loading dialog_loading;
-    private Dialog_SingleButton dialog_success;
+    private MessageBox dialog_success;
     private int Quantity = 1;
 
     public void setItemTransNox(String itemTransNox) {
@@ -99,13 +99,13 @@ public class BottomCartDialog extends BottomSheetDialogFragment {
                     @Override
                     public void onSuccess(String fsMessage) {
                         dialog_loading.dismiss();
-                        showMessage("Success", fsMessage);
+                        showMessage("Success", fsMessage, R.drawable.ic_baseline_message_24);
                     }
 
                     @Override
                     public void onFailed(String fsMessage) {
                         dialog_loading.dismiss();
-                        showMessage("Failed", fsMessage);
+                        showMessage("Failed", fsMessage, R.drawable.baseline_error_24);
                     }
 
                     @Override
@@ -115,7 +115,7 @@ public class BottomCartDialog extends BottomSheetDialogFragment {
                 });
             });
         }catch (NullPointerException e){
-            showMessage("Error", e.getMessage());
+            showMessage("Error", e.getMessage(), R.drawable.baseline_error_24);
         }
         return view;
     }
@@ -133,13 +133,21 @@ public class BottomCartDialog extends BottomSheetDialogFragment {
         dialog_loading = new Dialog_Loading(requireActivity());
 
     }
-    private void showMessage(String fsTitle,String fsMessage){
-        dialog_success = new Dialog_SingleButton(requireActivity());
-        dialog_success.setButtonText("Okay");
-        dialog_success.initDialog(fsTitle, fsMessage, () -> {
-            dialog_success.dismiss();
-            dismiss();
+    private void showMessage(String fsTitle,String fsMessage, int fsIcon){
+        dialog_success = new MessageBox(requireActivity());
+        dialog_success.initDialog();
+        dialog_success.setIcon(fsIcon);
+        dialog_success.setTitle(fsTitle);
+        dialog_success.setMessage(fsMessage);
+
+        dialog_success.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+            @Override
+            public void OnButtonClick(View view, AlertDialog dialog) {
+                dialog.dismiss();
+                dismiss();
+            }
         });
+
         dialog_success.show();
     }
     private double getTotPoints(){

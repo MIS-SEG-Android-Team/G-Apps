@@ -38,12 +38,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.guanzongroup.com.creditapp.Activities.Activity_LoanProductList;
 import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.etc.ConnectionUtil;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Promo;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.digitalgcard.Activity.Activity_GCardOffline;
 import org.rmj.guanzongroup.digitalgcard.Activity.Activity_QrCodeScanner;
 import org.rmj.guanzongroup.digitalgcard.Dialogs.Dialog_TransactionPIN;
@@ -80,7 +80,7 @@ public class Activity_Dashboard extends AppCompatActivity {
     private VMHome mViewModel;
     private LayoutInflater loInflate;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialog;
+    private MessageBox poDialog;
     private Toolbar toolbar;
     private BadgeDrawable loBadge;
     private TextView lblBadge;
@@ -111,14 +111,15 @@ public class Activity_Dashboard extends AppCompatActivity {
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
-        setSupportActionBar(binding.appBarActivityDashboard.toolbar);
+        setSupportActionBar(binding.appBarActivityDashboardId.toolbar);
 
         DrawerLayout drawer = binding.drawerLayout;
 
         loInflate = LayoutInflater.from(Activity_Dashboard.this);
         mViewModel = new ViewModelProvider(Activity_Dashboard.this).get(VMHome.class);
         poLoading = new Dialog_Loading(Activity_Dashboard.this);
-        poDialog = new Dialog_SingleButton(Activity_Dashboard.this);
+        poDialog = new MessageBox(Activity_Dashboard.this);
+        poDialog.initDialog();
 
         navigationView = binding.navView;
 
@@ -281,8 +282,17 @@ public class Activity_Dashboard extends AppCompatActivity {
                 @Override
                 public void OnFailed(String message) {
                     poLoading.dismiss();
-                    poDialog.setButtonText("Okay");
-                    poDialog.initDialog("Gaunzon App", message, () -> poDialog.dismiss());
+
+                    poDialog.setIcon(R.drawable.baseline_error_24);
+                    poDialog.setTitle("Guanzon App");
+                    poDialog.setMessage(message);
+                    poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            poDialog.dismiss();
+                        }
+                    });
+
                     poDialog.show();
                 }
             });
@@ -370,6 +380,7 @@ public class Activity_Dashboard extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
         Dialog_DoubleButton loDialog = new Dialog_DoubleButton(Activity_Dashboard.this);
@@ -636,9 +647,19 @@ public class Activity_Dashboard extends AppCompatActivity {
             }
             @Override
             public void OnFailed(String message) {
-                poDialog.setButtonText("Okay");
-                poDialog.initDialog("Digital GCard", message, () -> poDialog.dismiss());
+
+                poDialog.setIcon(R.drawable.baseline_error_24);
+                poDialog.setTitle("Digital GCard");
+                poDialog.setMessage(message);
+                poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        poDialog.dismiss();
+                    }
+                });
+
                 poDialog.show();
+
             }
         });
     }
@@ -653,19 +674,37 @@ public class Activity_Dashboard extends AppCompatActivity {
             @Override
             public void OnSuccess(String args) {
                 poLoading.dismiss();
-                poDialog.setButtonText("Okay");
-                poDialog.initDialog("Digital GCard", args, () -> {
-                    poDialog.dismiss();
+
+                poDialog.setIcon(R.drawable.ic_baseline_message_24);
+                poDialog.setTitle("Digital GCard");
+                poDialog.setMessage(args);
+                poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        poDialog.dismiss();
+                    }
                 });
+
                 poDialog.show();
+
             }
 
             @Override
             public void OnFailed(String args) {
                 poLoading.dismiss();
-                poDialog.setButtonText("Okay");
-                poDialog.initDialog("Digital GCard", args, () -> poDialog.dismiss());
+
+                poDialog.setIcon(R.drawable.baseline_error_24);
+                poDialog.setTitle("Digital GCard");
+                poDialog.setMessage(args);
+                poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        poDialog.dismiss();
+                    }
+                });
+
                 poDialog.show();
+
             }
         });
     }
@@ -680,17 +719,35 @@ public class Activity_Dashboard extends AppCompatActivity {
             public void onSuccess() {
                 poLoading.dismiss();
 
-                poDialog.setButtonText("Okay");
-                poDialog.initDialog("Guanzon App", "Upload Successful", () -> poDialog.dismiss());
+                poDialog.setIcon(R.drawable.ic_baseline_message_24);
+                poDialog.setTitle("Guanzon App");
+                poDialog.setMessage("Upload Successful");
+                poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        poDialog.dismiss();
+                    }
+                });
+
                 poDialog.show();
+
             }
             @Override
             public void onFailed(String message) {
                 poLoading.dismiss();
 
-                poDialog.setButtonText("Dismiss");
-                poDialog.initDialog("Guanzon App", message, () -> poDialog.dismiss());
+                poDialog.setIcon(R.drawable.baseline_error_24);
+                poDialog.setTitle("Guanzon App");
+                poDialog.setMessage(message);
+                poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        poDialog.dismiss();
+                    }
+                });
+
                 poDialog.show();
+
             }
         });
     }

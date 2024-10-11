@@ -6,8 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,28 +18,29 @@ import com.squareup.picasso.Picasso;
 
 import org.guanzongroup.com.creditapp.R;
 import org.guanzongroup.com.creditapp.ViewModel.VMLoanPreview;
-import org.guanzongroup.com.creditapp.ViewModel.VMLoanProductList;
 import org.json.JSONArray;
 import org.rmj.g3appdriver.dev.Database.Entities.EProducts;
 import org.rmj.g3appdriver.etc.CashFormatter;
-import org.rmj.g3appdriver.lib.CreditApp.model.MpCreditApp;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 
 public class Activity_LoanPreview extends AppCompatActivity {
     private static final String TAG = Activity_LoanPreview.class.getSimpleName();
 
     private VMLoanPreview mViewModel;
     private Dialog_Loading poLoad;
-    private Dialog_SingleButton poMessage;
+    private MessageBox poMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_loan_preview);
+
         mViewModel = new ViewModelProvider(Activity_LoanPreview.this).get(VMLoanPreview.class);
         poLoad = new Dialog_Loading(Activity_LoanPreview.this);
-        poMessage = new Dialog_SingleButton(Activity_LoanPreview.this);
-        setContentView(R.layout.activity_loan_preview);
+        poMessage = new MessageBox(Activity_LoanPreview.this);
+        poMessage.initDialog();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Apply For A Loan");
@@ -109,25 +110,43 @@ public class Activity_LoanPreview extends AppCompatActivity {
                     @Override
                     public void OnSuccess() {
                         poLoad.dismiss();
-                        poMessage.setButtonText("Okay");
-                        poMessage.initDialog("Apply For A Loan", "Application submitted successfully", new Dialog_SingleButton.OnButtonClick() {
+
+                        poMessage.setIcon(R.drawable.ic_baseline_message_24);
+                        poMessage.setTitle("Apply For A Loan");
+                        poMessage.setMessage("Application submitted successfully");
+                        poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                             @Override
-                            public void onClick() {
+                            public void OnButtonClick(View view, AlertDialog dialog) {
+
                                 poMessage.dismiss();
                                 Activity_LoanTerm.getInstance().finish();
                                 Activity_ApplicantInfo.getInstance().finish();
                                 finish();
+
                             }
                         });
+
                         poMessage.show();
                     }
 
                     @Override
                     public void OnFailed(String message) {
                         poLoad.dismiss();
-                        poMessage.setButtonText("Okay");
-                        poMessage.initDialog("Apply For A Loan", message, () -> poMessage.dismiss());
+
+                        poMessage.setIcon(R.drawable.baseline_error_24);
+                        poMessage.setTitle("Apply For A Loan");
+                        poMessage.setMessage(message);
+                        poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                            @Override
+                            public void OnButtonClick(View view, AlertDialog dialog) {
+
+                                poMessage.dismiss();
+
+                            }
+                        });
+
                         poMessage.show();
+
                     }
                 });
             } catch (Exception e){

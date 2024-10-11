@@ -26,9 +26,8 @@ import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.marketplace.Activity.Activity_PlaceOrder;
 import org.rmj.guanzongroup.marketplace.Activity.Activity_ProductOverview;
 import org.rmj.guanzongroup.marketplace.Adapter.Adapter_ItemCart;
@@ -48,8 +47,7 @@ public class Fragment_MPItemCart extends Fragment {
     private RecyclerView recyclerView, rvSuggest;
     private LinearLayout noItem, lnMPFooter;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
-    private Dialog_DoubleButton poMessage;
+    private MessageBox poDialogx;
     private MaterialButton btnCheckOut;
     private ImageButton btnDelete;
     private TextView lblGrandTotal, lblTotalCount;
@@ -67,17 +65,26 @@ public class Fragment_MPItemCart extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(requireActivity()).get(VMMPItemCart.class);
+
         View v = inflater.inflate(R.layout.fragment_mp_item_cart, container, false);
         v.setVisibility(View.GONE);
+
         initWidgets(v);
 
+        mViewModel = new ViewModelProvider(requireActivity()).get(VMMPItemCart.class);
+        poDialogx = new MessageBox(requireActivity());
+        poDialogx.initDialog();
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity());
+
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
+
         mViewModel.GetCartItemsList().observe(getViewLifecycleOwner(), items -> {
             try {
+
                 List<ItemCartModel> itemCart = mViewModel.ParseDataForAdapter(items);
+
                 if (itemCart.size() > 0){
                     v.setVisibility(View.VISIBLE);
                     cvSelectAll.setVisibility(View.VISIBLE);
@@ -112,9 +119,19 @@ public class Fragment_MPItemCart extends Fragment {
                                 @Override
                                 public void onFailed(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Item Cart", fsMessage, () -> poDialogx.dismiss());
+
+                                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                                    poDialogx.setTitle("Item Cart");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+                                            poDialogx.dismiss();
+                                        }
+                                    });
+
                                     poDialogx.show();
+
                                 }
                             });
                         }
@@ -136,9 +153,19 @@ public class Fragment_MPItemCart extends Fragment {
                                 @Override
                                 public void onFailed(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Item Cart", fsMessage, () -> poDialogx.dismiss());
+
+                                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                                    poDialogx.setTitle("Item Cart");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+                                            poDialogx.dismiss();
+                                        }
+                                    });
+
                                     poDialogx.show();
+
                                 }
                             });
                         }
@@ -250,9 +277,19 @@ public class Fragment_MPItemCart extends Fragment {
                 @Override
                 public void onFailed(String fsMessage) {
                     poLoading.dismiss();
-                    poDialogx.setButtonText("Okay");
-                    poDialogx.initDialog("Item Cart", fsMessage, () -> poDialogx.dismiss());
+
+                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                    poDialogx.setTitle("Item Cart");
+                    poDialogx.setMessage(fsMessage);
+                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            poDialogx.dismiss();
+                        }
+                    });
+
                     poDialogx.show();
+
                 }
             });
         });
@@ -261,8 +298,6 @@ public class Fragment_MPItemCart extends Fragment {
 
     private void initWidgets(View view){
         poLoading = new Dialog_Loading(requireActivity());
-        poDialogx = new Dialog_SingleButton(requireActivity());
-        poMessage = new Dialog_DoubleButton(requireActivity());
         recyclerView = view.findViewById(R.id.recyclerView_MPCart);
         rvSuggest = view.findViewById(R.id.rvSuggest);
         noItem = view.findViewById(R.id.layoutMPNoItem);
@@ -325,9 +360,19 @@ public class Fragment_MPItemCart extends Fragment {
             @Override
             public void onFailed(String fsMessage) {
                 poLoading.dismiss();
-                poDialogx.setButtonText("Okay");
-                poDialogx.initDialog("Item Cart", fsMessage, () -> poDialogx.dismiss());
+
+                poDialogx.setIcon(R.drawable.baseline_error_24);
+                poDialogx.setTitle("Item Cart");
+                poDialogx.setMessage(fsMessage);
+                poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        poDialogx.dismiss();
+                    }
+                });
+
                 poDialogx.show();
+
             }
         });
     }

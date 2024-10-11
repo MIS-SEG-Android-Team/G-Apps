@@ -4,7 +4,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.multidex.BuildConfig;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
+import org.rmj.guanzongroup.gconnect.BuildConfig;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.guanzongroup.gconnect.Service.GMessagingService;
 import org.rmj.guanzongroup.gconnect.ViewModel.VMSplashScreen;
