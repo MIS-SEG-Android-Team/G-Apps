@@ -10,11 +10,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
+import org.rmj.g3appdriver.etc.MessageBox;
+import org.rmj.guanzongroup.ganado.Dialog.DialogDisclosure;
 import org.rmj.guanzongroup.gconnect.BuildConfig;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.guanzongroup.gconnect.Service.GMessagingService;
@@ -24,7 +26,7 @@ public class Activity_SplashScreen extends AppCompatActivity {
 
     private static final String TAG = Activity_SplashScreen.class.getSimpleName();
     private VMSplashScreen mViewModel;
-    private Dialog_DoubleButton poDialog;
+    private DialogDisclosure poDialog;
     private ActivityResultLauncher<String[]> poRequest;
     private TextView txt_Status;
     private TextView txt_Version;
@@ -33,11 +35,12 @@ public class Activity_SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_splash_screen);
 
         //TODO: INITIALIZE VARIABLES
         mViewModel = new ViewModelProvider(this).get(VMSplashScreen.class);
-        poDialog = new Dialog_DoubleButton(Activity_SplashScreen.this);
+        poDialog = new DialogDisclosure(Activity_SplashScreen.this);
 
         txt_Status = findViewById(R.id.txt_Status);
         txt_Version = findViewById(R.id.txt_Version);
@@ -58,19 +61,22 @@ public class Activity_SplashScreen extends AppCompatActivity {
 
         String lsMessage = "Guanzon Connect collects and stores your phone number to ensure security on every transaction made within the mobile app. " +
                 "This collection enables authentication and verification processes, protecting your account from unauthorized access.";
-        poDialog.setButtonText("Agree", "Decline");
-        poDialog.initDialog("Guanzon Connect", lsMessage, new Dialog_DoubleButton.OnDialogConfirmation() {
+
+        poDialog.initDialog(new DialogDisclosure.onDisclosure() {
             @Override
-            public void onConfirm(AlertDialog dialog) {
-                dialog.dismiss();
+            public void onAccept() {
+                poDialog.dismiss();
                 poRequest.launch(mViewModel.GetPermissions().toArray(new String[0]));
             }
+
             @Override
-            public void onCancel(AlertDialog dialog) {
-                dialog.dismiss();
+            public void onDecline() {
+                poDialog.dismiss();
                 finish();
             }
         });
+
+        poDialog.setMessage(lsMessage);
         poDialog.show();
     }
 

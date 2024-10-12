@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,14 +16,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.Account.AccountAuthentication;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.Etc.LogType;
 import org.rmj.guanzongroup.useraccount.Model.LoginInfoModel;
 import org.rmj.guanzongroup.useraccount.R;
@@ -35,12 +36,10 @@ public class Activity_Login extends AppCompatActivity {
 
     private VMAccountAuthentication mViewModel;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
-    private Toolbar toolbar;
-    private TabLayout tabLayout;
-    private TextView lblUser, lblForgot, lblCreate;
-    private TextInputLayout tilEmail, tilMobile;
-    private TextInputEditText tieEmail, tieMobile, tiePassword;
+    private MessageBox poDialogx;
+    private MaterialToolbar toolbar;
+    private TextView lblForgot, lblCreate;
+    private TextInputEditText tieEmail, tiePassword;
     private MaterialButton btnLogin;
 
     public boolean isClicked = false;
@@ -66,14 +65,16 @@ public class Activity_Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
 
         mViewModel = new ViewModelProvider(Activity_Login.this).get(VMAccountAuthentication.class);
 
         initViews();
         setUpToolbar();
-        setTabLayout();
         setClickLinkListeners();
+
+        poDialogx.initDialog();
 
         btnLogin.setOnClickListener(v -> {
             if(!isClicked) {
@@ -100,20 +101,13 @@ public class Activity_Login extends AppCompatActivity {
 
     // Initialize this first before anything else.
     private void initViews() {
-        poDialogx = new Dialog_SingleButton(Activity_Login.this);
+        poDialogx = new MessageBox(Activity_Login.this);
         toolbar = findViewById(R.id.toolbar);
-        tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Email"));
-        tabLayout.addTab(tabLayout.newTab().setText("Mobile"));
 
-        tilEmail = findViewById(R.id.til_email);
-        tilMobile = findViewById(R.id.til_mobile);
-        lblUser = findViewById(R.id.lblUser);
         lblForgot = findViewById(R.id.lblForgotPassword);
         lblCreate = findViewById(R.id.lblSignUp);
 
         tieEmail = findViewById(R.id.tie_email);
-        tieMobile = findViewById(R.id.tie_mobile);
         tiePassword = findViewById(R.id.tie_password);
         btnLogin = findViewById(R.id.btnLogin);
     }
@@ -142,11 +136,13 @@ public class Activity_Login extends AppCompatActivity {
         String lsPasswrd = Objects.requireNonNull(tiePassword.getText()).toString().trim();
 
         LoginInfoModel infoModel = new LoginInfoModel(LogType.EMAIL, lsEmailxx, lsPasswrd);
+
         if(infoModel.isDataNotEmpty()) {
             AccountAuthentication.LoginCredentials loCrednts = new AccountAuthentication.LoginCredentials(
                     infoModel.getLogUser(),
                     infoModel.getPassword());
             try {
+
                 mViewModel.LoginAccount(loCrednts, new VMAccountAuthentication.AuthenticationCallback() {
                     @Override
                     public void onLoad() {
@@ -159,32 +155,46 @@ public class Activity_Login extends AppCompatActivity {
                     public void onSuccess(String fsMessage) {
                         Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
                         intent.putExtra("args", "auth");
+
                         sendBroadcast(intent);
+
                         poLoading.dismiss();
                         isClicked = false;
+
                         finish();
                     }
 
                     @Override
                     public void onFailed(String fsMessage) {
                         poLoading.dismiss();
-                        poDialogx.setButtonText("Okay");
-                        poDialogx.initDialog("Log in Failed", fsMessage, () -> {
-                            isClicked = false;
-                            poDialogx.dismiss();
+
+                        poDialogx.setIcon(R.drawable.baseline_error_24);
+                        poDialogx.setTitle("Log in Failed");
+                        poDialogx.setMessage(fsMessage);
+                        poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                            @Override
+                            public void OnButtonClick(View view, AlertDialog dialog) {
+                                isClicked = false;
+                                dialog.dismiss();
+                            }
                         });
+
                         poDialogx.show();
+
                     }
 
                     @Override
                     public void onVerifiy(String args1, String args2) {
                         poLoading.dismiss();
+
                         Log.d("Activation OTP", args1);
+
                         Intent loIntent = new Intent(Activity_Login.this, Activity_AccountVerification.class);
                         loIntent.putExtra("otp", args1);
                         loIntent.putExtra("verify", args2);
                         loIntent.putExtra("email", lsEmailxx);
                         loIntent.putExtra("passw", lsPasswrd);
+
                         isClicked = false;
                         poArl.launch(loIntent);
                     }
@@ -193,43 +203,21 @@ public class Activity_Login extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else {
-            poDialogx.setButtonText("Okay");
-            poDialogx.initDialog("Log in Failed", infoModel.getMessage(), () -> {
-                isClicked = false;
-                poDialogx.dismiss();
-            });
-            poDialogx.show();
-        }
-    }
 
-    private void setTabLayout(){
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                switch(tab.getPosition()) {
-                    case 1:
-                        tilEmail.setVisibility(View.INVISIBLE);
-                        tilMobile.setVisibility(View.VISIBLE);
-                        lblUser.setText(R.string.lblMobileNumber);
-                        break;
-                    default:
-                        tilEmail.setVisibility(View.VISIBLE);
-                        tilMobile.setVisibility(View.INVISIBLE);
-                        lblUser.setText(R.string.lblEmailAddress);
-                        break;
+            poDialogx.setIcon(R.drawable.baseline_error_24);
+            poDialogx.setTitle("Log in Failed");
+            poDialogx.setMessage(infoModel.getMessage());
+            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                @Override
+                public void OnButtonClick(View view, AlertDialog dialog) {
+                    isClicked = false;
+                    dialog.dismiss();
                 }
-            }
+            });
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            poDialogx.show();
 
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        }
     }
 
 }

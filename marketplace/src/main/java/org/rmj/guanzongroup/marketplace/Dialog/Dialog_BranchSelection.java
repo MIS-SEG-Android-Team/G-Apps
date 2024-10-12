@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.guanzongroup.marketplace.Adapter.Adapter_BranchSelection;
 import org.rmj.guanzongroup.marketplace.R;
 
@@ -34,23 +34,27 @@ public class Dialog_BranchSelection {
     private TextInputEditText txtSearch;
     private Adapter_BranchSelection adapter;
     private ImageButton btnClose;
-    private Dialog_DoubleButton confimDialog;
+    private MessageBox confimDialog;
+
     public Dialog_BranchSelection(Context context){
         this.mContext = context;
         this.builder = new AlertDialog.Builder(mContext);
-        this.confimDialog = new Dialog_DoubleButton(mContext);
-
+        this.confimDialog = new MessageBox(mContext);
     }
 
     public void showDialog(){
         dialog.show();
     }
+
     public void cancelable(boolean val){
         dialog.setCancelable(val);
     }
+
     @SuppressLint("InflateParams")
     public void createDialog(List<EBranchInfo> branchInfo, onConfirmBranch callback){
+
         view = LayoutInflater.from(mContext).inflate(R.layout.dialog_branch_selection, null, false);
+
         builder.setView(view)
                 .setCancelable(true);
 
@@ -63,48 +67,42 @@ public class Dialog_BranchSelection {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
+
         adapter = new Adapter_BranchSelection(branchInfo, new Adapter_BranchSelection.onBranchContentClickListener() {
             @Override
             public void onClick(EBranchInfo eBranchInfo) {
 
-                confimDialog.setButtonText("Confirm", "Cancel");
-                confimDialog.initDialog("Branch Selection", "Are you sure you want to select " + eBranchInfo.getBranchNm() + "?", new Dialog_DoubleButton.OnDialogConfirmation() {
+                confimDialog.initDialog();
+
+                confimDialog.setIcon(R.drawable.baseline_contact_support_24);
+                confimDialog.setTitle("Branch Selection");
+                confimDialog.setMessage("Are you sure you want to select " + eBranchInfo.getBranchNm() + "?");
+
+                confimDialog.setPositiveButton("Confirm", new MessageBox.DialogButton() {
                     @Override
-                    public void onConfirm(AlertDialog dialogS) {
+                    public void OnButtonClick(View view, AlertDialog dialog) {
                         callback.onConfirm(eBranchInfo,dialog);
-                        dialogS.dismiss();
-
-                    }
-
-                    @Override
-                    public void onCancel(AlertDialog dialog) {
                         dialog.dismiss();
                     }
                 });
+
+                confimDialog.setNegativeButton("Cancel", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
+                });
+
                 confimDialog.show();
-//                dialog.dismiss();
             }
 
-//            @Override
-//            public void onClick(String BranchCode, String BranchName, String BranchAddress) {
-//                confimDialog.setButtonText("Confirm", "Cancel");
-//                confimDialog.initDialog("Branch Selection", "Are you sure you want to select " + BranchName + "?", new Dialog_DoubleButton.OnDialogConfirmation() {
-//                    @Override
-//                    public void onConfirm(AlertDialog dialog) {
-//                        callback.onConfirm();
-//                    }
-//
-//                    @Override
-//                    public void onCancel(AlertDialog dialog) {
-//
-//                    }
-//                });
-//                dialog.dismiss();
-//            }
         });
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
+
         adapter.notifyDataSetChanged();
+
         btnClose.setOnClickListener(v->{
             dialog.dismiss();
         });

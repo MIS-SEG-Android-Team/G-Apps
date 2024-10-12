@@ -118,7 +118,8 @@ public class Activity_LoanPreview extends AppCompatActivity {
                             @Override
                             public void OnButtonClick(View view, AlertDialog dialog) {
 
-                                poMessage.dismiss();
+                                dialog.dismiss();
+
                                 Activity_LoanTerm.getInstance().finish();
                                 Activity_ApplicantInfo.getInstance().finish();
                                 finish();
@@ -140,7 +141,7 @@ public class Activity_LoanPreview extends AppCompatActivity {
                             @Override
                             public void OnButtonClick(View view, AlertDialog dialog) {
 
-                                poMessage.dismiss();
+                                dialog.dismiss();
 
                             }
                         });

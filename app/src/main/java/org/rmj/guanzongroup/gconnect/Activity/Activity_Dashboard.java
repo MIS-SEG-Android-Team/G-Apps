@@ -41,7 +41,6 @@ import org.rmj.g3appdriver.etc.ConnectionUtil;
 import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Promo;
 import org.rmj.guanzongroup.digitalgcard.Activity.Activity_GCardOffline;
@@ -289,7 +288,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                     poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                         @Override
                         public void OnButtonClick(View view, AlertDialog dialog) {
-                            poDialog.dismiss();
+                            dialog.dismiss();
                         }
                     });
 
@@ -309,12 +308,13 @@ public class Activity_Dashboard extends AppCompatActivity {
 
         navigationView.getMenu().findItem(R.id.nav_logout).setOnMenuItemClickListener(menuItem -> {
 
-            Dialog_DoubleButton loDialog = new Dialog_DoubleButton(Activity_Dashboard.this);
-            loDialog.setButtonText("YES", "NO");
+            poDialog.setIcon(R.drawable.baseline_contact_support_24);
+            poDialog.setTitle("Confirm Logout");
+            poDialog.setMessage("Do you want to log out?");
 
-            loDialog.initDialog("Confirm Logout", "Do you want to log out?", new Dialog_DoubleButton.OnDialogConfirmation() {
+            poDialog.setPositiveButton("Yes", new MessageBox.DialogButton() {
                 @Override
-                public void onConfirm(AlertDialog dialog) {
+                public void OnButtonClick(View view, AlertDialog dialog) {
 
                     mViewModel.LogoutUserSession(() -> {
                         Intent loIntent = new Intent(Activity_Dashboard.this, Activity_Dashboard.class);
@@ -322,14 +322,18 @@ public class Activity_Dashboard extends AppCompatActivity {
                     });
 
                     dialog.dismiss();
+
                 }
+            });
+
+            poDialog.setNegativeButton("No", new MessageBox.DialogButton() {
                 @Override
-                public void onCancel(AlertDialog dialog) {
+                public void OnButtonClick(View view, AlertDialog dialog) {
                     dialog.dismiss();
                 }
             });
 
-            loDialog.show();
+            poDialog.show();
 
             return false;
         });
@@ -383,20 +387,27 @@ public class Activity_Dashboard extends AppCompatActivity {
     @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
-        Dialog_DoubleButton loDialog = new Dialog_DoubleButton(Activity_Dashboard.this);
-        loDialog.setButtonText("YES", "NO");
-        loDialog.initDialog("Guanzon App", "Exit Guanzon App?", new Dialog_DoubleButton.OnDialogConfirmation() {
+
+        poDialog.setIcon(R.drawable.baseline_contact_support_24);
+        poDialog.setTitle("Guanzon App");
+        poDialog.setMessage("Exit Guanzon App?");
+
+        poDialog.setPositiveButton("Yes", new MessageBox.DialogButton() {
             @Override
-            public void onConfirm(AlertDialog dialog) {
+            public void OnButtonClick(View view, AlertDialog dialog) {
                 dialog.dismiss();
                 finish();
             }
+        });
+
+        poDialog.setNegativeButton("No", new MessageBox.DialogButton() {
             @Override
-            public void onCancel(AlertDialog dialog) {
+            public void OnButtonClick(View view, AlertDialog dialog) {
                 dialog.dismiss();
             }
         });
-        loDialog.show();
+
+        poDialog.show();
     }
 
     @SuppressLint("NewApi")
@@ -654,7 +665,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                 poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {
-                        poDialog.dismiss();
+                        dialog.dismiss();
                     }
                 });
 
@@ -681,7 +692,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                 poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {
-                        poDialog.dismiss();
+                        dialog.dismiss();
                     }
                 });
 
@@ -699,7 +710,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                 poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {
-                        poDialog.dismiss();
+                        dialog.dismiss();
                     }
                 });
 
@@ -725,7 +736,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                 poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {
-                        poDialog.dismiss();
+                        dialog.dismiss();
                     }
                 });
 
@@ -742,7 +753,7 @@ public class Activity_Dashboard extends AppCompatActivity {
                 poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {
-                        poDialog.dismiss();
+                        dialog.dismiss();
                     }
                 });
 

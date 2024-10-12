@@ -174,7 +174,7 @@ public class Activity_AddGcard extends AppCompatActivity {
                             @Override
                             public void OnButtonClick(View view, AlertDialog dialog) {
                                 isClicked = false;
-                                poDialog.dismiss();
+                                dialog.dismiss();
                                 finish();
                             }
                         });
@@ -232,7 +232,7 @@ public class Activity_AddGcard extends AppCompatActivity {
                                 @Override
                                 public void OnButtonClick(View view, AlertDialog dialog) {
                                     isClicked = false;
-                                    poDialog.dismiss();
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
@@ -257,7 +257,7 @@ public class Activity_AddGcard extends AppCompatActivity {
                 @Override
                 public void OnButtonClick(View view, AlertDialog dialog) {
                     isClicked = false;
-                    poDialog.dismiss();
+                    dialog.dismiss();
                     finish();
                 }
             });
@@ -282,7 +282,7 @@ public class Activity_AddGcard extends AppCompatActivity {
                 poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {
-                        poDialog.dismiss();
+                        dialog.dismiss();
                         finish();
                     }
                 });
@@ -306,7 +306,7 @@ public class Activity_AddGcard extends AppCompatActivity {
                             poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                                 @Override
                                 public void OnButtonClick(View view, AlertDialog dialog) {
-                                    poDialog.dismiss();
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
@@ -323,7 +323,7 @@ public class Activity_AddGcard extends AppCompatActivity {
                     poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                         @Override
                         public void OnButtonClick(View view, AlertDialog dialog) {
-                            poDialog.dismiss();
+                            dialog.dismiss();
                         }
                     });
 
@@ -355,7 +355,7 @@ public class Activity_AddGcard extends AppCompatActivity {
                     poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                         @Override
                         public void OnButtonClick(View view, AlertDialog dialog) {
-                            poDialog.dismiss();
+                            dialog.dismiss();
                             finish();
                         }
                     });
@@ -373,7 +373,7 @@ public class Activity_AddGcard extends AppCompatActivity {
                     poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                         @Override
                         public void OnButtonClick(View view, AlertDialog dialog) {
-                            poDialog.dismiss();
+                            dialog.dismiss();
                         }
                     });
 

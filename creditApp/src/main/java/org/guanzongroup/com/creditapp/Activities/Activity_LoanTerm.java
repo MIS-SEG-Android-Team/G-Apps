@@ -129,7 +129,7 @@ public class Activity_LoanTerm extends AppCompatActivity {
                         poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                             @Override
                             public void OnButtonClick(View view, AlertDialog dialog) {
-                                poMessage.dismiss();
+                                dialog.dismiss();
                             }
                         });
 

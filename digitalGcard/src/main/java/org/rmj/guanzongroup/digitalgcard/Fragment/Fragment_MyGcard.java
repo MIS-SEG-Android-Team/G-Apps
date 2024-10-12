@@ -92,7 +92,7 @@ public class Fragment_MyGcard extends Fragment{
                 poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {
-                        poDialog.dismiss();
+                        dialog.dismiss();
                     }
                 });
 

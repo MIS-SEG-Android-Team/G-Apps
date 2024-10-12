@@ -16,21 +16,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.rmj.g3appdriver.etc.FormatUIText;
 import org.rmj.g3appdriver.etc.InputFieldController;
-import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.Model.CompleteAccountDetailsInfo;
 import org.rmj.guanzongroup.useraccount.R;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMAccountDetails;
@@ -48,8 +44,7 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
     private CompleteAccountDetailsInfo poDataMdl;
     private Toolbar toolbar;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialog;
-    private Dialog_DoubleButton poDblDiag;
+    private MessageBox poDialog;
     private TextInputEditText txtLastNm, txtFirstN, txtMidNme, txtSuffix, txtBdatex, txtTaxNox,
             txtHouseN, txtStreet, txtGCashNo;
     private AutoCompleteTextView txtBplace, txtGender, txtCivilS,
@@ -59,6 +54,7 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
     private MaterialButton btnSaveDt, btnScan;
     private static final int QR_RESULT_CODE = 1; // This should match the code you used in setResult(1, loIntent)
     private String psBDate, ClientID, SourceCD, SourceNo;
+
     private final ActivityResultLauncher<Intent> poArl = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -76,6 +72,7 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
                 }
             }
     );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,18 +83,21 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
         setUpToolbar();
         setInputOptions();
 
+        poDialog.initDialog();
+
         btnSaveDt.setOnClickListener(v -> saveAccountDetails());
         btnScan.setOnClickListener((v-> scanAccountDetails()));
     }
+
     private void initObjects() {
         mViewModel = new ViewModelProvider(Activity_CompleteAccountDetails.this)
                 .get(VMAccountDetails.class);
         poDataMdl = new CompleteAccountDetailsInfo();
     }
+
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
-        poDialog = new Dialog_SingleButton(Activity_CompleteAccountDetails.this);
-        poDblDiag = new Dialog_DoubleButton(Activity_CompleteAccountDetails.this);
+        poDialog = new MessageBox(Activity_CompleteAccountDetails.this);
         txtLastNm = findViewById(R.id.tie_accountUpdate);
         txtFirstN = findViewById(R.id.tie_firstname);
         txtMidNme = findViewById(R.id.tie_middname);
@@ -116,6 +116,7 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
         btnSaveDt = findViewById(R.id.btnSave);
         btnScan = findViewById(R.id.btn_Scan);
     }
+
     private void initData(){
         mViewModel.getClientDetail().observe(Activity_CompleteAccountDetails.this, eClientInfo -> {
             if(eClientInfo != null){
@@ -190,24 +191,31 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Complete Details");
     }
+
     private void popUpCloseConfirmationDialog() {
-        poDblDiag.setButtonText("Yes", "No");
-        poDblDiag.initDialog("Complete Account Details", "Are you sure you want to cancel filling in account details?", new Dialog_DoubleButton.OnDialogConfirmation() {
+
+        poDialog.setIcon(R.drawable.baseline_contact_support_24);
+        poDialog.setTitle("Complete Account Details");
+        poDialog.setMessage("Are you sure you want to cancel filling in account details?");
+
+        poDialog.setPositiveButton("Yes", new MessageBox.DialogButton() {
             @Override
-            public void onConfirm(AlertDialog dialog) {
+            public void OnButtonClick(View view, AlertDialog dialog) {
                 dialog.dismiss();
                 Intent loIntent = new Intent();
                 loIntent.putExtra("result", "cancelled");
                 finish();
-
             }
+        });
 
+        poDialog.setNegativeButton("No", new MessageBox.DialogButton() {
             @Override
-            public void onCancel(AlertDialog dialog) {
+            public void OnButtonClick(View view, AlertDialog dialog) {
                 dialog.dismiss();
             }
         });
-        poDblDiag.show();
+
+        poDialog.show();
     }
 
     private void disableFields(TextInputEditText... textInputEditTexts) {
@@ -248,11 +256,19 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
             @Override
             public void onFailed(String fsMessage) {
                 poLoading.dismiss();
-                poDialog.setButtonText("Okay");
-                poDialog.initDialog("Account Details", fsMessage, () -> {
-                    poDialog.dismiss();
+
+                poDialog.setIcon(R.drawable.baseline_error_24);
+                poDialog.setTitle("Account Details");
+                poDialog.setMessage(fsMessage);
+                poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
                 });
+
                 poDialog.show();
+
             }
         });
     }
@@ -428,31 +444,57 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
                 @Override
                 public void onSuccess(String fsMessage) {
                     poLoading.dismiss();
-                    poDialog.setButtonText("Okay");
-                    poDialog.initDialog("Account Details", fsMessage, () -> {
-                        poDialog.dismiss();
 
-                        Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
-                        intent.putExtra("args", "auth");
-                        sendBroadcast(intent);
+                    poDialog.setIcon(R.drawable.ic_baseline_message_24);
+                    poDialog.setTitle("Account Details");
+                    poDialog.setMessage(fsMessage);
+                    poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
 
-                        poLoading.dismiss();
-                        finish();
+                            Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
+                            intent.putExtra("args", "auth");
+                            sendBroadcast(intent);
+
+                            finish();
+                        }
                     });
+
                     poDialog.show();
                 }
                 @Override
                 public void onFailed(String fsMessage) {
                     poLoading.dismiss();
-                    poDialog.setButtonText("Okay");
-                    poDialog.initDialog("Account Details", fsMessage, () -> poDialog.dismiss());
+
+                    poDialog.setIcon(R.drawable.baseline_error_24);
+                    poDialog.setTitle("Account Details");
+                    poDialog.setMessage(fsMessage);
+                    poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
+                        }
+                    });
+
                     poDialog.show();
+
                 }
             });
         } else {
-            poDialog.setButtonText("Okay");
-            poDialog.initDialog("Account Details", poDataMdl.getMessage(), () -> poDialog.dismiss());
+
+            poDialog.setIcon(R.drawable.baseline_error_24);
+            poDialog.setTitle("Account Details");
+            poDialog.setMessage(poDataMdl.getMessage());
+            poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                @Override
+                public void OnButtonClick(View view, AlertDialog dialog) {
+                    dialog.dismiss();
+                }
+            });
+
             poDialog.show();
+
         }
 
     }
@@ -487,11 +529,19 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
                 @Override
                 public void onFailed(String fsMessage) {
                     poLoading.dismiss();
-                    poDialog.setButtonText("Okay");
-                    poDialog.initDialog("Account Details", fsMessage, () -> {
-                        poDialog.dismiss();
+
+                    poDialog.setIcon(R.drawable.baseline_error_24);
+                    poDialog.setTitle("Account Details");
+                    poDialog.setMessage(fsMessage);
+                    poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
+                        }
                     });
+
                     poDialog.show();
+
                 }
             });
 

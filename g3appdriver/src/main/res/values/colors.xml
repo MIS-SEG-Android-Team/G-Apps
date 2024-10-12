@@ -23,4 +23,10 @@
     <color name="guanzon_digital_red">#ff1a1a</color>
     <color name="black">#000000</color>
 
+    <color name="colorNavTop">#FF8200</color>
+    <color name="colorNavBottom">#FF7F32</color>.
+
+    <color name="colorNavTopDark">#FF8200</color>
+    <color name="colorNavBottomDark">#7E3915</color>
+
 </resources>

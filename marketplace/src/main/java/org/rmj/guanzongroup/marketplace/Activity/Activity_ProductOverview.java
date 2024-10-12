@@ -177,7 +177,7 @@ public class Activity_ProductOverview extends AppCompatActivity {
             poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                 @Override
                 public void OnButtonClick(View view, AlertDialog dialog) {
-                    poDialogx.dismiss();
+                    dialog.dismiss();
                     finish();
                 }
             });
@@ -445,7 +445,7 @@ public class Activity_ProductOverview extends AppCompatActivity {
                                     poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                                         @Override
                                         public void OnButtonClick(View view, AlertDialog dialog) {
-                                            poDialogx.dismiss();
+                                            dialog.dismiss();
                                         }
                                     });
 
@@ -463,7 +463,7 @@ public class Activity_ProductOverview extends AppCompatActivity {
                                     poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                                         @Override
                                         public void OnButtonClick(View view, AlertDialog dialog) {
-                                            poDialogx.dismiss();
+                                            dialog.dismiss();
                                         }
                                     });
 
