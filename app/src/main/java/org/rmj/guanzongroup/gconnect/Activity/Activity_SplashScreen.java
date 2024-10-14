@@ -10,12 +10,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
-import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.guanzongroup.ganado.Dialog.DialogDisclosure;
 import org.rmj.guanzongroup.gconnect.BuildConfig;
 import org.rmj.guanzongroup.gconnect.R;

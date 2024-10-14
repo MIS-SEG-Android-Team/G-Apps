@@ -39,10 +39,7 @@ public class VMPersonalInfo extends AndroidViewModel implements GanadoUI {
 
     public interface OnSaveInquiry {
         void OnSave();
-
         void OnSuccess(String args);
-
-
         void OnFailed(String message);
     }
 
@@ -104,7 +101,7 @@ public class VMPersonalInfo extends AndroidViewModel implements GanadoUI {
     }
 
     public void SaveData(OnSaveInquiry listener) {
-//        new SaveDetailTask(listener).execute(poModel);
+
         TaskExecutor.Execute(poModel, new OnTaskExecuteListener() {
             @Override
             public void OnPreExecute() {

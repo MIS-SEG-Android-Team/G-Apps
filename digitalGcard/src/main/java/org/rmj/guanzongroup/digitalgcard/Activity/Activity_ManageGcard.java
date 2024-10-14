@@ -2,7 +2,6 @@ package org.rmj.guanzongroup.digitalgcard.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
 import org.rmj.g3appdriver.etc.MessageBox;
@@ -32,13 +32,14 @@ public class Activity_ManageGcard extends AppCompatActivity {
     private MessageBox poDialogx;
     private Adapter_GcardList poAdapter;
     private MaterialButton btnAddGcard;
-    private Toolbar toolbar;
+    private MaterialToolbar toolbar;
     private RecyclerView recyclerView;
     private TextView txtUserNm, txtCardNo, txtPoints, lblOtherx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_manage_gcard);
 
         mViewModel = new ViewModelProvider(Activity_ManageGcard.this).get(VMGCardSystem.class);

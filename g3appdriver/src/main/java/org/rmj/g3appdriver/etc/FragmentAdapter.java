@@ -21,6 +21,7 @@ public class FragmentAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         return mFragmentList[position];
     }
+
     @Override
     public int getItemCount() {
         return mFragmentList.length;

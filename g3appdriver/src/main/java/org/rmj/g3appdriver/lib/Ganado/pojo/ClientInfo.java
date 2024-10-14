@@ -182,6 +182,7 @@ public class ClientInfo {
 
         if(sFrstName.isEmpty()){
             message = "Please enter first name.";
+            return false;
         }
 
         if(cGenderCd.isEmpty()){

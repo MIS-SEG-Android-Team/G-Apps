@@ -125,6 +125,11 @@ public class DashboardActionReceiver extends BroadcastReceiver {
             @Override
             public Object DoInBackground(Object args) {
                 try{
+
+                    //TODO: IMPORT PROMOS, NEWS AND EVENTS. PRIORITY FOR THIS FOR IMAGE LOADING
+                    GCardSystem.GCardSystemCallback callback = (GCardSystem.GCardSystemCallback) args;
+                    cImportxx = '0';
+
                     //TODO: IMPORT ACCOUNT INFO
                     if (loClient.ImportAccountInfo()) {
                         Log.d(TAG, "Client info downloaded successfully.");
@@ -132,12 +137,21 @@ public class DashboardActionReceiver extends BroadcastReceiver {
                         Log.e(TAG, "Failed to download client info. " + loClient.getMessage());
                     }
 
-                    //TODO: IMPORT MC DATA
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
+                    loGcardExtra.DownloadPromotions(callback);
+                    Log.d(TAG, "Promotions imported successfully...");
+
+                    Thread.sleep(500);
+                    loGcardExtra.DownloadNewsEvents(callback);
+                    Log.d(TAG, "News events imported successfully...");
+
+                    //TODO: IMPORT MC DATA. SECOND PRIORITY
+                    Thread.sleep(500);
                     if (new RMcModel(loContext).ImportCashPrices()){
                         Log.d(TAG, "Cash price imported successfully");
                     }
-                    Thread.sleep(1000);
+
+                    Thread.sleep(500);
                     ImportInstance[]  importInstances = {
                             new Import_Relation(loApplication),
                             new ImportBrand(loApplication),
@@ -160,50 +174,37 @@ public class DashboardActionReceiver extends BroadcastReceiver {
                             }
                         });
 
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                     }
 
-
                     //TODO: IMPORT GCARD DATA
-                    GCardSystem.GCardSystemCallback callback = (GCardSystem.GCardSystemCallback) args;
-                    cImportxx = '0';
-
-                    Thread.sleep(1000);
                     loGcard.DownloadGcardNumbers(callback);
                     if(loGcard.hasActiveGcard().size() > 0){
                         cImportxx = '1';
 
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                         loGcard.DownloadMCServiceInfo(callback);
 
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                         loGcard.DownloadTransactions(callback);
                     }
-
-                    Thread.sleep(500);
-                    loGcardExtra.DownloadPromotions(callback);
-                    Log.d(TAG, "Promotions imported successfully...");
 
                     Thread.sleep(500);
                     loGcardExtra.DownloadBranchesList(callback);
                     Log.d(TAG, "Branches imported successfully...");
 
                     Thread.sleep(500);
-                    loGcardExtra.DownloadNewsEvents(callback);
-                    Log.d(TAG, "News events imported successfully...");
-
-                    Thread.sleep(500);
                     loGcardRedeemables.DownloadRedeemables(callback);
 
                     if (loClient.getClientId() != null) {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                         if (loPurchase.ImportMarketPlaceItemCart()) {
                             Log.d(TAG, "Cart items downloaded successfully.");
                         } else {
                             Log.e(TAG, "Failed to download cart items. " + loPurchase.getMessage());
                         }
 
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                         if (loPurchase.ImportPurchases()) {
                             Log.d(TAG, "Purchases downloaded successfully.");
                         } else {
@@ -211,12 +212,13 @@ public class DashboardActionReceiver extends BroadcastReceiver {
                         }
                     }
 
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                     if (loNotif.ImportClientNotifications(0)){
                         Log.d(TAG, "Client info downloaded successfully.");
                     }else {
                         Log.d(TAG, loNotif.getMessage());
                     }
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }

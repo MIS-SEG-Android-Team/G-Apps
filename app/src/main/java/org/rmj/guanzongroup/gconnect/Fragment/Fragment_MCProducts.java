@@ -63,7 +63,11 @@ public class Fragment_MCProducts extends Fragment {
         mViewModel.getBrandList().observe(requireActivity(), new Observer<List<EMcBrand>>() {
             @Override
             public void onChanged(List<EMcBrand> eMcBrands) {
-                if (eMcBrands.size() > 0) {
+
+                if (eMcBrands.size() > 0){
+
+                    Log.d("MERON BANG NAKUHA?", String.valueOf(eMcBrands.size()));
+
                     HashMap<Integer, String> logos = new HashMap<>();
 
                     for (int i = 0; i < eMcBrands.size(); i++) {
@@ -101,10 +105,13 @@ public class Fragment_MCProducts extends Fragment {
                             }
                         }
                     });
+
                     img_slider.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
                     img_slider.setAdapter(loAdapter);
+
                 }
             }
+
         });
     }
 
@@ -147,7 +154,7 @@ public class Fragment_MCProducts extends Fragment {
             }
         });
 
-        dialogDisclosure.setMessage("Guanzon Circle collects location data to enable saving of product inquiry when the app is in use.");
+        dialogDisclosure.setMessage("Guanzon Connect collects location data to enable saving of product inquiry when the app is in use.");
         dialogDisclosure.show();
     }
 }

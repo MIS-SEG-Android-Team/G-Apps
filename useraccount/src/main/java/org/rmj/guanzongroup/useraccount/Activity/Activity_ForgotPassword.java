@@ -85,7 +85,7 @@ public class Activity_ForgotPassword extends AppCompatActivity {
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Forgot Password");
+        getSupportActionBar().setTitle("");
     }
 
     private void retrievePassword() {

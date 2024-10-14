@@ -404,6 +404,7 @@ public class SystemExtras implements iGCardSystem{
             info.setNotified("0");
             info.setModified(new AppConstants().DATE_MODIFIED);
             info.setDirectoryFolder("Events");
+
             poEvents.insert(info);
         }
     }

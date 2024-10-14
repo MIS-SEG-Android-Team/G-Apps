@@ -42,7 +42,6 @@ public class Activity_ClientInfo extends AppCompatActivity {
 
     private VMPersonalInfo mViewModel;
     private MessageBox poMessage ;
-    private MessageBoxInstallment icMessage;
     private LoadDialog poDialogx;
     private TextInputEditText txtLastNm, txtFrstNm, txtMiddNm, txtSuffixx,  txtBirthDt,
             txtEmailAdd, txtMobileNo,  txtHouseNox, txtAddress;
@@ -88,6 +87,7 @@ public class Activity_ClientInfo extends AppCompatActivity {
         });
 
         spinner_relation.setOnItemClickListener(new OnItemClickListener(spinner_relation));
+
         mViewModel.GetTownProvinceList().observe(Activity_ClientInfo.this, new Observer<List<DTownInfo.TownProvinceInfo>>() {
             @Override
             public void onChanged(List<DTownInfo.TownProvinceInfo> loList) {
@@ -115,8 +115,10 @@ public class Activity_ClientInfo extends AppCompatActivity {
                             }
                         }
                     });
+
                     ArrayAdapter<String> adapters1 = new ArrayAdapter<>(Activity_ClientInfo.this, android.R.layout.simple_spinner_dropdown_item, string.toArray(new String[0]));
                     txtMunicipl.setAdapter(adapters1);
+
                     txtMunicipl.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -141,6 +143,7 @@ public class Activity_ClientInfo extends AppCompatActivity {
                 }
             }
         });
+
         txtBirthDt.setOnClickListener(v -> {
             final Calendar newCalendar = Calendar.getInstance();
             @SuppressLint("SimpleDateFormat") final SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM dd, yyyy");
@@ -172,15 +175,17 @@ public class Activity_ClientInfo extends AppCompatActivity {
         });
 
         btnContinue.setOnClickListener(v ->{
+
             mViewModel.InitGeoLocation(Activity_ClientInfo.this);
-            mViewModel.getModel().setFrstName(txtFrstNm.getText().toString().trim());
-            mViewModel.getModel().setMiddName(txtMiddNm.getText().toString().trim());
-            mViewModel.getModel().setLastName(txtLastNm.getText().toString().trim());
-            mViewModel.getModel().setSuffixNm(txtSuffixx.getText().toString().trim());
-            mViewModel.getModel().setHouseNox(txtHouseNox.getText().toString());
-            mViewModel.getModel().setAddressx(txtAddress.getText().toString().trim());
-            mViewModel.getModel().setEmailAdd(txtEmailAdd.getText().toString().trim());
-            mViewModel.getModel().setMobileNo(txtMobileNo.getText().toString());
+
+            mViewModel.getModel().setFrstName(Objects.requireNonNull(txtFrstNm.getText()).toString().trim());
+            mViewModel.getModel().setMiddName(Objects.requireNonNull(txtMiddNm.getText()).toString().trim());
+            mViewModel.getModel().setLastName(Objects.requireNonNull(txtLastNm.getText()).toString().trim());
+            mViewModel.getModel().setSuffixNm(Objects.requireNonNull(txtSuffixx.getText()).toString().trim());
+            mViewModel.getModel().setHouseNox(Objects.requireNonNull(txtHouseNox.getText()).toString());
+            mViewModel.getModel().setAddressx(Objects.requireNonNull(txtAddress.getText()).toString().trim());
+            mViewModel.getModel().setEmailAdd(Objects.requireNonNull(txtEmailAdd.getText()).toString().trim());
+            mViewModel.getModel().setMobileNo(Objects.requireNonNull(txtMobileNo.getText()).toString());
 
             if (!mViewModel.InitGeoLocation(Activity_ClientInfo.this)){
                 poMessage.initDialog();
@@ -237,7 +242,6 @@ public class Activity_ClientInfo extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar_PersonalInfo);
         mViewModel = new ViewModelProvider(Activity_ClientInfo.this).get(VMPersonalInfo.class);
         poMessage = new MessageBox(Activity_ClientInfo.this);
-        icMessage = new MessageBoxInstallment(Activity_ClientInfo.this);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");

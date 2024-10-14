@@ -24,7 +24,7 @@ public class DialogDisclosure {
 
     public void initDialog(onDisclosure callback){
         AlertDialog.Builder loBuilder = new AlertDialog.Builder(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_dcp_permission, null, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_disclosure_permission, null, false);
         loBuilder.setCancelable(false)
                 .setView(view);
         poDialogx = loBuilder.create();

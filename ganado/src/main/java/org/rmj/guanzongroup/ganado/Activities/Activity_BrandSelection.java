@@ -160,7 +160,7 @@ public class Activity_BrandSelection extends AppCompatActivity {
             }
         });
 
-        dialogDisclosure.setMessage("Guanzon Circle collects location data to enable saving of product inquiry when the app is in use.");
+        dialogDisclosure.setMessage("Guanzon Connect collects location data to enable saving of product inquiry when the app is in use.");
         dialogDisclosure.show();
     }
 

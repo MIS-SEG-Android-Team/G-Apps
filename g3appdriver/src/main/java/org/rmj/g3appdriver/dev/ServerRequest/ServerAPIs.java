@@ -1,7 +1,6 @@
 package org.rmj.g3appdriver.dev.ServerRequest;
 
 import static org.rmj.g3appdriver.dev.ServerRequest.APILocation.GCARD;
-import static org.rmj.g3appdriver.dev.ServerRequest.APILocation.GCARDs;
 import static org.rmj.g3appdriver.dev.ServerRequest.APILocation.LIVE;
 import static org.rmj.g3appdriver.dev.ServerRequest.APILocation.LOCAL;
 import static org.rmj.g3appdriver.dev.ServerRequest.APILocation.SECURITY;
@@ -34,7 +33,7 @@ public class ServerAPIs {
     private static final String URL_REQUEST_AVAIL_POINTS = GCARD + "request_avl_points.php";
     private static final String URL_PLACE_ODER = GCARD + "place_order.php";
     private static final String URL_CANCEL_ORDER = GCARD + "cancel_order_item.php";
-    private static final String URL_IMPORT_EVENTS = GCARDs + "import_events.php";
+    private static final String URL_IMPORT_EVENTS = GCARD + "import_events.php";
     private static final String URL_CHANGE_PASSWORD = SECURITY + "acctupdate.php";
     private static final String URL_REQUEST_DEVICES = SECURITY + "acctdevice.php";
     private static final String URL_CLIENT_LOGIN = SECURITY + "signin.php";

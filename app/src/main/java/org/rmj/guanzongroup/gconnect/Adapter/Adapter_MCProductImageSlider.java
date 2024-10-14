@@ -1,5 +1,6 @@
 package org.rmj.guanzongroup.gconnect.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -37,8 +38,11 @@ public class Adapter_MCProductImageSlider extends RecyclerView.Adapter<Adapter_M
     }
     @Override
     public void onBindViewHolder(@NonNull SliderAdapterVH holder, int position) {
+
         holder.imageViewBackground.setImageResource((Integer) oSlideLst.keySet().toArray()[position]);
+
         holder.imageViewBackground.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NonConstantResourceId")
             @Override
             public void onClick(View v) {
                 if (loAccount.getLoginStatus()){
@@ -71,6 +75,7 @@ public class Adapter_MCProductImageSlider extends RecyclerView.Adapter<Adapter_M
                 }else {
                     Toast.makeText(context, "Unable to use feature. Please login", Toast.LENGTH_LONG).show();
                 }
+
             }
         });
     }

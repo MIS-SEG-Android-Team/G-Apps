@@ -5,7 +5,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
@@ -18,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -38,7 +38,7 @@ import java.util.Objects;
 
 public class Activity_AddGcard extends AppCompatActivity {
     private VMGCardSystem mViewModel;
-    private Toolbar toolbar;
+    private MaterialToolbar toolbar;
     private Dialog_Loading poLoading;
     private MessageBox poDialog;
     private TextInputEditText txtBdatex, txtGcardN;

@@ -1,5 +1,6 @@
 package org.rmj.guanzongroup.gconnect.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -50,7 +51,7 @@ public class Fragment_Home extends Fragment {
         mViewModel = new ViewModelProvider(requireActivity()).get(VMHome.class);
         loAccount = new AccountInfo(requireActivity());
 
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, true);
 
         initViews(view);
         displayData();
@@ -98,11 +99,14 @@ public class Fragment_Home extends Fragment {
         imgSlider_phones.setScrollTimeInSec(5);
         imgSlider_phones.startAutoCycle();
     }
+
     private void displayData() {
         setSliderImages();
         setTabSlider();
     }
+
     private void setSliderImages() {
+
         List<HomeImageSliderModel> loSliders = new ArrayList<>();
 
         mViewModel.GetPromoLinkList().observe(getViewLifecycleOwner(), ePromos -> {
@@ -125,6 +129,7 @@ public class Fragment_Home extends Fragment {
                             e.printStackTrace();
                         }
                     });
+
                     poSliderx.setSliderAdapter(adapter);
                 }else {
                     mcv_promotions.setVisibility(View.GONE);
@@ -134,8 +139,13 @@ public class Fragment_Home extends Fragment {
             }
         });
     }
+
+    @SuppressLint("NotifyDataSetChanged")
     private void setTabSlider(){
+
         ProductSlider_Adapter sliderAdapter = new ProductSlider_Adapter(getChildFragmentManager(), getLifecycle());
+        sliderAdapter.initFragments(new Fragment[]{new Fragment_MCProducts(), new Fragment_MPhones()});
+
         vpage.setAdapter(sliderAdapter);
 
         tab_choices.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -152,5 +162,6 @@ public class Fragment_Home extends Fragment {
 
             }
         });
+
     }
 }

@@ -155,6 +155,7 @@ public class Ganado {
             }
 
             JSONObject joClient = new JSONObject();
+
             joClient.put("sLastName", loInfo.getLastName());
             joClient.put("sFrstName", loInfo.getFrstName());
             joClient.put("sMiddName", loInfo.getMiddName());
