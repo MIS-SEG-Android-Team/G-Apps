@@ -44,7 +44,8 @@ public class Fragment_MCProducts extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_homeproductslider, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_homeproductslider, container, true);
 
         mViewModel = new ViewModelProvider(requireActivity()).get(VMBrandList.class);
         img_slider = view.findViewById(R.id.img_slider);

@@ -51,7 +51,7 @@ public class Fragment_Home extends Fragment {
         mViewModel = new ViewModelProvider(requireActivity()).get(VMHome.class);
         loAccount = new AccountInfo(requireActivity());
 
-        View view = inflater.inflate(R.layout.fragment_home, container, true);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         initViews(view);
         displayData();
@@ -63,6 +63,8 @@ public class Fragment_Home extends Fragment {
             tab_choices.setVisibility(View.GONE);
             vpage.setVisibility(View.GONE);
         }
+
+        vpage.setCurrentItem(0);
 
         return view;
     }
