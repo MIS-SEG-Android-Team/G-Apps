@@ -4,12 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -22,7 +19,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
-import org.rmj.g3appdriver.lib.Account.AccountInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
+import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.guanzongroup.gconnect.Adapter.ProductSlider_Adapter;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.g3appdriver.lib.Promotions.Adapter_ImageSlider;
@@ -40,7 +38,7 @@ public class Fragment_Home extends Fragment {
     private SliderView imgSlider_phones;
     private TabLayout tab_choices;
     private ViewPager2 vpage;
-    private AccountInfo loAccount;
+    private RClientInfo loClient;
 
     public Fragment_Home() {}
 
@@ -49,22 +47,32 @@ public class Fragment_Home extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         mViewModel = new ViewModelProvider(requireActivity()).get(VMHome.class);
-        loAccount = new AccountInfo(requireActivity());
+        loClient = new RClientInfo(requireActivity());
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         initViews(view);
         displayData();
 
-        if (loAccount.getVerificationStatus() > 0){
-            tab_choices.setVisibility(View.VISIBLE);
-            vpage.setVisibility(View.VISIBLE);
-        }else {
-            tab_choices.setVisibility(View.GONE);
-            vpage.setVisibility(View.GONE);
-        }
+        loClient.getClientInfo().observe(getViewLifecycleOwner(), new Observer<EClientInfo>() {
+            @Override
+            public void onChanged(EClientInfo eClientInfo) {
 
-        vpage.setCurrentItem(0);
+                if (eClientInfo != null){
+
+                    if (eClientInfo.getVerified() > 0){
+                        tab_choices.setVisibility(View.VISIBLE);
+                        vpage.setVisibility(View.VISIBLE);
+                    }else {
+                        tab_choices.setVisibility(View.GONE);
+                        vpage.setVisibility(View.GONE);
+                    }
+                }else {
+                    tab_choices.setVisibility(View.GONE);
+                    vpage.setVisibility(View.GONE);
+                }
+            }
+        });
 
         return view;
     }

@@ -214,7 +214,7 @@ public class DashboardActionReceiver extends BroadcastReceiver {
 
                     Thread.sleep(500);
                     if (loNotif.ImportClientNotifications(0)){
-                        Log.d(TAG, "Client info downloaded successfully.");
+                        Log.d(TAG, "Client notifications downloaded successfully.");
                     }else {
                         Log.d(TAG, loNotif.getMessage());
                     }
@@ -227,7 +227,7 @@ public class DashboardActionReceiver extends BroadcastReceiver {
             }
             @Override
             public void OnPostExecute(Object object) {
-                Log.d(TAG, "Local imports for GCard has finished.");
+                Log.d(TAG, "Local imports has finished.");
             }
         });
     }
