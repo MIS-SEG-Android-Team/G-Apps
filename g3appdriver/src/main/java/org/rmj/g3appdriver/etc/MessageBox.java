@@ -38,7 +38,6 @@ public class MessageBox {
     private final Context context;
 
     public MessageBox(Context context){
-        // Must be, at all times, pass Activity Context.
         this.context = Objects.requireNonNull(context);
     }
     public void initDialog(){

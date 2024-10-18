@@ -19,7 +19,7 @@
         <item name="colorSecondaryVariant">@color/guanzon_digital_orange</item>
         <item name="colorOnSecondary">@color/white</item>
 
-        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:windowBackground">@drawable/app_background_light</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
