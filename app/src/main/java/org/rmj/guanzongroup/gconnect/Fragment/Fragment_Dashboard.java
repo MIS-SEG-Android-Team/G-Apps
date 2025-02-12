@@ -44,6 +44,12 @@ public class Fragment_Dashboard extends Fragment {
             }  else if(item.getItemId() == R.id.nav_promos){
                 viewPager.setCurrentItem(1);
                 Log.d(TAG, "Guanzon Panalo Selected.");
+            }  else if(item.getItemId() == R.id.nav_Bingo){
+                viewPager.setCurrentItem(2);
+                Log.d(TAG, "Bingo Panalo Selected.");
+            }  else if(item.getItemId() == R.id.nav_Poll){
+                viewPager.setCurrentItem(3);
+                Log.d(TAG, "Voting Poll Selected.");
             }
             return true;
         });
@@ -57,7 +63,9 @@ public class Fragment_Dashboard extends Fragment {
     private void setupPages(){
         Fragment[] loFragments = new Fragment[]{
                 new Fragment_Home(),
-                new Fragment_Promotion()};
+                new Fragment_Promotion(),
+                new Fragment_Bingo(),
+                new Fragment_Poll()};
 
         FragmentAdapter loAdapter = new FragmentAdapter(getChildFragmentManager(), getLifecycle());
         loAdapter.initFragments(loFragments);

@@ -21,7 +21,6 @@ import org.rmj.g3appdriver.etc.AppConstants;
 import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_AccountDetails;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_CompleteAccountDetails;
-import org.rmj.guanzongroup.useraccount.Activity.Activity_Login;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_ShippingAddress;
 import org.rmj.guanzongroup.useraccount.Adapter.Adapter_AccountSettings;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMAccountSettings;

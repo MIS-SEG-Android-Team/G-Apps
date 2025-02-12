@@ -55,27 +55,6 @@ public class Activity_AccountVerification extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        /*btnResend.setOnClickListener(v -> mViewModel.StartTimer(new VMAccountAuthentication.TimerListener() {
-            @Override
-            public void OnStart() {
-                btnResend.setEnabled(false);
-            }
-
-            @Override
-            public void OnTimerCountdown(int progress) {
-                if(progress > 0) {
-                    btnResend.setText("Please wait...(" + progress + ")");
-                } else {
-                    btnResend.setText("Resend OTP?");
-                }
-            }
-
-            @Override
-            public void OnFinish() {
-                btnResend.setEnabled(true);
-            }
-        }));*/
-
         btnSubmit.setOnClickListener(v -> {
             String lsEntry = Objects.requireNonNull(txtOtp.getText()).toString();
             mViewModel.ActivateAccount(lsEntry,lsOtpxxx, lsVerify, new VMAccountAuthentication.AuthTransactionCallback() {
@@ -111,7 +90,6 @@ public class Activity_AccountVerification extends AppCompatActivity {
                 @Override
                 public void onFailed(String fsMessage) {
                     poLoading.dismiss();
-
 
                     poDialogx.setIcon(R.drawable.baseline_error_24);
                     poDialogx.setTitle("Activate Account");
