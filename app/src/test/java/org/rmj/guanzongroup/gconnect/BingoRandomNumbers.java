@@ -1,8 +1,10 @@
 package org.rmj.guanzongroup.gconnect;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class BingoRandomNumbers {
@@ -10,16 +12,34 @@ public class BingoRandomNumbers {
     @Test
     public void GenerateNumbers(){
 
-        ArrayList<Integer> bingoNumbers = new ArrayList<Integer>();
+        try {
 
-        while (bingoNumbers.size() < 20){
+            JSONArray loArray = new JSONArray();
 
-            Random random = new Random();
+            while (loArray.length() < 5){
 
-            bingoNumbers.add(random.nextInt(9));
+                JSONObject loNumbers = new JSONObject();
 
+                for (int ctr = 0; loNumbers.length() < 5; ctr++){
+
+                    Random random = new Random();
+                    loNumbers.put(String.valueOf(ctr), random.nextInt(9));
+
+                }
+
+                loArray.put(loNumbers);
+
+            }
+
+            for (int i = 0; i < loArray.length(); i++) {
+
+                System.out.println(loArray.getJSONObject(i));
+
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
-        System.out.println(bingoNumbers);
     }
 }
