@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
+
 import org.rmj.g3appdriver.dev.Database.Entities.EBingoCard;
 import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
@@ -30,6 +32,7 @@ public class Fragment_Bingo extends Fragment {
     private Dialog_Loading poDialog;
     private MessageBox poMessage;
     private MaterialButton btnGenerate;
+    private MaterialCardView mcv_bingocard;
     private RecyclerView rvBingoCard;
 
     @Nullable
@@ -39,43 +42,14 @@ public class Fragment_Bingo extends Fragment {
         View view = inflater.inflate(R.layout.fragment_bingo, container, false);
 
         mviewModel = new ViewModelProvider(this).get(VMBingo.class);
-        poDialog = new Dialog_Loading(getContext());
-        poMessage = new MessageBox(getContext());
+        poDialog = new Dialog_Loading(requireContext());
+        poMessage = new MessageBox(requireContext());
         btnGenerate = view.findViewById(R.id.btn_generate);
+        mcv_bingocard = view.findViewById(R.id.mcv_bingocard);
         rvBingoCard = view.findViewById(R.id.bingo_card);
 
         poDialog.initDialog("Bingo", "Generating Bingo Card Numbers");
         poMessage.initDialog();
-
-        mviewModel.GetCardNumbers().observe(getViewLifecycleOwner(), new Observer<List<EBingoCard>>() {
-            @Override
-            public void onChanged(List<EBingoCard> eBingoCards) {
-
-                if (eBingoCards == null){
-
-                    btnGenerate.setVisibility(View.VISIBLE);
-                    rvBingoCard.setVisibility(View.INVISIBLE);
-
-                }else {
-
-                    if (eBingoCards.size() > 0){
-
-                        btnGenerate.setVisibility(View.INVISIBLE);
-                        rvBingoCard.setVisibility(View.VISIBLE);
-
-                        rvBingoCard.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-                        rvBingoCard.setAdapter(new Adapter_CardNumbers(eBingoCards));
-                    }else {
-
-                        btnGenerate.setVisibility(View.VISIBLE);
-                        rvBingoCard.setVisibility(View.INVISIBLE);
-
-                    }
-
-                }
-
-            }
-        });
 
         btnGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +81,39 @@ public class Fragment_Bingo extends Fragment {
                         poMessage.show();
                     }
                 });
+
+            }
+        });
+
+        mviewModel.GetCardNumbers().observe(getViewLifecycleOwner(), new Observer<List<EBingoCard>>() {
+            @Override
+            public void onChanged(List<EBingoCard> eBingoCards) {
+
+                if (eBingoCards == null){
+
+                    btnGenerate.setVisibility(View.VISIBLE);
+                    mcv_bingocard.setVisibility(View.INVISIBLE);
+                    rvBingoCard.setVisibility(View.INVISIBLE);
+
+                }else {
+
+                    if (eBingoCards.size() > 0){
+
+                        btnGenerate.setVisibility(View.INVISIBLE);
+                        mcv_bingocard.setVisibility(View.VISIBLE);
+                        rvBingoCard.setVisibility(View.VISIBLE);
+
+                        rvBingoCard.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
+                        rvBingoCard.setAdapter(new Adapter_CardNumbers(eBingoCards));
+                    }else {
+
+                        btnGenerate.setVisibility(View.VISIBLE);
+                        mcv_bingocard.setVisibility(View.INVISIBLE);
+                        rvBingoCard.setVisibility(View.INVISIBLE);
+
+                    }
+
+                }
 
             }
         });

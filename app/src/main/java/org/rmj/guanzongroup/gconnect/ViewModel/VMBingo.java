@@ -1,6 +1,7 @@
 package org.rmj.guanzongroup.gconnect.ViewModel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -32,7 +33,7 @@ public class VMBingo extends AndroidViewModel {
 
     public void SaveCardNumbers(OnSaveCardNumbers callback){
 
-        TaskExecutor.Execute(callback, new OnTaskExecuteListener() {
+        TaskExecutor.Execute(null, new OnTaskExecuteListener() {
             @Override
             public void OnPreExecute() {
                 callback.onGenerate();

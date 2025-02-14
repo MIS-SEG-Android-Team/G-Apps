@@ -1,5 +1,9 @@
 package org.rmj.guanzongroup.gconnect.Adapter;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,13 +11,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
-
 import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.Entities.EBingoCard;
 import org.rmj.guanzongroup.gconnect.R;
-
-import java.util.HashMap;
 import java.util.List;
 
 public class Adapter_CardNumbers extends RecyclerView.Adapter<Adapter_CardNumbers.VH_CardNumbers>{
@@ -38,11 +40,18 @@ public class Adapter_CardNumbers extends RecyclerView.Adapter<Adapter_CardNumber
 
             JSONObject entry = new JSONObject(nmbrSet.get(position).getColList());
 
-            holder.mtv_num1.setText(entry.getString("0"));
-            holder.mtv_num2.setText(entry.getString("1"));
-            holder.mtv_num3.setText(entry.getString("2"));
-            holder.mtv_num4.setText(entry.getString("3"));
-            holder.mtv_num5.setText(entry.getString("4"));
+            holder.mtv_num1.setText(entry.getString("0")); // LETTER B
+            holder.mtv_num2.setText(entry.getString("1")); // LETTER I
+            holder.mtv_num3.setText(entry.getString("2")); // LETTER N
+            holder.mtv_num4.setText(entry.getString("3")); // LETTER G
+            holder.mtv_num5.setText(entry.getString("4")); // LETTER O
+
+            holder.mtv_num1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
 
         }catch (Exception e){
             e.printStackTrace();
@@ -56,11 +65,11 @@ public class Adapter_CardNumbers extends RecyclerView.Adapter<Adapter_CardNumber
 
     class VH_CardNumbers extends  RecyclerView.ViewHolder{
 
-        MaterialTextView mtv_num1;
-        MaterialTextView mtv_num2;
-        MaterialTextView mtv_num3;
-        MaterialTextView mtv_num4;
-        MaterialTextView mtv_num5;
+        MaterialButton mtv_num1;
+        MaterialButton mtv_num2;
+        MaterialButton mtv_num3;
+        MaterialButton mtv_num4;
+        MaterialButton mtv_num5;
 
         public VH_CardNumbers(@NonNull View itemView) {
             super(itemView);

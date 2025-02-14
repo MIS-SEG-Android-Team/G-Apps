@@ -35,7 +35,7 @@ public class EBingoCard {
         return colList;
     }
 
-    public void setRowIndex(String rowIndex) {
+    public void setRowIndex(@NonNull String rowIndex) {
         this.rowIndex = rowIndex;
     }
 

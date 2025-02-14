@@ -2,6 +2,7 @@ package org.rmj.g3appdriver.etc;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -47,6 +48,9 @@ public class Bingo {
 
                 }
 
+                //TODO: ADD LIST TO ARRAY
+                loArray.put(loNumbers);
+
             }
 
             return loArray;
@@ -69,7 +73,7 @@ public class Bingo {
         int countCards = dbBingoCard.count();
 
         //TODO: RETURN CONCATENATED STRING
-        return dateToday + countCards;
+        return "BNGO" + dateToday + countCards;
     }
 
     public void SaveCardNumber(String cardID, JSONArray cardNumbers){
