@@ -14,6 +14,7 @@ import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -48,23 +49,25 @@ public class Bingo {
                     switch (ctr){
 
                         case 0:
-                            loNumbers.put(String.valueOf(ctr), random.nextInt(15 + 1));
+                            if (!CheckNumberExist(loArray, "0", String.valueOf(random.nextInt(15 + 1)))){
+                                loNumbers.put(String.valueOf(ctr), random.nextInt(15 + 1));
+                            }
                             break;
 
                         case 1:
-                            loNumbers.put(String.valueOf(ctr), random.nextInt(30 + 1) + 15);
+                            loNumbers.put(String.valueOf(ctr), random.nextInt(30 - 15 + 1) + 15);
                             break;
 
                         case 2:
-                            loNumbers.put(String.valueOf(ctr), random.nextInt(45 + 1) + 30);
+                            loNumbers.put(String.valueOf(ctr), random.nextInt(45 - 30 + 1) + 30);
                             break;
 
                         case 3:
-                            loNumbers.put(String.valueOf(ctr), random.nextInt(60 + 1) + 45);
+                            loNumbers.put(String.valueOf(ctr), random.nextInt(60 - 45 + 1) + 45);
                             break;
 
                         case 4:
-                            loNumbers.put(String.valueOf(ctr), random.nextInt(75 + 1) + 60);
+                            loNumbers.put(String.valueOf(ctr), random.nextInt(75 - 60 + 1) + 60);
                             break;
                     }
 
@@ -83,6 +86,33 @@ public class Bingo {
             return new JSONArray();
         }
 
+    }
+
+    public Boolean CheckNumberExist(JSONArray loArr, String id, String number){
+
+        if (loArr.length() > 0){
+
+            for (int i = 0; i < loArr.length(); i++){
+
+                try {
+
+                    JSONObject loObj = loArr.getJSONObject(i);
+                    if (loObj.has(id)){
+
+                        if (loObj.get(id).equals(number)){
+                            return true;
+                        }else {
+                            return false;
+                        }
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return true;
+                }
+            }
+        }
+        return true;
     }
 
     @SuppressLint("NewApi")
