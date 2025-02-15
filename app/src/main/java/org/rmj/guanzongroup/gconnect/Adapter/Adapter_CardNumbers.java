@@ -1,18 +1,18 @@
 package org.rmj.guanzongroup.gconnect.Adapter;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textview.MaterialTextView;
+
 import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.Entities.EBingoCard;
 import org.rmj.guanzongroup.gconnect.R;
@@ -40,15 +40,90 @@ public class Adapter_CardNumbers extends RecyclerView.Adapter<Adapter_CardNumber
 
             JSONObject entry = new JSONObject(nmbrSet.get(position).getColList());
 
-            holder.mtv_num1.setText(entry.getString("0")); // LETTER B
-            holder.mtv_num2.setText(entry.getString("1")); // LETTER I
-            holder.mtv_num3.setText(entry.getString("2")); // LETTER N
-            holder.mtv_num4.setText(entry.getString("3")); // LETTER G
-            holder.mtv_num5.setText(entry.getString("4")); // LETTER O
+            String BNumber = entry.getString("0");
+            String INumber = entry.getString("1");
+            String NNumber = entry.getString("2");
+            String GNumber = entry.getString("3");
+            String ONumber = entry.getString("4");
 
-            holder.mtv_num1.setOnClickListener(new View.OnClickListener() {
+            //TODO: SET DEFAULT TEXT
+            holder.mtv_num1.setText(BNumber); // LETTER B
+            holder.mtv_num2.setText(INumber); // LETTER I
+            holder.mtv_num3.setText(NNumber); // LETTER N
+            holder.mtv_num4.setText(GNumber); // LETTER G
+            holder.mtv_num5.setText(ONumber); // LETTER O
+
+            holder.mtv_num1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
-                public void onClick(View v) {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked){
+                        holder.mtv_num1.setTextOn(BNumber);
+                        buttonView.setBackgroundResource(R.color.colorNavBottomDark);
+                    }else {
+                        holder.mtv_num1.setTextOff(BNumber);
+                        buttonView.setBackgroundResource(R.color.white);
+                    }
+
+                }
+            });
+
+            holder.mtv_num2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked){
+                        holder.mtv_num2.setTextOn(INumber);
+                        buttonView.setBackgroundResource(R.color.colorNavBottomDark);
+                    }else {
+                        holder.mtv_num2.setTextOff(INumber);
+                        buttonView.setBackgroundResource(R.color.white);
+                    }
+
+                }
+            });
+
+            holder.mtv_num3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked){
+                        holder.mtv_num3.setTextOn(NNumber);
+                        buttonView.setBackgroundResource(R.color.colorNavBottomDark);
+                    }else {
+                        holder.mtv_num3.setTextOff(NNumber);
+                        buttonView.setBackgroundResource(R.color.white);
+                    }
+
+                }
+            });
+
+            holder.mtv_num4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked){
+                        holder.mtv_num4.setTextOn(GNumber);
+                        buttonView.setBackgroundResource(R.color.colorNavBottomDark);
+                    }else {
+                        holder.mtv_num4.setTextOff(GNumber);
+                        buttonView.setBackgroundResource(R.color.white);
+                    }
+
+                }
+            });
+
+            holder.mtv_num5.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked){
+                        holder.mtv_num5.setTextOn(ONumber);
+                        buttonView.setBackgroundResource(R.color.colorNavBottomDark);
+                    }else {
+                        holder.mtv_num5.setTextOff(ONumber);
+                        buttonView.setBackgroundResource(R.color.white);
+                    }
 
                 }
             });
@@ -65,11 +140,11 @@ public class Adapter_CardNumbers extends RecyclerView.Adapter<Adapter_CardNumber
 
     class VH_CardNumbers extends  RecyclerView.ViewHolder{
 
-        MaterialButton mtv_num1;
-        MaterialButton mtv_num2;
-        MaterialButton mtv_num3;
-        MaterialButton mtv_num4;
-        MaterialButton mtv_num5;
+        ToggleButton mtv_num1;
+        ToggleButton mtv_num2;
+        ToggleButton mtv_num3;
+        ToggleButton mtv_num4;
+        ToggleButton mtv_num5;
 
         public VH_CardNumbers(@NonNull View itemView) {
             super(itemView);

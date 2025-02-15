@@ -44,7 +44,29 @@ public class Bingo {
                 for (int ctr = 0; loNumbers.length() < 5; ctr++){
 
                     Random random = new Random();
-                    loNumbers.put(String.valueOf(ctr), random.nextInt(9));
+
+                    switch (ctr){
+
+                        case 0:
+                            loNumbers.put(String.valueOf(ctr), random.nextInt(15 + 1));
+                            break;
+
+                        case 1:
+                            loNumbers.put(String.valueOf(ctr), random.nextInt(30 + 1) + 15);
+                            break;
+
+                        case 2:
+                            loNumbers.put(String.valueOf(ctr), random.nextInt(45 + 1) + 30);
+                            break;
+
+                        case 3:
+                            loNumbers.put(String.valueOf(ctr), random.nextInt(60 + 1) + 45);
+                            break;
+
+                        case 4:
+                            loNumbers.put(String.valueOf(ctr), random.nextInt(75 + 1) + 60);
+                            break;
+                    }
 
                 }
 
