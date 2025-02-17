@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class Bingo {
@@ -45,30 +46,35 @@ public class Bingo {
                 for (int ctr = 0; loNumbers.length() < 5; ctr++){
 
                     Random random = new Random();
+                    int randomNumber = random.nextInt(15 + 1);
 
                     switch (ctr){
 
                         case 0:
-                            if (!CheckNumberExist(loArray, "0", String.valueOf(random.nextInt(15 + 1)))){
-                                loNumbers.put(String.valueOf(ctr), random.nextInt(15 + 1));
-                            }
-                            break;
-
+                            randomNumber = random.nextInt(15 + 1);
                         case 1:
-                            loNumbers.put(String.valueOf(ctr), random.nextInt(30 - 15 + 1) + 15);
-                            break;
-
+                            randomNumber = random.nextInt(30 - 15 + 1) + 15;
                         case 2:
-                            loNumbers.put(String.valueOf(ctr), random.nextInt(45 - 30 + 1) + 30);
-                            break;
-
+                            randomNumber = random.nextInt(45 - 30 + 1) + 30;
                         case 3:
-                            loNumbers.put(String.valueOf(ctr), random.nextInt(60 - 45 + 1) + 45);
-                            break;
-
+                            randomNumber = random.nextInt(60 - 45 + 1) + 45;
                         case 4:
-                            loNumbers.put(String.valueOf(ctr), random.nextInt(75 - 60 + 1) + 60);
-                            break;
+                            randomNumber = random.nextInt(75 - 60 + 1) + 60;
+                    }
+
+                    if (loNumbers.length() > 0){
+
+                        boolean isExist = false;
+                        while (randomNumber > 0){
+
+                            if (!CheckNumberExist(loNumbers, String.valueOf(randomNumber))){
+                                loNumbers.put(String.valueOf(ctr), String.valueOf(randomNumber));
+                                break;
+                            }
+
+                        }
+                    }else {
+                        loNumbers.put(String.valueOf(ctr), String.valueOf(randomNumber));
                     }
 
                 }
@@ -88,31 +94,32 @@ public class Bingo {
 
     }
 
-    public Boolean CheckNumberExist(JSONArray loArr, String id, String number){
+    public Boolean CheckNumberExist(JSONObject loObj, String number){
 
-        if (loArr.length() > 0){
+        boolean result = false;
 
-            for (int i = 0; i < loArr.length(); i++){
+        while (loObj.keys().hasNext()){
 
-                try {
+            try {
 
-                    JSONObject loObj = loArr.getJSONObject(i);
-                    if (loObj.has(id)){
+                String key = loObj.keys().next();
 
-                        if (loObj.get(id).equals(number)){
-                            return true;
-                        }else {
-                            return false;
-                        }
-                    }
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    return true;
+                if (number.equals(loObj.getString(key)) ){
+                    result = true;
+                    break;
+                }else {
+                    break;
                 }
+
+            }catch (Exception e){
+                e.printStackTrace();
+                result = true;
+                break;
             }
         }
-        return true;
+
+        return result;
+
     }
 
     @SuppressLint("NewApi")
