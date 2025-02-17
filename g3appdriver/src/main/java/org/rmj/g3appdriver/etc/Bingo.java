@@ -46,35 +46,98 @@ public class Bingo {
                 for (int ctr = 0; loNumbers.length() < 5; ctr++){
 
                     Random random = new Random();
-                    int randomNumber = random.nextInt(15 + 1);
 
                     switch (ctr){
 
                         case 0:
-                            randomNumber = random.nextInt(15 + 1);
-                        case 1:
-                            randomNumber = random.nextInt(30 - 15 + 1) + 15;
-                        case 2:
-                            randomNumber = random.nextInt(45 - 30 + 1) + 30;
-                        case 3:
-                            randomNumber = random.nextInt(60 - 45 + 1) + 45;
-                        case 4:
-                            randomNumber = random.nextInt(75 - 60 + 1) + 60;
-                    }
 
-                    if (loNumbers.length() > 0){
+                            if (loNumbers.length() > 0){
 
-                        boolean isExist = false;
-                        while (randomNumber > 0){
+                                while (!CheckNumberExist(loNumbers, String.valueOf(random.nextInt(15 + 1)))){
 
-                            if (!CheckNumberExist(loNumbers, String.valueOf(randomNumber))){
-                                loNumbers.put(String.valueOf(ctr), String.valueOf(randomNumber));
-                                break;
+                                    if (!CheckNumberExist(loNumbers, String.valueOf(random.nextInt(15 + 1)))){
+                                        loNumbers.put(String.valueOf(ctr), String.valueOf(random.nextInt(15 + 1)));
+                                        break;
+                                    }
+
+                                }
+                            }else {
+                                loNumbers.put(String.valueOf(ctr), String.valueOf(random.nextInt(15 + 1)));
                             }
 
-                        }
-                    }else {
-                        loNumbers.put(String.valueOf(ctr), String.valueOf(randomNumber));
+                            break;
+
+                        case 1:
+
+                            if (loNumbers.length() > 0){
+
+                                while (!CheckNumberExist(loNumbers, String.valueOf(random.nextInt(30 - 15 + 1) + 15))){
+
+                                    if (!CheckNumberExist(loNumbers, String.valueOf(random.nextInt(30 - 15 + 1) + 15))){
+                                        loNumbers.put(String.valueOf(ctr), String.valueOf(random.nextInt(30 - 15 + 1) + 15));
+                                        break;
+                                    }
+
+                                }
+                            }else {
+                                loNumbers.put(String.valueOf(ctr), String.valueOf(random.nextInt(30 - 15 + 1) + 15));
+                            }
+
+                            break;
+
+                        case 2:
+
+                            if (loNumbers.length() > 0){
+
+                                while (!CheckNumberExist(loNumbers, String.valueOf(random.nextInt(45 - 30 + 1) + 30))){
+
+                                    if (!CheckNumberExist(loNumbers, String.valueOf(random.nextInt(45 - 30 + 1) + 30))){
+                                        loNumbers.put(String.valueOf(ctr), String.valueOf(random.nextInt(45 - 30 + 1) + 30));
+                                        break;
+                                    }
+
+                                }
+                            }else {
+                                loNumbers.put(String.valueOf(ctr), String.valueOf(random.nextInt(45 - 30 + 1) + 30));
+                            }
+
+                            break;
+
+                        case 3:
+
+                            if (loNumbers.length() > 0){
+
+                                while (!CheckNumberExist(loNumbers, String.valueOf(random.nextInt(60 - 45 + 1) + 45))){
+
+                                    if (!CheckNumberExist(loNumbers, String.valueOf(random.nextInt(60 - 45 + 1) + 45))){
+                                        loNumbers.put(String.valueOf(ctr), String.valueOf(random.nextInt(60 - 45 + 1) + 45));
+                                        break;
+                                    }
+
+                                }
+                            }else {
+                                loNumbers.put(String.valueOf(ctr), String.valueOf(random.nextInt(60 - 45 + 1) + 45));
+                            }
+
+                            break;
+
+                        case 4:
+
+                            if (loNumbers.length() > 0){
+
+                                while (!CheckNumberExist(loNumbers, String.valueOf(random.nextInt(75 - 60 + 1) + 60))){
+
+                                    if (!CheckNumberExist(loNumbers, String.valueOf(random.nextInt(75 - 60 + 1) + 60))){
+                                        loNumbers.put(String.valueOf(ctr), String.valueOf(random.nextInt(75 - 60 + 1) + 60));
+                                        break;
+                                    }
+
+                                }
+                            }else {
+                                loNumbers.put(String.valueOf(ctr), String.valueOf(random.nextInt(75 - 60 + 1) + 60));
+                            }
+
+                            break;
                     }
 
                 }
