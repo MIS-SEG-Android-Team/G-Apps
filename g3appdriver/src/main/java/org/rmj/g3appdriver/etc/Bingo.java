@@ -42,81 +42,102 @@ public class Bingo {
                 //TODO: INITIATE JSON OBJECT
                 JSONObject loNumbers = new JSONObject();
 
-                //TODO: GENERATE 5 RANDOM NUMBERS, ADD TO LIST
+                //TODO: LOOP UNTIL 5 NUMBERS ARE GENERATED
                 while (loNumbers.length() < 5){
 
                     Random random = new Random();
 
                     Log.d("BINGO", String.valueOf(loNumbers.length()));
 
+                    //TODO: GENERATE RANDOM NUMBER, WITHIN A RANGE. BASED ON LENGTH
                     switch (loNumbers.length()){
 
+                        //TODO: O FOR LETTER 'B' IN BINGO, RANGING TO 0 - 15
                         case 0:
 
+                            //TODO: IF JSON OBJECT LIST IS NOT EMPTY, CHECK IF NUMBER EXISTS IN THIS SAME INDEX ELSE ADD
                             if (loArray.length() > 0){
 
-                                if (!CheckNumberExist(loArray, "0", String.valueOf(random.nextInt(15 + 1)))){
-                                    loNumbers.put("0", String.valueOf(random.nextInt(15 + 1)));
+                                int randomNum = random.nextInt(15 + 1);
+
+                                if (!CheckNumberExist(loArray, "B", String.valueOf(randomNum))){
+                                    loNumbers.put("B", String.valueOf(randomNum));
                                 }
 
                             }else {
-                                loNumbers.put("0", String.valueOf(random.nextInt(15 + 1)));
+                                loNumbers.put("B", String.valueOf(random.nextInt(15 + 1)));
                             }
 
                             break;
 
+                        //TODO: 1 FOR LETTER 'I' IN BINGO, RANGING TO 16 - 30
                         case 1:
 
+                            //TODO: IF JSON OBJECT LIST IS NOT EMPTY, CHECK IF NUMBER EXISTS IN THIS SAME INDEX ELSE ADD
                             if (loArray.length() > 0){
 
-                                if (!CheckNumberExist(loArray, "1", String.valueOf(random.nextInt(30 - 15 + 1) + 15))){
-                                    loNumbers.put("1", String.valueOf(random.nextInt(30 - 15 + 1) + 15));
+                                int randomNum = random.nextInt(30 - 15 + 1) + 15;
+
+                                if (!CheckNumberExist(loArray, "I", String.valueOf(randomNum))){
+                                    loNumbers.put("I", String.valueOf(randomNum));
                                 }
 
                             }else {
-                                loNumbers.put("1", String.valueOf(random.nextInt(30 - 15 + 1) + 15));
+                                loNumbers.put("I", String.valueOf(random.nextInt(30 - 15 + 1) + 15));
                             }
 
                             break;
 
+                        //TODO: 2 FOR LETTER 'N' IN BINGO, RANGING TO 31 - 45
                         case 2:
 
+                            //TODO: IF JSON OBJECT LIST IS NOT EMPTY, CHECK IF NUMBER EXISTS IN THIS SAME INDEX ELSE ADD
                             if (loArray.length() > 0){
 
-                                if (!CheckNumberExist(loArray, "2", String.valueOf(random.nextInt(45 - 30 + 1) + 30))){
-                                    loNumbers.put("2", String.valueOf(random.nextInt(45 - 30 + 1) + 30));
+                                int randomNum = random.nextInt(45 - 30 + 1) + 30;
+
+                                if (!CheckNumberExist(loArray, "N", String.valueOf(randomNum))){
+                                    loNumbers.put("N", String.valueOf(randomNum));
                                 }
 
                             }else {
-                                loNumbers.put("2", String.valueOf(random.nextInt(45 - 30 + 1) + 30));
+                                loNumbers.put("N", String.valueOf(random.nextInt(45 - 30 + 1) + 30));
                             }
 
                             break;
 
+                        //TODO: 3 FOR LETTER 'G' IN BINGO, RANGING TO 46 - 60
                         case 3:
 
+                            //TODO: IF JSON OBJECT LIST IS NOT EMPTY, CHECK IF NUMBER EXISTS IN THIS SAME INDEX ELSE ADD
                             if (loArray.length() > 0){
 
-                                if (!CheckNumberExist(loArray, "3", String.valueOf(random.nextInt(60 - 45 + 1) + 45))){
-                                    loNumbers.put("3", String.valueOf(random.nextInt(60 - 45 + 1) + 45));
+                                int randomNum = random.nextInt(60 - 45 + 1) + 45;
+
+                                if (!CheckNumberExist(loArray, "G", String.valueOf(randomNum))){
+                                    loNumbers.put("G", String.valueOf(randomNum));
                                 }
 
                             }else {
-                                loNumbers.put("3", String.valueOf(random.nextInt(60 - 45 + 1) + 45));
+                                loNumbers.put("G", String.valueOf(random.nextInt(60 - 45 + 1) + 45));
                             }
 
                             break;
 
+                        //TODO: 4 FOR LETTER 'O' IN BINGO, RANGING TO 61 - 75
                         case 4:
 
+                            //TODO: IF JSON OBJECT LIST IS NOT EMPTY, CHECK IF NUMBER EXISTS IN THIS SAME INDEX ELSE ADD
                             if (loArray.length() > 0){
 
-                                if (!CheckNumberExist(loArray, "4", String.valueOf(random.nextInt(75 - 60 + 1) + 60))){
-                                    loNumbers.put("4", String.valueOf(random.nextInt(75 - 60 + 1) + 60));
+                                int randomNum = random.nextInt(75 - 60 + 1) + 60;
+
+                                if (!CheckNumberExist(loArray, "O", String.valueOf(randomNum))){
+                                    loNumbers.put("O", String.valueOf(randomNum));
                                 }
 
                             }else {
-                                loNumbers.put("4", String.valueOf(random.nextInt(75 - 60 + 1) + 60));
+                                loNumbers.put("O", String.valueOf(random.nextInt(75 - 60 + 1) + 60));
                             }
 
                             break;
@@ -144,15 +165,17 @@ public class Bingo {
 
         boolean result = false;
 
+        //TODO: SCAN PER LIST
         for (int i = 0; i < loArr.length(); i++){
 
             try {
 
+                //TODO: SCAN PER OBJECT IN LIST, CHECK IF CURRENT ID EXIST IN OBJECT
                 if (loArr.getJSONObject(i).has(id)){
+
+                    //TODO: GET OBJECT VALUE BY ID, CHECK IF ALREADY EXIST ON OBJECT LIST
                     if (loArr.getJSONObject(i).getString(id).equals(number)){
                         result = true;
-                        break;
-                    }else {
                         break;
                     }
                 }

@@ -38,13 +38,15 @@ public class Adapter_CardNumbers extends RecyclerView.Adapter<Adapter_CardNumber
 
         try {
 
+            //TODO: GET JSON OBJECT FROM LIST
             JSONObject entry = new JSONObject(nmbrSet.get(position).getColList());
 
-            String BNumber = entry.getString("0");
-            String INumber = entry.getString("1");
-            String NNumber = entry.getString("2");
-            String GNumber = entry.getString("3");
-            String ONumber = entry.getString("4");
+            //TODO: GET NUMBERS FROM JSON OBJECT
+            String BNumber = entry.getString("B"); // LETTER B
+            String INumber = entry.getString("I"); // LETTER I
+            String NNumber = entry.getString("N"); // LETTER N
+            String GNumber = entry.getString("G"); // LETTER G
+            String ONumber = entry.getString("O"); //
 
             //TODO: SET DEFAULT TEXT
             holder.mtv_num1.setText(BNumber); // LETTER B

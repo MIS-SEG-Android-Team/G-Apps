@@ -34,8 +34,6 @@ public class Fragment_Home extends Fragment {
     private VMHome mViewModel;
     private MaterialCardView mcv_promotions;
     private SliderView poSliderx;
-    private SliderView imgSlider_mc;
-    private SliderView imgSlider_phones;
     private TabLayout tab_choices;
     private ViewPager2 vpage;
     private RClientInfo loClient;
@@ -80,8 +78,6 @@ public class Fragment_Home extends Fragment {
     private void initViews(View v) {
         mcv_promotions = v.findViewById(R.id.mcv_promotions);
         poSliderx = v.findViewById(R.id.imgSlider);
-        imgSlider_mc = v.findViewById(R.id.imgSlider_mc);
-        imgSlider_phones = v.findViewById(R.id.imgSlider_phones);
         tab_choices = v.findViewById(R.id.tab_choices);
         vpage = v.findViewById(R.id.vpage);
 
@@ -92,22 +88,6 @@ public class Fragment_Home extends Fragment {
         poSliderx.setIndicatorUnselectedColor(Color.GRAY);
         poSliderx.setScrollTimeInSec(5);
         poSliderx.startAutoCycle();
-
-        imgSlider_mc.setIndicatorAnimation(IndicatorAnimationType.WORM);
-        imgSlider_mc.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-        imgSlider_mc.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
-        imgSlider_mc.setIndicatorSelectedColor(Color.WHITE);
-        imgSlider_mc.setIndicatorUnselectedColor(Color.GRAY);
-        imgSlider_mc.setScrollTimeInSec(5);
-        imgSlider_mc.startAutoCycle();
-
-        imgSlider_phones.setIndicatorAnimation(IndicatorAnimationType.WORM);
-        imgSlider_phones.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-        imgSlider_phones.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
-        imgSlider_phones.setIndicatorSelectedColor(Color.WHITE);
-        imgSlider_phones.setIndicatorUnselectedColor(Color.GRAY);
-        imgSlider_phones.setScrollTimeInSec(5);
-        imgSlider_phones.startAutoCycle();
     }
 
     private void displayData() {
