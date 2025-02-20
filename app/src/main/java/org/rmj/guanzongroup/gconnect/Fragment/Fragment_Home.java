@@ -21,7 +21,7 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
 import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
-import org.rmj.guanzongroup.gconnect.Adapter.ProductSlider_Adapter;
+import org.rmj.guanzongroup.gconnect.Adapter.Adapter_ProductSlider;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.g3appdriver.lib.Promotions.Adapter_ImageSlider;
 import org.rmj.g3appdriver.lib.Promotions.model.HomeImageSliderModel;
@@ -33,6 +33,7 @@ import java.util.List;
 public class Fragment_Home extends Fragment {
     private VMHome mViewModel;
     private MaterialCardView mcv_promotions;
+    private MaterialCardView mcv_tabHead;
     private SliderView poSliderx;
     private TabLayout tab_choices;
     private ViewPager2 vpage;
@@ -59,13 +60,16 @@ public class Fragment_Home extends Fragment {
                 if (eClientInfo != null){
 
                     if (eClientInfo.getVerified() > 0){
+                        mcv_tabHead.setVisibility(View.VISIBLE);
                         tab_choices.setVisibility(View.VISIBLE);
                         vpage.setVisibility(View.VISIBLE);
                     }else {
+                        mcv_tabHead.setVisibility(View.GONE);
                         tab_choices.setVisibility(View.GONE);
                         vpage.setVisibility(View.GONE);
                     }
                 }else {
+                    mcv_tabHead.setVisibility(View.GONE);
                     tab_choices.setVisibility(View.GONE);
                     vpage.setVisibility(View.GONE);
                 }
@@ -77,6 +81,7 @@ public class Fragment_Home extends Fragment {
 
     private void initViews(View v) {
         mcv_promotions = v.findViewById(R.id.mcv_promotions);
+        mcv_tabHead = v.findViewById(R.id.mcv_tabHead);
         poSliderx = v.findViewById(R.id.imgSlider);
         tab_choices = v.findViewById(R.id.tab_choices);
         vpage = v.findViewById(R.id.vpage);
@@ -133,7 +138,7 @@ public class Fragment_Home extends Fragment {
     @SuppressLint("NotifyDataSetChanged")
     private void setTabSlider(){
 
-        ProductSlider_Adapter sliderAdapter = new ProductSlider_Adapter(getChildFragmentManager(), getLifecycle());
+        Adapter_ProductSlider sliderAdapter = new Adapter_ProductSlider(getChildFragmentManager(), getLifecycle());
         sliderAdapter.initFragments(new Fragment[]{new Fragment_MCProducts(), new Fragment_MPhones()});
 
         vpage.setAdapter(sliderAdapter);

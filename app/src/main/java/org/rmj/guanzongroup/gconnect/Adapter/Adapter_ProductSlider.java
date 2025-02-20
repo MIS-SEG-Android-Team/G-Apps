@@ -5,17 +5,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
-import org.rmj.guanzongroup.gconnect.Fragment.Fragment_MCProducts;
-import org.rmj.guanzongroup.gconnect.Fragment.Fragment_MPhones;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ProductSlider_Adapter extends FragmentStateAdapter {
+public class Adapter_ProductSlider extends FragmentStateAdapter {
 
     private Fragment[] fragments;
 
-    public ProductSlider_Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+    public Adapter_ProductSlider(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
     }
 

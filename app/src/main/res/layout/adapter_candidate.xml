@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mcv_img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:cardElevation="10dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="1:1">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/img_candidate"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/kay"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintWidth_percent="0.9"
+                app:layout_constraintHeight_percent="0.9"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/Title"
+        android:id="@+id/mtv_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Dela Cruz, Juan"
+        android:textAlignment="center"
+        android:paddingVertical="10dp"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mcv_img"/>
+
+    <ToggleButton
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textOn="VOTE SUBMITTED"
+        android:textOff="VOTE NOW"
+        android:background="@drawable/gradient_orange_dark"
+        app:layout_constraintTop_toBottomOf="@+id/mtv_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
