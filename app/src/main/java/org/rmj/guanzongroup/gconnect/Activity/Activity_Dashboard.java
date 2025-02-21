@@ -525,6 +525,7 @@ public class Activity_Dashboard extends AppCompatActivity {
             }
         });
     }
+
     private void setUpNotifications(){
         Intent loIntent = null;
 
@@ -606,6 +607,7 @@ public class Activity_Dashboard extends AppCompatActivity {
             });
         }
     }
+
     private void setupIntentArguments(NavController navController){
         if(getIntent().hasExtra("args")){
             String lsArgs = getIntent().getStringExtra("args");
@@ -673,6 +675,7 @@ public class Activity_Dashboard extends AppCompatActivity {
             }
         });
     }
+
     private void AddGcard(String fsVal){
         mViewModel.AddNewGCard(fsVal, new VMHome.OnActionCallback() {
             @Override
@@ -718,6 +721,7 @@ public class Activity_Dashboard extends AppCompatActivity {
             }
         });
     }
+
     private void DownloadGCardPoints(HashMap<String, String> loParams){
         mViewModel.DownloadGCardPoints(loParams, new VMHome.onDownloadPoints() {
             @Override
@@ -761,6 +765,7 @@ public class Activity_Dashboard extends AppCompatActivity {
             }
         });
     }
+
     private void SendOfflineEntries(){
         mViewModel.GetPendingRqsts().observe(this, new Observer<List<EPointsRequest>>() {
             @Override

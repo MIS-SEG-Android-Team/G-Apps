@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
+import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.g3appdriver.etc.FragmentAdapter;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.guanzongroup.notifications.Fragment.Fragment_Promotion;
@@ -22,6 +25,7 @@ public class Fragment_Dashboard extends Fragment {
     private View view;
     private BottomNavigationView botNav;
     private ViewPager2 viewPager;
+    private RClientInfo loClient;
 
     public static Fragment_Dashboard newInstance() {
         return new Fragment_Dashboard();
@@ -32,9 +36,24 @@ public class Fragment_Dashboard extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        loClient = new RClientInfo(requireActivity());
 
         initViews();
         setupPages();
+
+        loClient.getClientInfo().observe(getViewLifecycleOwner(), new Observer<EClientInfo>() {
+            @Override
+            public void onChanged(EClientInfo eClientInfo) {
+
+                if (eClientInfo != null){
+                    botNav.getMenu().findItem(R.id.nav_Bingo).setVisible(true);
+                    botNav.getMenu().findItem(R.id.nav_Poll).setVisible(true);
+                }else {
+                    botNav.getMenu().findItem(R.id.nav_Bingo).setVisible(false);
+                    botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
+                }
+            }
+        });
 
         botNav.setBackground(null);
         botNav.setOnItemSelectedListener(item -> {

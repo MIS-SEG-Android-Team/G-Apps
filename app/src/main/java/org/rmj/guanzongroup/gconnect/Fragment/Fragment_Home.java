@@ -147,6 +147,15 @@ public class Fragment_Home extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 vpage.setCurrentItem(tab.getPosition(), true);
+
+                switch (tab.getPosition()){
+                    case 0:
+                        tab_choices.setSelectedTabIndicator(R.drawable.background_guanzontableft);
+                        break;
+                    case 1:
+                        tab_choices.setSelectedTabIndicator(R.drawable.background_guanzontabright);
+                        break;
+                }
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {

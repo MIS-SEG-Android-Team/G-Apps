@@ -98,9 +98,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            app:tabIndicator="@drawable/background_guanzontab"
+            app:tabIndicator="@drawable/background_guanzontableft"
             app:tabTextColor="?attr/colorOnPrimary"
-            app:tabIndicatorHeight="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mcv_tabHead">
@@ -109,8 +108,7 @@
                 android:id="@+id/tabride"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Your Ride"
-                android:background="@drawable/background_guanzontab"/>
+                android:text="Your Ride"/>
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabcall"

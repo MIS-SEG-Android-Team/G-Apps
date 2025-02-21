@@ -1,6 +1,7 @@
 package org.rmj.guanzongroup.gconnect.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,9 @@ public class Fragment_Poll extends Fragment {
         rv_candidates = view.findViewById(R.id.rv_candidates);
 
         List<String> candidates = List.of("Julia Montes", "Liza Soberano", "Kim Domingo", "Kathryn Bernardo");
-        Adapter_Candidates adapterCandidates = new Adapter_Candidates(candidates);
+        Adapter_Candidates adapterCandidates = new Adapter_Candidates(requireContext(), candidates);
 
+        //TODO: DISPLAY DATA, UPON CURRENT TAB POSITION
         switch (tab_candidates.getSelectedTabPosition()){
 
             case 0:
@@ -49,6 +51,36 @@ public class Fragment_Poll extends Fragment {
                 rv_candidates.setAdapter(adapterCandidates);
                 break;
         }
+
+        //TODO: CHANGE TAB INDICATOR ON SELECTION
+        tab_candidates.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                Log.d("Poll", String.valueOf(tab.getPosition()));
+
+                switch (tab.getPosition()){
+
+                    case 0:
+                        tab_candidates.setSelectedTabIndicator(R.drawable.background_guanzontableft);
+                        break;
+                    case 1:
+                        tab_candidates.setSelectedTabIndicator(R.drawable.background_guanzontabright);
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         return view;
 
