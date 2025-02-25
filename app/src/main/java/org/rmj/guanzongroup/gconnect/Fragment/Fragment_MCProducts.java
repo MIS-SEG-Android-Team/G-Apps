@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,8 +65,6 @@ public class Fragment_MCProducts extends Fragment {
             public void onChanged(List<EMcBrand> eMcBrands) {
 
                 if (eMcBrands.size() > 0){
-
-                    Log.d("MERON BANG NAKUHA?", String.valueOf(eMcBrands.size()));
 
                     HashMap<Integer, String> logos = new HashMap<>();
 

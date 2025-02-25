@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintDimensionRatio="4:1">
+        app:layout_constraintDimensionRatio="5:1">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -68,7 +68,7 @@
             android:id="@+id/tabAdults"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Miss Kawasaki"/>
+            android:text="Biker Babe"/>
 
     </com.google.android.material.tabs.TabLayout>
 

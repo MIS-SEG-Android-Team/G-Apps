@@ -1,6 +1,9 @@
 package org.rmj.guanzongroup.gconnect.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +28,9 @@ public class Fragment_Poll extends Fragment {
     private TabLayout tab_candidates;
     private TextInputEditText tv_search;
     private RecyclerView rv_candidates;
+    private Adapter_Candidates adapter_candidates;
 
+    @SuppressLint("NotifyDataSetChanged")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -36,19 +41,26 @@ public class Fragment_Poll extends Fragment {
         tv_search = view.findViewById(R.id.tv_search);
         rv_candidates = view.findViewById(R.id.rv_candidates);
 
-        List<String> candidates = List.of("Julia Montes", "Liza Soberano", "Kim Domingo", "Kathryn Bernardo");
-        Adapter_Candidates adapterCandidates = new Adapter_Candidates(requireContext(), candidates);
+        List<String> candidates1 = List.of("Mitch Cardigan", "Jewel Myers", "Lyndsay Rivera", "Sofia Reyes");
+        List<String> candidates2 = List.of("Carmina Dela Cruz", "Sharmaine Aquino", "Jenny Rogers", "Ashley De Vera");
 
-        //TODO: DISPLAY DATA, UPON CURRENT TAB POSITION
         switch (tab_candidates.getSelectedTabPosition()){
 
             case 0:
+                tab_candidates.setSelectedTabIndicator(R.drawable.background_guanzontableft);
+                adapter_candidates = new Adapter_Candidates(requireContext(), candidates1);
+
+                adapter_candidates.notifyDataSetChanged();
                 rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
-                rv_candidates.setAdapter(adapterCandidates);
+                rv_candidates.setAdapter(adapter_candidates);
                 break;
             case 1:
+                tab_candidates.setSelectedTabIndicator(R.drawable.background_guanzontabright);
+                adapter_candidates = new Adapter_Candidates(requireContext(), candidates2);
+
+                adapter_candidates.notifyDataSetChanged();
                 rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
-                rv_candidates.setAdapter(adapterCandidates);
+                rv_candidates.setAdapter(adapter_candidates);
                 break;
         }
 
@@ -57,15 +69,23 @@ public class Fragment_Poll extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                Log.d("Poll", String.valueOf(tab.getPosition()));
-
                 switch (tab.getPosition()){
 
                     case 0:
                         tab_candidates.setSelectedTabIndicator(R.drawable.background_guanzontableft);
+                        adapter_candidates = new Adapter_Candidates(requireContext(), candidates1);
+
+                        adapter_candidates.notifyDataSetChanged();
+                        rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
+                        rv_candidates.setAdapter(adapter_candidates);
                         break;
                     case 1:
                         tab_candidates.setSelectedTabIndicator(R.drawable.background_guanzontabright);
+                        adapter_candidates = new Adapter_Candidates(requireContext(), candidates2);
+
+                        adapter_candidates.notifyDataSetChanged();
+                        rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
+                        rv_candidates.setAdapter(adapter_candidates);
                         break;
                 }
 
@@ -78,6 +98,39 @@ public class Fragment_Poll extends Fragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        tv_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                try {
+
+                    adapter_candidates.getFilter().filter(s.toString());
+                    adapter_candidates.notifyDataSetChanged();
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                try {
+
+                    adapter_candidates.getFilter().filter(s.toString());
+                    adapter_candidates.notifyDataSetChanged();
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
