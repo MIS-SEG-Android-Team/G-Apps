@@ -15,14 +15,6 @@
         android:enabled="true"
         android:icon="@drawable/ic_baseline_promo_24"/>
 
-<!--    android:title="@string/lbl_bingo" -->
-    <item
-        android:id="@+id/nav_Bingo"
-        android:enabled="true"
-        android:title=""
-        android:icon="@drawable/baseline_apps_24"
-        android:visible="false"/>
-
 <!--    android:title="@string/lbl_poll" -->
     <item
         android:id="@+id/nav_Poll"
@@ -30,6 +22,22 @@
         android:title=""
         android:icon="@drawable/baseline_poll_24"
         android:visible="false"/>
+
+<!--    android:title="@string/lbl_poll" -->
+    <item
+        android:id="@+id/nav_Barcode"
+        android:enabled="true"
+        android:title=""
+        android:icon="@drawable/baseline_barcode_reader_24"
+        android:visible="false"/>
+
+    <!--    android:title="@string/lbl_bingo" -->
+    <!--    <item-->
+    <!--        android:id="@+id/nav_Bingo"-->
+    <!--        android:enabled="true"-->
+    <!--        android:title=""-->
+    <!--        android:icon="@drawable/baseline_apps_24"-->
+    <!--        android:visible="false"/>-->
 
 <!--    <item-->
 <!--        android:id="@+id/nav_Panalo"-->

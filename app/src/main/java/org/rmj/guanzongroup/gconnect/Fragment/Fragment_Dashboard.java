@@ -46,10 +46,12 @@ public class Fragment_Dashboard extends Fragment {
             public void onChanged(EClientInfo eClientInfo) {
 
                 if (eClientInfo != null){
-                    botNav.getMenu().findItem(R.id.nav_Bingo).setVisible(true);
+                    //botNav.getMenu().findItem(R.id.nav_Bingo).setVisible(true); todo: for future use, postponed
+                    botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(true);
                     botNav.getMenu().findItem(R.id.nav_Poll).setVisible(true);
                 }else {
-                    botNav.getMenu().findItem(R.id.nav_Bingo).setVisible(false);
+                    //botNav.getMenu().findItem(R.id.nav_Bingo).setVisible(false); todo: for future use, postponed
+                    botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(false);
                     botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
                 }
             }
@@ -63,9 +65,9 @@ public class Fragment_Dashboard extends Fragment {
             }  else if(item.getItemId() == R.id.nav_promos){
                 viewPager.setCurrentItem(1);
                 Log.d(TAG, "Guanzon Panalo Selected.");
-            }  else if(item.getItemId() == R.id.nav_Bingo){
+            }  else if(item.getItemId() == R.id.nav_Barcode){
                 viewPager.setCurrentItem(2);
-                Log.d(TAG, "Bingo Panalo Selected.");
+                Log.d(TAG, "Barcode Selected.");
             }  else if(item.getItemId() == R.id.nav_Poll){
                 viewPager.setCurrentItem(3);
                 Log.d(TAG, "Voting Poll Selected.");
@@ -83,7 +85,7 @@ public class Fragment_Dashboard extends Fragment {
         Fragment[] loFragments = new Fragment[]{
                 new Fragment_Home(),
                 new Fragment_Promotion(),
-                new Fragment_Bingo(),
+                new Fragment_PhoneBarcode(),
                 new Fragment_Poll()};
 
         FragmentAdapter loAdapter = new FragmentAdapter(getChildFragmentManager(), getLifecycle());
