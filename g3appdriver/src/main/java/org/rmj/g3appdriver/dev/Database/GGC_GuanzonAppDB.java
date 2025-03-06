@@ -11,6 +11,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DAddress;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBarcode;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBingoCard;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBranchInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DClientInfo;
@@ -46,6 +47,7 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DTownInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DUserInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EAddressInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarangayInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.EBarcode;
 import org.rmj.g3appdriver.dev.Database.Entities.EBingoCard;
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
@@ -131,7 +133,8 @@ import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
         EGCardPoints.class,
         EGCard_Ledger.class,
         EPointsRequest.class,
-        EBingoCard.class}, version = 4, exportSchema = false)
+        EBingoCard.class,
+        EBarcode.class}, version = 5, exportSchema = false)
 public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     private static final String TAG = "GuanzonApp_DB_Manager";
     private static GGC_GuanzonAppDB instance;
@@ -172,6 +175,7 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     public abstract DGCard_Ledger GLedgerDao();
     public abstract DPointsRequest GPointsRqstDao();
     public abstract DBingoCard BingoCardDao();
+    public abstract DBarcode BarcodeDao();
 
     public static synchronized GGC_GuanzonAppDB getInstance(Context context){
         if(instance == null){

@@ -37,9 +37,14 @@ public class Fragment_Poll extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_poll, container, false);
 
-        tab_candidates = view.findViewById(R.id.tab_candidates);
-        tv_search = view.findViewById(R.id.tv_search);
-        rv_candidates = view.findViewById(R.id.rv_candidates);
+        initViews(view);
+        initListener();
+
+        return view;
+
+    }
+
+    private void initListener(){
 
         List<String> candidates1 = List.of("Mitch Cardigan", "Jewel Myers", "Lyndsay Rivera", "Sofia Reyes");
         List<String> candidates2 = List.of("Carmina Dela Cruz", "Sharmaine Aquino", "Jenny Rogers", "Ashley De Vera");
@@ -135,7 +140,11 @@ public class Fragment_Poll extends Fragment {
             }
         });
 
-        return view;
+    }
 
+    private void initViews(View view){
+        tab_candidates = view.findViewById(R.id.tab_candidates);
+        tv_search = view.findViewById(R.id.tv_search);
+        rv_candidates = view.findViewById(R.id.rv_candidates);
     }
 }
