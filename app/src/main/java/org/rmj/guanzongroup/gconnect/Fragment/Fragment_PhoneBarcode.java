@@ -21,7 +21,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,12 +33,15 @@ import org.rmj.g3appdriver.dev.Database.Entities.EBarcode;
 import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
 import org.rmj.guanzongroup.digitalgcard.Activity.Activity_QrCodeScanner;
+import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Barcodes;
+import org.rmj.guanzongroup.gconnect.Dialog.Dialog_BarcodeDetails;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.guanzongroup.gconnect.ViewModel.VMBarcode;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class Fragment_PhoneBarcode extends Fragment {
 
@@ -161,6 +166,7 @@ public class Fragment_PhoneBarcode extends Fragment {
         initViews(view); //todo: view initialization
         initAnimation(); //todo: animation initialization
         initListener(); //todo: listener initialization
+        initAdapter(); //todo: adapter initialization
 
         return view;
     }
@@ -256,7 +262,52 @@ public class Fragment_PhoneBarcode extends Fragment {
                 });
             }
         });
+        fab_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initDialogDetails();
+            }
+        });
 
+    }
+
+    private void initAdapter(){
+
+        mviewModel.getBarcodeList().observe(getViewLifecycleOwner(), new Observer<List<EBarcode>>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onChanged(List<EBarcode> eBarcodes) {
+
+                if (eBarcodes.size() > 0){
+
+                    layout_personalform.setVisibility(View.VISIBLE);
+
+                    Adapter_Barcodes adapter_barcodes = new Adapter_Barcodes(eBarcodes);
+                    adapter_barcodes.notifyDataSetChanged();
+
+                    rv_products.setAdapter(adapter_barcodes);
+                    rv_products.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
+                }
+            }
+        });
+    }
+
+    private void initDialogDetails(){
+
+        Dialog_BarcodeDetails.Dialog_PersonalInfo dialogPersonalInfo =
+                new Dialog_BarcodeDetails(requireActivity()).new Dialog_PersonalInfo();
+
+        dialogPersonalInfo.initDialogPersonalInfo(new Dialog_BarcodeDetails.Dialog_PersonalInfo.onDialogButton() {
+            @Override
+            public void onContinue(Dialog_BarcodeDetails.Personal_Info foVal) {
+                Log.d("PhoneBarcode", foVal.getLname());
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
     }
 
     private void initMessage(String message, String btnPos, String btnNeg,
@@ -270,10 +321,16 @@ public class Fragment_PhoneBarcode extends Fragment {
 
             case 1: //todo: success message
                 messageBox.setIcon(R.drawable.ic_baseline_message_24);
+                break;
             case 2: //todo: error message
                 messageBox.setIcon(R.drawable.baseline_error_24);
+                break;
             case 3: //todo: confirm message
                 messageBox.setIcon(R.drawable.ic_baseline_confirmation_pin_24);
+                break;
+            default:
+                messageBox.setIcon(R.drawable.ic_baseline_message_24);
+                break;
         }
 
         messageBox.setPositiveButton(btnPos, new MessageBox.DialogButton() {
