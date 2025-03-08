@@ -55,6 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Amount"
+                android:text="0.00"
                 android:inputType="numberDecimal"/>
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -65,24 +66,46 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/CustomDropDownTilStyle"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_terms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="5dp"
                 android:visibility="gone">
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    style="@style/DropdownStyleTheme"
-                    android:id="@+id/tie_terms"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Terms"/>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomDropDownTilStyle"
+                    android:id="@+id/til_terms"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="0.3">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        style="@style/DropdownStyleTheme"
+                        android:id="@+id/tie_terms"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Terms"
+                        android:text="0" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Months"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintStart_toEndOf="@+id/til_terms"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/TextInputStyle"
+                android:id="@+id/til_sc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -92,24 +115,43 @@
                     android:id="@+id/tie_sc"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="SC"/>
+                    android:hint="Service Charge"
+                    android:text="0.00"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_continue"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Submit"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cancel"/>
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button"
+                android:id="@+id/btn_continue"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Generate QR"
+                app:icon="@drawable/ic_baseline_qr_code_24"
+                app:iconGravity="textStart"
+                android:layout_marginEnd="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_cancel"
+                app:layout_constraintWidth_percent="0.5"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Cancel"
+                android:layout_marginStart="5dp"
+                app:layout_constraintTop_toTopOf="@+id/btn_continue"
+                app:layout_constraintBottom_toBottomOf="@id/btn_continue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btn_continue"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

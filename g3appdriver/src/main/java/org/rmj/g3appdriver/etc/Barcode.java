@@ -1,9 +1,11 @@
 package org.rmj.g3appdriver.etc;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import androidx.lifecycle.LiveData;
 
+import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBarcode;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarcode;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;;import java.util.List;
@@ -27,5 +29,10 @@ public class Barcode {
     public int countBarcode(){
         return barcodeDao.getBarcodeCount();
     }
+
+//    public static Bitmap generateQR(JSONObject loData){
+//
+//
+//    }
 
 }

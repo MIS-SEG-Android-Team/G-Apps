@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textview.MaterialTextView;
 
+import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarcode;
 import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
@@ -38,7 +39,6 @@ import org.rmj.guanzongroup.gconnect.Dialog.Dialog_BarcodeDetails;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.guanzongroup.gconnect.ViewModel.VMBarcode;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -55,6 +55,8 @@ public class Fragment_PhoneBarcode extends Fragment {
     private VMBarcode mviewModel;
     private Dialog_Loading dialogLoad;
     private MessageBox messageBox;
+
+    private JSONObject loQRData;
 
     @SuppressLint("NewApi")
     private final ActivityResultLauncher<Intent> poArlBarcode =  registerForActivityResult(
@@ -167,6 +169,8 @@ public class Fragment_PhoneBarcode extends Fragment {
         initAnimation(); //todo: animation initialization
         initListener(); //todo: listener initialization
         initAdapter(); //todo: adapter initialization
+
+        loQRData = new JSONObject();
 
         return view;
     }
@@ -294,20 +298,116 @@ public class Fragment_PhoneBarcode extends Fragment {
 
     private void initDialogDetails(){
 
+        //todo: initialize sub classes, for personal and payment info
         Dialog_BarcodeDetails.Dialog_PersonalInfo dialogPersonalInfo =
                 new Dialog_BarcodeDetails(requireActivity()).new Dialog_PersonalInfo();
 
+        Dialog_BarcodeDetails.Dialog_PaymentDetails dialogPaymentDetails =
+                new Dialog_BarcodeDetails(requireActivity()).new Dialog_PaymentDetails();
+
+        //todo: collect personal info result, initialize to QR data
         dialogPersonalInfo.initDialogPersonalInfo(new Dialog_BarcodeDetails.Dialog_PersonalInfo.onDialogButton() {
             @Override
             public void onContinue(Dialog_BarcodeDetails.Personal_Info foVal) {
-                Log.d("PhoneBarcode", foVal.getLname());
-            }
 
-            @Override
-            public void onCancel() {
+                try {
+
+                    //todo: check parsed data, if not empty then initialize QR data and proceed to payment
+                    if (ParsePersonalInfo(foVal) != null){
+
+                        initQRData("personalinfo", ParsePersonalInfo(foVal));
+
+                        //todo: collect payment info result, initialize to QR data
+                        dialogPaymentDetails.initDialogPayment(new Dialog_BarcodeDetails.Dialog_PaymentDetails.onSubmit() {
+
+                            @Override
+                            public void onGenerateQR(Dialog_BarcodeDetails.Payment_Info foVal) {
+
+                                //todo: check parsed data, if not empty then collect result and initialize QR data
+                                if (ParsePaymentInfo(foVal) != null){
+                                    initQRData("paymentinfo", ParsePaymentInfo(foVal));
+                                }else {
+
+                                    initMessage("Payment info qr data is empty", "Okay", "",
+                                            2, false, new onMessage() {
+                                                @Override
+                                                public void onPosBtnListener() {
+                                                }
+
+                                                @Override
+                                                public void onNegBtnListener() {
+                                                }
+                                            });
+                                }
+                            }
+
+                        });
+
+                    }else {
+
+                        initMessage("Personal info qr data is empty", "Okay", "",
+                                2, false, new onMessage() {
+                                    @Override
+                                    public void onPosBtnListener() {
+                                    }
+
+                                    @Override
+                                    public void onNegBtnListener() {
+                                    }
+                                });
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
             }
         });
+    }
+
+    private void initQRData(String key, JSONObject data){
+        try {
+            loQRData.put(key, data);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private JSONObject ParsePersonalInfo(Dialog_BarcodeDetails.Personal_Info loVal){
+
+        try {
+
+            JSONObject loObj = new JSONObject();
+            loObj.put("firstname", loVal.getFname());
+            loObj.put("middlename", loVal.getMname());
+            loObj.put("lastname", loVal.getLname());
+            loObj.put("suffix", loVal.getSuffix());
+            loObj.put("mobile", loVal.getMobile());
+
+            return loObj;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private JSONObject ParsePaymentInfo(Dialog_BarcodeDetails.Payment_Info loVal){
+
+        try {
+
+            JSONObject loObj = new JSONObject();
+            loObj.put("paytype", loVal.getPaytype());
+            loObj.put("payamt", loVal.getAmount());
+            loObj.put("terms", loVal.getTerms());
+            loObj.put("scamt", loVal.getScAmt());
+
+            return loObj;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void initMessage(String message, String btnPos, String btnNeg,
