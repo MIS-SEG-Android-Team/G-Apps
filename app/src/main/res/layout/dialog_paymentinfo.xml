@@ -122,36 +122,24 @@
 
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button"
+            android:id="@+id/btn_continue"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:text="Generate QR"
+            app:icon="@drawable/ic_baseline_qr_code_24"
+            app:iconGravity="textStart"
+            android:layout_marginEnd="5dp"/>
 
-            <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button"
-                android:id="@+id/btn_continue"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="Generate QR"
-                app:icon="@drawable/ic_baseline_qr_code_24"
-                app:iconGravity="textStart"
-                android:layout_marginEnd="5dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_cancel"
-                app:layout_constraintWidth_percent="0.5"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_cancel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="Cancel"
-                android:layout_marginStart="5dp"
-                app:layout_constraintTop_toTopOf="@+id/btn_continue"
-                app:layout_constraintBottom_toBottomOf="@id/btn_continue"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_continue"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Cancel"
+            app:icon="@drawable/ic_action_cancel"
+            app:iconGravity="textStart"/>
 
     </LinearLayout>
 
