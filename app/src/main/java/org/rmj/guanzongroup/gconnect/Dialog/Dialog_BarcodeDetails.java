@@ -2,6 +2,7 @@ package org.rmj.guanzongroup.gconnect.Dialog;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -18,20 +20,24 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DTownInfo;
 import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
 import org.rmj.g3appdriver.utils.Task.OnTaskExecuteListener;
 import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 import org.rmj.guanzongroup.gconnect.R;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Dialog_BarcodeDetails {
 
     private final Context context;
     private final MessageBox poMessage;
-    private AlertDialog poDialogx;
     private final Dialog_Loading poLoad;
+
+    private AlertDialog poDialogx;
     private String message;
 
     public Dialog_BarcodeDetails(Context context){
@@ -44,15 +50,20 @@ public class Dialog_BarcodeDetails {
 
         private TextInputEditText tie_lname;
         private TextInputEditText tie_fname;
-
         private TextInputEditText tie_mname;
         private TextInputEditText tie_suffix;
+
+        private TextInputEditText tie_address;
+        private MaterialAutoCompleteTextView tie_towncity;
 
         private TextInputEditText tie_mobile;
         private MaterialButton btn_continue;
         private MaterialButton btn_cancel;
 
-        public void initDialogPersonalInfo(onDialogButton callback){
+        private List<DTownInfo.TownProvinceInfo> townProvinceInfos;
+        private final HashMap<String, String> loTownMap = new HashMap<>();
+
+        public void initDialogPersonalInfo(List<DTownInfo.TownProvinceInfo> townProvinceInfos, onDialogButton callback){
 
             View view = LayoutInflater.from(context).inflate(R.layout.dialog_personalinfo, null, false);
 
@@ -61,7 +72,10 @@ public class Dialog_BarcodeDetails {
                     .setView(view);
             poDialogx = loBuilder.create();
 
+            this.townProvinceInfos = townProvinceInfos;
+
             initViews(view);
+            initAdapter();
 
             btn_continue.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -137,11 +151,41 @@ public class Dialog_BarcodeDetails {
             tie_fname = view.findViewById(R.id.tie_fname);
             tie_mname = view.findViewById(R.id.tie_mname);
             tie_suffix = view.findViewById(R.id.tie_suffix);
+
+            tie_address = view.findViewById(R.id.tie_address);
+            tie_towncity = view.findViewById(R.id.tie_towncity);
+
             tie_mobile = view.findViewById(R.id.tie_mobile);
 
             btn_continue = view.findViewById(R.id.btn_continue);
             btn_cancel = view.findViewById(R.id.btn_cancel);
 
+        }
+
+        private void initAdapter(){
+
+            if(townProvinceInfos != null){
+
+                if (townProvinceInfos.size() > 0){
+
+                    List<String> loTowns = new ArrayList<>();
+
+                    //todo: iterate town and province info
+                    for (DTownInfo.TownProvinceInfo townInfo: townProvinceInfos){
+
+                        String sTownName = townInfo.sTownName +", "+ townInfo.sProvName;
+
+                        //todo: add town to list, if not added
+                        if (!loTowns.contains(sTownName)){
+                            loTowns.add(sTownName);
+                            loTownMap.put(townInfo.sTownIDxx, sTownName);
+                        }
+
+                    }
+
+                    tie_towncity.setAdapter(new ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item ,loTowns));
+                }
+            }
         }
 
         private Boolean isValidInfo(){
@@ -183,6 +227,20 @@ public class Dialog_BarcodeDetails {
             }
         }
 
+        private String getAdapterID(HashMap<String, String> map, String value){
+
+            String returnID = "";
+            for (Map.Entry<String, String> entry : map.entrySet()){
+
+                if (entry.getValue().equalsIgnoreCase(value)){
+                    returnID = entry.getKey();
+                    break;
+                }
+            }
+
+            return returnID;
+        }
+
         private Personal_Info collectInfo(){
 
             //todo: initialize personal info
@@ -192,6 +250,8 @@ public class Dialog_BarcodeDetails {
             info.setMname(tie_mname.getText().toString());
             info.setSuffix(tie_suffix.getText().toString());
             info.setMobile(tie_mobile.getText().toString());
+            info.setAddress(tie_address.getText().toString());
+            info.setTownId(getAdapterID(loTownMap, tie_towncity.getText().toString()));
 
             return info;
 
@@ -448,6 +508,38 @@ public class Dialog_BarcodeDetails {
 
     }
 
+    public class Dialog_QRImage{
+
+        private ImageView img_QRCode;
+        private MaterialButton btn_close;
+
+        public void initDialogQRImage(Bitmap bitmapQR){
+
+            View view = LayoutInflater.from(context).inflate(R.layout.dialog_qrbarcode, null, false);
+
+            AlertDialog.Builder loBuilder =  new AlertDialog.Builder(context);
+            loBuilder.setCancelable(false)
+                    .setView(view);
+            poDialogx = loBuilder.create();
+
+            img_QRCode = view.findViewById(R.id.img_QRCode);
+            btn_close = view.findViewById(R.id.btn_close);
+
+            img_QRCode.setImageBitmap(bitmapQR);
+            btn_close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    poDialogx.dismiss();
+                }
+            });
+
+            poDialogx.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            poDialogx.getWindow().getAttributes().windowAnimations = org.rmj.g3appdriver.R.style.PopupAnimation;
+            poDialogx.show();
+
+        }
+    }
+
     private String getMessage(){
         return message;
     }
@@ -468,7 +560,7 @@ public class Dialog_BarcodeDetails {
                 poMessage.setIcon(R.drawable.baseline_error_24);
                 break;
             case 3: //todo: confirm message
-                poMessage.setIcon(R.drawable.ic_baseline_confirmation_pin_24);
+                poMessage.setIcon(R.drawable.baseline_contact_support_24);
                 break;
             default:
                 poMessage.setIcon(R.drawable.ic_baseline_message_24);
@@ -509,6 +601,8 @@ public class Dialog_BarcodeDetails {
         private String mname = "";
         private String suffix = "";
         private String mobile = "";
+        private String address = "";
+        private String townId = "";
 
         public String getLname() {
             return lname;
@@ -548,6 +642,22 @@ public class Dialog_BarcodeDetails {
 
         public void setMobile(String mobile) {
             this.mobile = mobile;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getTownId() {
+            return townId;
+        }
+
+        public void setTownId(String townId) {
+            this.townId = townId;
         }
     }
 

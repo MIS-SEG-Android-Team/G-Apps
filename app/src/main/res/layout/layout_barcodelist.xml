@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingVertical="5dp"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/gradient_orange_dark"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.card.MaterialCardView
@@ -37,14 +39,28 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/mtv_barcode"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:text="431029453"
         android:letterSpacing="0.5"
         android:gravity="center_vertical"
         android:layout_marginStart="10dp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/mcv_index"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.7"/>
+    
+    <ImageButton
+        android:id="@+id/btn_imgdelete"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/baseline_delete_24"
+        android:background="@color/zxing_transparent"
+        app:layout_constraintStart_toEndOf="@+id/mtv_barcode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mtv_barcode"
+        app:layout_constraintBottom_toBottomOf="@+id/mtv_barcode"
+        app:layout_constraintWidth_percent="0.1"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

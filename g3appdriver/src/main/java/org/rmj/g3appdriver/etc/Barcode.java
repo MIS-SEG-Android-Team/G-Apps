@@ -5,6 +5,11 @@ import android.graphics.Bitmap;
 
 import androidx.lifecycle.LiveData;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
+
 import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBarcode;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarcode;
@@ -22,6 +27,10 @@ public class Barcode {
         barcodeDao.save(barcode);
     }
 
+    public void deleteBarcode(String bcodeID){
+        barcodeDao.deleteBarcode(bcodeID);
+    }
+
     public LiveData<List<EBarcode>> getBarcodeList(){
         return barcodeDao.getBarcodes();
     }
@@ -30,9 +39,15 @@ public class Barcode {
         return barcodeDao.getBarcodeCount();
     }
 
-//    public static Bitmap generateQR(JSONObject loData){
-//
-//
-//    }
+    public Bitmap generateQR(JSONObject loData) throws Exception{
+
+        //todo: initialize barcode encoder
+        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+
+        //todo: generate image details for bitmap
+        BitMatrix bitMatrix = new MultiFormatWriter().encode(loData.toString(), BarcodeFormat.QR_CODE, 700, 700);
+        return barcodeEncoder.createBitmap(bitMatrix); //todo: return bitmap
+
+    }
 
 }

@@ -21,4 +21,7 @@ public interface DBarcode {
     @Query("SELECT COUNT(*) FROM Barcode")
     int getBarcodeCount();
 
+    @Query("DELETE FROM Barcode WHERE barcode_id = :bcodeID")
+    void deleteBarcode(String bcodeID);
+
 }
