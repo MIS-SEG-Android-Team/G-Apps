@@ -304,21 +304,24 @@ public class Fragment_PhoneBarcode extends Fragment {
             @Override
             public void onChanged(List<EBarcode> eBarcodes) {
 
+                Adapter_Barcodes adapter_barcodes = new Adapter_Barcodes(requireActivity(), eBarcodes, new Adapter_Barcodes.onDeleteRow() {
+                    @Override
+                    public void onDelete(String barcodeID) {
+                        mviewModel.deleteBarcode(barcodeID);
+                    }
+                });
+                adapter_barcodes.notifyDataSetChanged();
+
+                rv_products.setAdapter(adapter_barcodes);
+                rv_products.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
+
+                //TODO: SHOW BUTTON IF LIST IS NOT EMPTY
                 if (eBarcodes.size() > 0){
-
                     layout_personalform.setVisibility(View.VISIBLE);
-
-                    Adapter_Barcodes adapter_barcodes = new Adapter_Barcodes(requireActivity(), eBarcodes, new Adapter_Barcodes.onDeleteRow() {
-                        @Override
-                        public void onDelete(String barcodeID) {
-                            mviewModel.deleteBarcode(barcodeID);
-                        }
-                    });
-                    adapter_barcodes.notifyDataSetChanged();
-
-                    rv_products.setAdapter(adapter_barcodes);
-                    rv_products.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
+                }else {
+                    layout_personalform.setVisibility(View.GONE);
                 }
+
             }
         });
     }

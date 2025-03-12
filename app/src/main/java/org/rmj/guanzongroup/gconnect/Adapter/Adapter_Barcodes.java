@@ -54,7 +54,7 @@ public class Adapter_Barcodes extends RecyclerView.Adapter<Adapter_Barcodes.VH_A
                     public void OnButtonClick(View view, AlertDialog dialog) {
                         dialog.dismiss();
 
-                        barcodeList.remove(position);
+                        //barcodeList.remove(position);
                         callback.onDelete(barcodeList.get(position).getBarcodeIdxx());
                     }
                 });
