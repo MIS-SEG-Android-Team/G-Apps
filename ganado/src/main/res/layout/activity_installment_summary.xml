@@ -96,9 +96,9 @@
                                 android:id="@+id/paymMethod"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:textColor="?attr/colorOnPrimary"
                                 android:enabled="false"
-                                android:padding="16dp"
-                                android:textColor="@color/black" />
+                                android:padding="16dp"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -117,7 +117,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:enabled="false"
-                                android:textColor="@color/black" />
+                                android:textColor="?attr/colorOnPrimary" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -137,7 +137,7 @@
                                 android:layout_height="wrap_content"
                                 android:enabled="false"
                                 android:padding="16dp"
-                                android:textColor="@color/black" />
+                                android:textColor="?attr/colorOnPrimary" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout

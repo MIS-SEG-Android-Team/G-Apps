@@ -57,6 +57,7 @@ public class Fragment_EventsPromos extends Fragment {
                     intent.putExtra("args", args);
                     startActivity(intent);
                 },"2");
+
                 eventsPromoView.setAdapter(poAdapter);
                 poAdapter.notifyDataSetChanged();
             });

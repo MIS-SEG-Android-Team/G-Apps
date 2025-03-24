@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -23,10 +24,10 @@ public class Fragment_About extends Fragment {
         mBinding = FragmentAboutBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
-
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         Intent loIntent = new Intent(requireActivity(), Activity_Browser.class);
 
         mBinding.lnkTermsC.setOnClickListener(v -> {
@@ -41,7 +42,6 @@ public class Fragment_About extends Fragment {
             startActivity(loIntent);
         });
     }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();

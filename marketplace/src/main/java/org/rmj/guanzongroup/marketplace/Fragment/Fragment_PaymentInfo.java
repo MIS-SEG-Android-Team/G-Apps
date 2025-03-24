@@ -1,13 +1,9 @@
 package org.rmj.guanzongroup.marketplace.Fragment;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -16,14 +12,13 @@ import android.view.ViewGroup;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.rmj.g3appdriver.dev.Database.DataAccessObject.DOrderMaster;
 import org.rmj.g3appdriver.etc.CashFormatter;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.etc.PaymentMethod;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_TextInput;
-import org.rmj.guanzongroup.marketplace.Activity.Activity_PayOrder;
 import org.rmj.guanzongroup.marketplace.Etc.OnTransactionsCallback;
+import org.rmj.guanzongroup.marketplace.R;
 import org.rmj.guanzongroup.marketplace.ViewModel.VMPayOrder;
 import org.rmj.guanzongroup.marketplace.databinding.FragmentPaymentInfoBinding;
 
@@ -34,7 +29,7 @@ public class Fragment_PaymentInfo extends Fragment {
     private VMPayOrder mViewModel;
     private FragmentPaymentInfoBinding binding;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
 
     private String psPayment;
     private String TransNox;
@@ -43,10 +38,14 @@ public class Fragment_PaymentInfo extends Fragment {
 
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         mViewModel = new ViewModelProvider(requireActivity()).get(VMPayOrder.class);
         binding = FragmentPaymentInfoBinding.inflate(inflater, container, false);
-        poDialogx = new Dialog_SingleButton(requireActivity());
+        poDialogx = new MessageBox(requireActivity());
+
+        poDialogx.initDialog();
         displayPaymentInfo();
+
         binding.btnConfrm.setOnClickListener(v -> {
             if(psPayment.equalsIgnoreCase("CashOnDelivery")) {
                 Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
@@ -57,16 +56,12 @@ public class Fragment_PaymentInfo extends Fragment {
                 payOrder();
             }
         });
+
         return binding.getRoot();
     }
 
     @Override
-    public void
-
-
-
-
-    onDestroyView() {
+    public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
@@ -112,8 +107,17 @@ public class Fragment_PaymentInfo extends Fragment {
                 @Override
                 public void onFailed(String fsMessage) {
                     poLoading.dismiss();
-                    poDialogx.setButtonText("Okay");
-                    poDialogx.initDialog("Pay Order", fsMessage, () -> poDialogx.dismiss());
+
+                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                    poDialogx.setTitle("Pay Order");
+                    poDialogx.setMessage(fsMessage);
+                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
+                        }
+                    });
+
                     poDialogx.show();
                 }
             });
@@ -132,9 +136,11 @@ public class Fragment_PaymentInfo extends Fragment {
                         @Override
                         public void onSuccess(String fsMessage) {
                             poLoading.dismiss();
+
                             binding.cardviewPaymentInfo.setVisibility(View.GONE);
                             binding.linearCod.setVisibility(View.VISIBLE);
                             binding.btnConfrm.setText("Continue Shopping");
+
                             if(requireActivity().getIntent().hasExtra("nSubTotal")){
                                 double lnOrderAmnt = 0;
                                 binding.lblOrderAmount.setText(CashFormatter.parse(String.valueOf(lnOrderAmnt)));
@@ -145,8 +151,17 @@ public class Fragment_PaymentInfo extends Fragment {
                         @Override
                         public void onFailed(String fsMessage) {
                             poLoading.dismiss();
-                            poDialogx.setButtonText("Okay");
-                            poDialogx.initDialog("Pay Order", fsMessage, () -> poDialogx.dismiss());
+
+                            poDialogx.setIcon(R.drawable.baseline_error_24);
+                            poDialogx.setTitle("Pay Order");
+                            poDialogx.setMessage(fsMessage);
+                            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                @Override
+                                public void OnButtonClick(View view, AlertDialog dialog) {
+                                    dialog.dismiss();
+                                }
+                            });
+
                             poDialogx.show();
                         }
                     });
@@ -175,31 +190,65 @@ public class Fragment_PaymentInfo extends Fragment {
                                 @Override
                                 public void onSuccess(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Pay Order", fsMessage, () -> {
-                                        poDialogx.dismiss();
-                                        Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
-                                        intent.putExtra("args", "purchase");
-                                        requireActivity().sendBroadcast(intent);
-                                        requireActivity().finish();
+
+                                    poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                                    poDialogx.setTitle("Pay Order");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+
+                                            dialog.dismiss();
+
+                                            Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
+                                            intent.putExtra("args", "purchase");
+                                            requireActivity().sendBroadcast(intent);
+                                            requireActivity().finish();
+
+                                        }
                                     });
+
                                     poDialogx.show();
+
                                 }
 
                                 @Override
                                 public void onFailed(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Pay Order", fsMessage, () -> poDialogx.dismiss());
+
+                                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                                    poDialogx.setTitle("Pay Order");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+
+                                            dialog.dismiss();
+
+                                        }
+                                    });
+
                                     poDialogx.show();
+
                                 }
                             });
                 } else {
                     dialog.dismiss();
-                    poDialogx.setButtonText("Okay");
-                    poDialogx.initDialog("Pay Order",
-                            "Please enter payment reference number.", () -> poDialogx.dismiss());
+
+                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                    poDialogx.setTitle("Pay Order");
+                    poDialogx.setMessage("Please enter payment reference number.");
+                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+
+                            dialog.dismiss();
+
+                        }
+                    });
+
                     poDialogx.show();
+
                 }
             }
 
@@ -212,13 +261,26 @@ public class Fragment_PaymentInfo extends Fragment {
     }
 
     private boolean isMethodSelected() {
+
         if(mViewModel.getPaymentMethod().getValue() == null) {
-            poDialogx.setButtonText("Okay");
-            poDialogx.initDialog("Pay Order",
-                    "Please select payment method for your order.", () -> poDialogx.dismiss());
+
+            poDialogx.setIcon(R.drawable.baseline_error_24);
+            poDialogx.setTitle("Pay Order");
+            poDialogx.setMessage("Please select payment method for your order.");
+            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                @Override
+                public void OnButtonClick(View view, AlertDialog dialog) {
+
+                    dialog.dismiss();
+
+                }
+            });
+
             poDialogx.show();
+
             return false;
         }
+
         return true;
     }
 

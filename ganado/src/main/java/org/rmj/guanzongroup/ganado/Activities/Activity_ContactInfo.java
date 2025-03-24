@@ -15,11 +15,8 @@ import org.rmj.guanzongroup.ganado.R;
 import java.util.Objects;
 
 public class Activity_ContactInfo extends AppCompatActivity {
-    private MessageBox poMessage;
-
     private TextInputEditText txtMobileNo, txtEmailAdd, txtHouseNox, txtAddress;
     private MaterialAutoCompleteTextView txtPMunicipl;
-
     private MaterialButton btnContinue;
     private MaterialToolbar toolbar;
 
@@ -35,7 +32,7 @@ public class Activity_ContactInfo extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar_ContactInfo);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Residence Info");
+        getSupportActionBar().setTitle("");
 
         txtMobileNo = findViewById(R.id.txt_mobile);
         txtEmailAdd = findViewById(R.id.txt_email);

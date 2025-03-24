@@ -1,12 +1,11 @@
 package org.rmj.guanzongroup.digitalgcard.Fragment;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +16,7 @@ import org.rmj.guanzongroup.digitalgcard.R;
 import org.rmj.guanzongroup.digitalgcard.ViewModel.VMGCardSystem;
 
 public class Fragment_GcardOrders extends Fragment {
-
     private VMGCardSystem mViewModel;
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -29,20 +26,14 @@ public class Fragment_GcardOrders extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(requireActivity()).get(VMGCardSystem.class);
         mViewModel.setmContext(GCardSystem.CoreFunctions.REDEMPTION);
-
-        initOrders();
     }
-
     private void initViews(View v) {
 
     }
 
-    private void initOrders() {
-
-    }
 
 }

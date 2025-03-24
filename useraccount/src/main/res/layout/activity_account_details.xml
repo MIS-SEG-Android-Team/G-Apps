@@ -49,7 +49,7 @@
                     <ImageView
                         android:layout_width="65dp"
                         android:layout_height="65dp"
-                        android:src="@drawable/sample_user_img_profile"/>
+                        android:src="@drawable/kay"/>
 
                 </androidx.cardview.widget.CardView>
 
@@ -129,7 +129,8 @@
         android:layout_marginBottom="5dp"
         android:gravity="center"
         android:text="ⓘ Personal Information is not yet verified"
-        android:textColor="@color/guanzon_digital_red" />
+        android:textColor="@color/guanzon_digital_red"
+        android:visibility="gone"/>
 
 
 </RelativeLayout>
@@ -326,7 +327,8 @@
                 android:layout_marginBottom="5dp"
                 android:gravity="center"
                 android:text="ⓘ Account Information is not yet verified"
-                android:textColor="@color/guanzon_digital_red" />
+                android:textColor="@color/guanzon_digital_red"
+                android:visibility="gone"/>
 
 </RelativeLayout>
             <View
@@ -435,7 +437,7 @@
 
             </LinearLayout>
 
-<!--            Email-->
+<!--            Gcash No-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -443,6 +445,57 @@
                 android:gravity="center"
                 android:paddingHorizontal="19dp"
                 android:paddingVertical="17dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".8"
+                    android:fontFamily="@font/roboto_regular"
+                    android:textColor="@color/font_regular"
+                    android:textSize="16sp"
+                    android:text="Gcash No :"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+                <TextView
+                    android:id="@+id/lbl_gcash"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:layout_weight="1.3"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="@string/lblNotSet"
+                    android:textColor="@color/font_light"
+                    android:textSize="14sp"
+                    android:gravity="right|center_vertical"
+                    android:paddingEnd="15dp"
+                    android:drawablePadding="10dp"/>
+
+                <TextView
+                    android:id="@+id/lbl_editGcashNo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".45"
+                    android:gravity="center"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="Edit"
+                    android:textColor="@color/font_light"
+                    android:textSize="16sp"
+                    app:drawableLeftCompat="@drawable/ic_baseline_edit_24" />
+
+            </LinearLayout>
+
+<!--            Email-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingHorizontal="19dp"
+                android:paddingVertical="17dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="0dp"

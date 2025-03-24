@@ -11,11 +11,15 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DAddress;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBarcode;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBingoCard;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBranchInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DClientInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DEmployeeInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DEvents;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGCardTransactionLedger;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGCard_Ledger;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGCard_Points;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGanadoOnline;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGcardApp;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DItemCart;
@@ -30,6 +34,7 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DNotifications;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DOrderDetail;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DOrderMaster;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPanalo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPointsRequest;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DProduct;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPromo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRawDao;
@@ -42,13 +47,17 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DTownInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DUserInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EAddressInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarangayInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.EBarcode;
+import org.rmj.g3appdriver.dev.Database.Entities.EBingoCard;
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ECountryInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEmailInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEmployeeInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
+import org.rmj.g3appdriver.dev.Database.Entities.EGCardPoints;
 import org.rmj.g3appdriver.dev.Database.Entities.EGCardTransactionLedger;
+import org.rmj.g3appdriver.dev.Database.Entities.EGCard_Ledger;
 import org.rmj.g3appdriver.dev.Database.Entities.EGanadoOnline;
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
 import org.rmj.g3appdriver.dev.Database.Entities.EGuanzonPanalo;
@@ -68,6 +77,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.ENotificationUser;
 import org.rmj.g3appdriver.dev.Database.Entities.EOrderDetail;
 import org.rmj.g3appdriver.dev.Database.Entities.EOrderMaster;
 import org.rmj.g3appdriver.dev.Database.Entities.EPanaloReward;
+import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EProducts;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
 import org.rmj.g3appdriver.dev.Database.Entities.EProvinceInfo;
@@ -119,7 +129,12 @@ import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
         EMcModelPrice.class,
         EMCModelCashPrice.class,
         EMcCategory.class,
-        EMcTermCategory.class}, version = 2, exportSchema = false)
+        EMcTermCategory.class,
+        EGCardPoints.class,
+        EGCard_Ledger.class,
+        EPointsRequest.class,
+        EBingoCard.class,
+        EBarcode.class}, version = 5, exportSchema = false)
 public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     private static final String TAG = "GuanzonApp_DB_Manager";
     private static GGC_GuanzonAppDB instance;
@@ -156,6 +171,11 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     public abstract DMcModelPrice McModelPriceDao();
     public abstract DMcCategory McCategoryDao();
     public abstract DMcTermCategory McTermCategoryDao();
+    public abstract DGCard_Points GPointsDao();
+    public abstract DGCard_Ledger GLedgerDao();
+    public abstract DPointsRequest GPointsRqstDao();
+    public abstract DBingoCard BingoCardDao();
+    public abstract DBarcode BarcodeDao();
 
     public static synchronized GGC_GuanzonAppDB getInstance(Context context){
         if(instance == null){

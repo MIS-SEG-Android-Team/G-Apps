@@ -20,21 +20,18 @@ import org.rmj.guanzongroup.notifications.Etc.iNotificationUI;
 
 public class GMessagingService extends FirebaseMessagingService {
     private static final String TAG = GMessagingService.class.getSimpleName();
-
-    private RNotificationInfo poNotif;
-
-
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
         new RRawData(GMessagingService.this).SaveNewToken(token);
         new GuanzonAppConfig(GMessagingService.this).setAppToken(token);
     }
-
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
+
         Log.e(TAG, "Message received!");
+
         String lsSysMon = new RemoteMessageParser(message).getValueOf("msgmon");
         iNotification loSys = new NMM(GMessagingService.this).getInstance(lsSysMon);
         String lsResult = loSys.Save(message);

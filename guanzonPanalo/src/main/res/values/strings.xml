@@ -17,5 +17,7 @@
     <string name="txt_claim_prize">Please claim your prize</string>
     <string name="my_gcard">My GCard</string>
     <string name="panalo">Panalo</string>
+    <string name="lbl_bingo">BINGO</string>
+    <string name="lbl_poll">Poll</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

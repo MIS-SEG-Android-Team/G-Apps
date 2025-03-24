@@ -46,7 +46,7 @@ public class SubmitOtherInfoTest {
     @Test
     public void test01LoginAccount() throws Exception{
         AccountAuthentication loAuth = new AccountAuthentication(mContext);
-        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("mikegarcia8748@gmail.com", "123456", "09270359402"), new AccountAuthentication.OnLoginCallback() {
+        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("mikegarcia8748@gmail.com", "123456"), new AccountAuthentication.OnLoginCallback() {
             @Override
             public void OnSuccessLogin(String message) {
                 isSuccess = true;

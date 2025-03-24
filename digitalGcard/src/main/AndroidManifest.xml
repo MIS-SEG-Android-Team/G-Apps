@@ -3,18 +3,21 @@
 
     <application>
         <activity
-            android:name=".Activity.Activity_QrCodeScanner"
-            android:screenOrientation="userPortrait"
+            android:name=".Activity.Activity_GCardOffline"
             android:exported="false" />
         <activity
+            android:name=".Activity.Activity_QrCodeScanner"
+            android:exported="false"
+            android:screenOrientation="userPortrait" />
+        <activity
             android:name=".Activity.Activity_AddGcard"
-            android:screenOrientation="userPortrait"
             android:exported="true"
+            android:screenOrientation="userPortrait"
             android:theme="@style/GuanzonMarketplace.Theme" />
         <activity
             android:name=".Activity.Activity_ManageGcard"
-            android:screenOrientation="userPortrait"
             android:exported="true"
+            android:screenOrientation="userPortrait"
             android:theme="@style/GuanzonMarketplace.Theme" />
     </application>
 

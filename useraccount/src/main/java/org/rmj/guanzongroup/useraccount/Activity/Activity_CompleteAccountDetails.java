@@ -12,26 +12,21 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.g3appdriver.etc.FormatUIText;
 import org.rmj.g3appdriver.etc.InputFieldController;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.Model.CompleteAccountDetailsInfo;
 import org.rmj.guanzongroup.useraccount.R;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMAccountDetails;
@@ -45,13 +40,11 @@ import java.util.Objects;
 
 public class Activity_CompleteAccountDetails extends AppCompatActivity {
     private static final String TAG = Activity_CompleteAccountDetails.class.getSimpleName();
-
     private VMAccountDetails mViewModel;
     private CompleteAccountDetailsInfo poDataMdl;
     private Toolbar toolbar;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialog;
-    private Dialog_DoubleButton poDblDiag;
+    private MessageBox poDialog;
     private TextInputEditText txtLastNm, txtFirstN, txtMidNme, txtSuffix, txtBdatex, txtTaxNox,
             txtHouseN, txtStreet, txtGCashNo;
     private AutoCompleteTextView txtBplace, txtGender, txtCivilS,
@@ -60,36 +53,70 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
             txtBarngy;
     private MaterialButton btnSaveDt, btnScan;
     private static final int QR_RESULT_CODE = 1; // This should match the code you used in setResult(1, loIntent)
-
-
     private String psBDate, ClientID, SourceCD, SourceNo;
+
     private final ActivityResultLauncher<Intent> poArl = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if(result.getResultCode() == QR_RESULT_CODE) {
                     Intent loIntent = result.getData();
                     if (loIntent != null) {
-//                        Toast.makeText(Activity_AddGcard.this, loIntent.getStringExtra("result"), Toast.LENGTH_LONG).show();
-                        String lsArgs = loIntent.getStringExtra("result");
-                        addScannedClientInfo(lsArgs);
+                        ClientID = loIntent.getStringExtra("ClientID");
+                        SourceCD = loIntent.getStringExtra("SourceCD");
+                        SourceNo = loIntent.getStringExtra("SourceNo");
+
+                        addScannedClientQR();
                     } else {
                         Toast.makeText(this, "No data result receive.", Toast.LENGTH_LONG).show();
                     }
                 }
             }
     );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_account_details);
+
         initObjects();
         initViews();
         setUpToolbar();
         setInputOptions();
 
+        poDialog.initDialog();
+
         btnSaveDt.setOnClickListener(v -> saveAccountDetails());
         btnScan.setOnClickListener((v-> scanAccountDetails()));
     }
+
+    private void initObjects() {
+        mViewModel = new ViewModelProvider(Activity_CompleteAccountDetails.this)
+                .get(VMAccountDetails.class);
+        poDataMdl = new CompleteAccountDetailsInfo();
+    }
+
+    private void initViews() {
+        toolbar = findViewById(R.id.toolbar);
+        poDialog = new MessageBox(Activity_CompleteAccountDetails.this);
+        txtLastNm = findViewById(R.id.tie_accountUpdate);
+        txtFirstN = findViewById(R.id.tie_firstname);
+        txtMidNme = findViewById(R.id.tie_middname);
+        txtSuffix = findViewById(R.id.tie_suffix);
+        txtBdatex = findViewById(R.id.tie_bdate);
+        txtBplace = findViewById(R.id.tie_bplace);
+        txtGender = findViewById(R.id.tie_gender);
+        txtCivilS = findViewById(R.id.tie_civil_stat);
+        txtCtizen = findViewById(R.id.tie_citizen);
+        txtGCashNo = findViewById(R.id.tie_gCashNo);
+        txtTaxNox = findViewById(R.id.tie_taxId);
+        txtHouseN = findViewById(R.id.tie_houseNo);
+        txtStreet = findViewById(R.id.tie_street);
+        txtTownCt = findViewById(R.id.tie_towncity);
+        txtBarngy = findViewById(R.id.tie_barangay);
+        btnSaveDt = findViewById(R.id.btnSave);
+        btnScan = findViewById(R.id.btn_Scan);
+    }
+
     private void initData(){
         mViewModel.getClientDetail().observe(Activity_CompleteAccountDetails.this, eClientInfo -> {
             if(eClientInfo != null){
@@ -100,10 +127,8 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
                 txtBdatex.setText(FormatUIText.formatGOCasBirthdate(eClientInfo.getBirthDte()));
                 poDataMdl.setBirthDate(eClientInfo.getBirthDte());
                 psBDate = eClientInfo.getBirthDte();
-//                txtBplace.setText(eClientInfo.getBirthPlc());
-//                txtGender.setText(eClientInfo.getGenderCd());
-//                txtCivilS.setText(eClientInfo.getCvilStat());
                 txtGCashNo.setText(eClientInfo.getGCashNo());
+
                 mViewModel.getBirthplace(eClientInfo.getBirthPlc()).observe(Activity_CompleteAccountDetails.this, info->{
                     txtBplace.setText(info);
                     poDataMdl.setBirthPlace(eClientInfo.getBirthPlc());
@@ -136,9 +161,8 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
 
                 txtHouseN.setText(eClientInfo.getHouseNo1());
                 txtStreet.setText(eClientInfo.getAddress1());
-//                txtTownCt.setText(eClientInfo.getTownIDx1());
                 txtBarngy.setText(eClientInfo.getBrgyIDx1());
-                Log.e("getTownIDx1",eClientInfo.getTownIDx1());
+
                 mViewModel.GetTownProvinceName(eClientInfo.getTownIDx1()).observe(Activity_CompleteAccountDetails.this, info ->{
                     try {
                         txtTownCt.setText(info);
@@ -161,10 +185,39 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
             }
         });
     }
-    private void scanAccountDetails() {
-        Intent loIntent = new Intent(Activity_CompleteAccountDetails.this, Activity_ClientInfo_QR.class);
-        startActivityForResult(loIntent, QR_RESULT_CODE);
+
+    private void setUpToolbar() {
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Complete Details");
     }
+
+    private void popUpCloseConfirmationDialog() {
+
+        poDialog.setIcon(R.drawable.baseline_contact_support_24);
+        poDialog.setTitle("Complete Account Details");
+        poDialog.setMessage("Are you sure you want to cancel filling in account details?");
+
+        poDialog.setPositiveButton("Yes", new MessageBox.DialogButton() {
+            @Override
+            public void OnButtonClick(View view, AlertDialog dialog) {
+                dialog.dismiss();
+                Intent loIntent = new Intent();
+                loIntent.putExtra("result", "cancelled");
+                finish();
+            }
+        });
+
+        poDialog.setNegativeButton("No", new MessageBox.DialogButton() {
+            @Override
+            public void OnButtonClick(View view, AlertDialog dialog) {
+                dialog.dismiss();
+            }
+        });
+
+        poDialog.show();
+    }
+
     private void disableFields(TextInputEditText... textInputEditTexts) {
         for (TextInputEditText editText : textInputEditTexts) {
             editText.setFocusable(false);
@@ -172,9 +225,6 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
     }
     private void disableAutoCompleteTextViews(AutoCompleteTextView... autoCompleteTextViews) {
         for (AutoCompleteTextView autoCompleteTextView : autoCompleteTextViews) {
-//            autoCompleteTextView.setFocusable(false);
-//            autoCompleteTextView.setInputType(0); // Disables the soft keyboard for AutoCompleteTextView
-//            autoCompleteTextView.setOnItemClickListener(null); // Disables item selection from the drop-down
             autoCompleteTextView.setClickable(false);
             autoCompleteTextView.setFocusable(false);
             autoCompleteTextView.setFocusableInTouchMode(false);
@@ -185,143 +235,42 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
         }
     }
 
-
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            popUpCloseConfirmationDialog();
-        }
-        return super.onOptionsItemSelected(item);
+    private void scanAccountDetails() {
+        Intent loIntent = new Intent(Activity_CompleteAccountDetails.this, Activity_ClientInfo_QR.class);
+        poArl.launch(loIntent);
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode,@Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void addScannedClientQR(){
+        mViewModel.importClientInfo(ClientID, SourceCD,SourceNo,new VMAccountDetails.OnClientInfoCallBack() {
+            @Override
+            public void onLoading() {
+                poLoading = new Dialog_Loading(Activity_CompleteAccountDetails.this);
+                poLoading.initDialog("Account Details", "Importing Client Info Data. Please wait.");
+                poLoading.show();
 
-        if (requestCode == QR_RESULT_CODE && resultCode == RESULT_OK && data != null) {
-            ClientID = data.getStringExtra("ClientID");
-            SourceCD = data.getStringExtra("SourceCD");
-            SourceNo = data.getStringExtra("SourceNo");
+            }
+            @Override
+            public void onSuccess(String fsMessage) {
+                poLoading.dismiss();
+                initData();
+            }
+            @Override
+            public void onFailed(String fsMessage) {
+                poLoading.dismiss();
 
-            // Use the retrieved values as needed
-            Log.d("ClientID scan", ClientID);
-            Log.d("SourceCD scan", SourceCD);
-            Log.d("SourceNo scan", SourceNo);
+                poDialog.setIcon(R.drawable.baseline_error_24);
+                poDialog.setTitle("Account Details");
+                poDialog.setMessage(fsMessage);
+                poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
+                });
 
-            mViewModel.importClientInfo(ClientID, SourceCD,SourceNo,new VMAccountDetails.OnClientInfoCallBack() {
-                @Override
-                public void onLoading() {
-                    poLoading = new Dialog_Loading(Activity_CompleteAccountDetails.this);
-                    poLoading.initDialog("Account Details", "Importing Client Info Data. Please wait.");
-                    poLoading.show();
+                poDialog.show();
 
-                }
-
-                @Override
-                public void onSuccess(String fsMessage) {
-
-                    poLoading.dismiss();
-                    initData();
-//                    poLoading.dismiss();
-                }
-
-                @Override
-                public void onFailed(String fsMessage) {
-                    poLoading.dismiss();
-                    poDialog.setButtonText("Okay");
-                    poDialog.initDialog("Account Details", fsMessage, () -> {
-                        poDialog.dismiss();
-//                        finish();
-                    });
-                    poDialog.show();
-                }
-            });
-
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        popUpCloseConfirmationDialog();
-    }
-
-    private void initObjects() {
-        mViewModel = new ViewModelProvider(Activity_CompleteAccountDetails.this)
-                .get(VMAccountDetails.class);
-        poDataMdl = new CompleteAccountDetailsInfo();
-    }
-
-    // Initialize this first before anything else.
-    private void initViews() {
-        toolbar = findViewById(R.id.toolbar);
-        poDialog = new Dialog_SingleButton(Activity_CompleteAccountDetails.this);
-        poDblDiag = new Dialog_DoubleButton(Activity_CompleteAccountDetails.this);
-        txtLastNm = findViewById(R.id.tie_accountUpdate);
-        txtFirstN = findViewById(R.id.tie_firstname);
-        txtMidNme = findViewById(R.id.tie_middname);
-        txtSuffix = findViewById(R.id.tie_suffix);
-        txtBdatex = findViewById(R.id.tie_bdate);
-        txtBplace = findViewById(R.id.tie_bplace);
-        txtGender = findViewById(R.id.tie_gender);
-        txtCivilS = findViewById(R.id.tie_civil_stat);
-        txtCtizen = findViewById(R.id.tie_citizen);
-        txtGCashNo = findViewById(R.id.tie_gCashNo);
-        txtTaxNox = findViewById(R.id.tie_taxId);
-        txtHouseN = findViewById(R.id.tie_houseNo);
-        txtStreet = findViewById(R.id.tie_street);
-        txtTownCt = findViewById(R.id.tie_towncity);
-        txtBarngy = findViewById(R.id.tie_barangay);
-        btnSaveDt = findViewById(R.id.btnSave);
-        btnScan = findViewById(R.id.btn_Scan);
-    }
-
-    // Initialize initViews() before this method.
-    private void setUpToolbar() {
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Complete Details");
-    }
-
-    private void saveAccountDetails() {
-        setInfoModelValues();
-        if(poDataMdl.isDataValid()) {
-            mViewModel.completeClientInfo(poDataMdl.getClientEntityValues(), new VMAccountDetails.OnTransactionCallBack() {
-                @Override
-                public void onLoading() {
-                    poLoading = new Dialog_Loading(Activity_CompleteAccountDetails.this);
-                    poLoading.initDialog("Account Details", "Saving account information. Please wait.");
-                    poLoading.show();
-                }
-
-                @Override
-                public void onSuccess(String fsMessage) {
-                    poLoading.dismiss();
-                    poDialog.setButtonText("Okay");
-                    poDialog.initDialog("Account Details", fsMessage, () -> {
-                        poDialog.dismiss();
-                        Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
-                        intent.putExtra("args", "auth");
-                        sendBroadcast(intent);
-                        poLoading.dismiss();
-                        finish();
-                    });
-                    poDialog.show();
-                }
-
-                @Override
-                public void onFailed(String fsMessage) {
-                    poLoading.dismiss();
-                    poDialog.setButtonText("Okay");
-                    poDialog.initDialog("Account Details", fsMessage, () -> poDialog.dismiss());
-                    poDialog.show();
-                }
-            });
-        } else {
-            poDialog.setButtonText("Okay");
-            poDialog.initDialog("Account Details", poDataMdl.getMessage(), () -> poDialog.dismiss());
-            poDialog.show();
-        }
-
+            }
+        });
     }
 
     private void setInfoModelValues() {
@@ -334,9 +283,7 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
         poDataMdl.setTaxIdNumber(Objects.requireNonNull(Objects.requireNonNull(txtTaxNox.getText()).toString().trim()));
         poDataMdl.setHouseNumber(Objects.requireNonNull(Objects.requireNonNull(txtHouseN.getText()).toString().trim()));
         poDataMdl.setAddress(Objects.requireNonNull(Objects.requireNonNull(txtStreet.getText()).toString().trim()));
-        Log.d(TAG, String.valueOf(txtGCashNo.getText()));
     }
-
     private void setInputOptions() {
         /** Date Auto Formatter */
         txtBdatex.setOnClickListener(v ->  {
@@ -409,8 +356,8 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
         // Setup Civil status field.
         txtCivilS.setAdapter(
                 InputFieldController.getAutoCompleteData(
-                    Activity_CompleteAccountDetails.this,
-                    mViewModel.getCivilStatusList()
+                        Activity_CompleteAccountDetails.this,
+                        mViewModel.getCivilStatusList()
                 )
         );
 
@@ -483,85 +430,126 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
         txtGender.setOnItemClickListener((adapterView, view, i, l) -> poDataMdl.setGender(String.valueOf(i)));
         txtCivilS.setOnItemClickListener((adapterView, view, i, l) -> poDataMdl.setCivilStat(String.valueOf(i)));
     }
+    private void saveAccountDetails() {
+        setInfoModelValues();
 
-    private void popUpCloseConfirmationDialog() {
-        poDblDiag.setButtonText("Yes", "No");
-        poDblDiag.initDialog("Complete Account Details", "Are you sure you want to cancel filling in account details?", new Dialog_DoubleButton.OnDialogConfirmation() {
-            @Override
-            public void onConfirm(AlertDialog dialog) {
-                dialog.dismiss();
-                Intent loIntent = new Intent();
-                loIntent.putExtra("result", "cancelled");
-                finish();
+        if(poDataMdl.isDataValid()) {
+            mViewModel.completeClientInfo(poDataMdl.getClientEntityValues(), new VMAccountDetails.OnTransactionCallBack() {
+                @Override
+                public void onLoading() {
+                    poLoading = new Dialog_Loading(Activity_CompleteAccountDetails.this);
+                    poLoading.initDialog("Account Details", "Saving account information. Please wait.");
+                    poLoading.show();
+                }
+                @Override
+                public void onSuccess(String fsMessage) {
+                    poLoading.dismiss();
 
-            }
+                    poDialog.setIcon(R.drawable.ic_baseline_message_24);
+                    poDialog.setTitle("Account Details");
+                    poDialog.setMessage(fsMessage);
+                    poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
 
-            @Override
-            public void onCancel(AlertDialog dialog) {
-                dialog.dismiss();
-            }
-        });
-        poDblDiag.show();
-    }
-    private void addScannedClientInfo(String args){
-        mViewModel.addScannedClientInfo(args, new VMAccountDetails.ClientInfoTransactionCallback() {
-            @Override
-            public void onLoad() {
-                poLoading = new Dialog_Loading(Activity_CompleteAccountDetails.this);
-                poLoading.initDialog("Adding GCard", "Please wait for a while.");
-                poLoading.show();
-            }
+                            Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
+                            intent.putExtra("args", "auth");
+                            sendBroadcast(intent);
 
-            @Override
-            public void onSuccess(String fsMessage) {
-                poLoading.dismiss();
-                poDialog.setButtonText("Okay");
-                poDialog.initDialog("Add GCard", "GCard Successfully Added.", () -> {
-                    poDialog.dismiss();
-                    finish();
-                });
-                poDialog.show();
-            }
-
-            @Override
-            public void onFailed(String fsMessage) {
-                poLoading.dismiss();
-                if(isJSONValid(fsMessage)) {
-                    String lsErrCode = "";
-                    try {
-                        JSONObject loJson = new JSONObject(fsMessage);
-                        lsErrCode = loJson.getString("code");
-                        if("CNF".equalsIgnoreCase(lsErrCode)) {
-                            poDialog.setButtonText("Okay");
-                            poDialog.initDialog("Add GCard", "GCard is already registered to other account. Please add GCard number manually and confirm to register the GCard on your account.", () -> {
-                                poDialog.dismiss();
-                                finish();
-                            });
-                            poDialog.show();
+                            finish();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    poDialog.setButtonText("Okay");
-                    poDialog.initDialog("Add GCard Failed", fsMessage, () -> poDialog.dismiss());
+                    });
+
                     poDialog.show();
                 }
-            }
+                @Override
+                public void onFailed(String fsMessage) {
+                    poLoading.dismiss();
 
-        });
-    }
-    public boolean isJSONValid(String fsMessage) {
-        try {
-            new JSONObject(fsMessage);
-        } catch (JSONException ex) {
-            try {
-                new JSONArray(fsMessage);
-            } catch (JSONException ex1) {
-                return false;
-            }
+                    poDialog.setIcon(R.drawable.baseline_error_24);
+                    poDialog.setTitle("Account Details");
+                    poDialog.setMessage(fsMessage);
+                    poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    poDialog.show();
+
+                }
+            });
+        } else {
+
+            poDialog.setIcon(R.drawable.baseline_error_24);
+            poDialog.setTitle("Account Details");
+            poDialog.setMessage(poDataMdl.getMessage());
+            poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                @Override
+                public void OnButtonClick(View view, AlertDialog dialog) {
+                    dialog.dismiss();
+                }
+            });
+
+            poDialog.show();
+
         }
-        return true;
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            popUpCloseConfirmationDialog();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,@Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == QR_RESULT_CODE && resultCode == RESULT_OK && data != null) {
+            ClientID = data.getStringExtra("ClientID");
+            SourceCD = data.getStringExtra("SourceCD");
+            SourceNo = data.getStringExtra("SourceNo");
+
+            mViewModel.importClientInfo(ClientID, SourceCD,SourceNo,new VMAccountDetails.OnClientInfoCallBack() {
+                @Override
+                public void onLoading() {
+                    poLoading = new Dialog_Loading(Activity_CompleteAccountDetails.this);
+                    poLoading.initDialog("Account Details", "Importing Client Info Data. Please wait.");
+                    poLoading.show();
+                }
+                @Override
+                public void onSuccess(String fsMessage) {
+                    poLoading.dismiss();
+                    initData();
+                }
+                @Override
+                public void onFailed(String fsMessage) {
+                    poLoading.dismiss();
+
+                    poDialog.setIcon(R.drawable.baseline_error_24);
+                    poDialog.setTitle("Account Details");
+                    poDialog.setMessage(fsMessage);
+                    poDialog.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    poDialog.show();
+
+                }
+            });
+
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        popUpCloseConfirmationDialog();
     }
 }
 

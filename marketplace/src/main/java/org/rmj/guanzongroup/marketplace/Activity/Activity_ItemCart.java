@@ -8,13 +8,10 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
-
-import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
 import org.rmj.guanzongroup.marketplace.Fragment.Fragment_GCardItemCart;
 import org.rmj.guanzongroup.digitalgcard.Fragment.Fragment_Redeemables;
 import org.rmj.guanzongroup.digitalgcard.ViewModel.VMGCardSystem;
@@ -26,8 +23,7 @@ import java.util.Objects;
 
 public class Activity_ItemCart extends AppCompatActivity {
     private VMGCardSystem mViewModel;
-    private ViewPager viewPager;
-    private View view;
+    private ViewPager2 viewPager;
     private TabLayout tabLayout;
     private ActivityFragmentAdapter adapter;
     private Toolbar toolbar;
@@ -35,16 +31,22 @@ public class Activity_ItemCart extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_cart);
+
         initWidgets();
         setupTabLayoutListener();
+
         mViewModel = new ViewModelProvider(Activity_ItemCart.this).get(VMGCardSystem.class);
+
         if(getIntent().getStringExtra("args").equalsIgnoreCase("1")){
+
             getSupportActionBar().setTitle("Item Cart");
+
             mViewModel.getActiveGcard().observe(this, eGcardApp -> {
                 try {
                     adapter.clear();
                     adapter.addFragment(new Fragment_MPItemCart());
-                    adapter.addTitle("MarketPlace");
+
+                    tabLayout.addTab(tabLayout.newTab().setText("MarketPlace"));
 
                     mViewModel.GetMarketplaceItemCartCount().observe(Activity_ItemCart.this, count -> {
                         try{
@@ -60,7 +62,8 @@ public class Activity_ItemCart extends AppCompatActivity {
 
                     if (eGcardApp != null) {
                         adapter.addFragment(new Fragment_GCardItemCart());
-                        adapter.addTitle("GCard");
+
+                        tabLayout.addTab(tabLayout.newTab().setText("GCard"));
                         tabLayout.setVisibility(View.VISIBLE);
 
                         mViewModel.GetGcardCartItemCount().observe(Activity_ItemCart.this, count -> {
@@ -79,7 +82,6 @@ public class Activity_ItemCart extends AppCompatActivity {
                         tabLayout.setVisibility(View.GONE);
                     }
                     viewPager.setAdapter(adapter);
-                    tabLayout.setupWithViewPager(viewPager);
                     adapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -99,36 +101,31 @@ public class Activity_ItemCart extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar_item_cart);
         tabLayout = findViewById(R.id.tabLayout_item_cart_fragment_indicator);
         viewPager = findViewById(R.id.viewpager_fragment_item_cart);
-        adapter = new ActivityFragmentAdapter(getSupportFragmentManager());
+        adapter = new ActivityFragmentAdapter(getSupportFragmentManager(), getLifecycle());
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
-    private void setupTabLayoutListener(){
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-//                tabLayout.getTabAt(tab.getPosition()).setIcon(tabIconsToggled[tab.getPosition()]);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-//                tabLayout.getTabAt(tab.getPosition()).setIcon(tabIcons[tab.getPosition()]);
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-    }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == android.R.id.home){
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+    private void setupTabLayoutListener(){
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition(), true);
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 }

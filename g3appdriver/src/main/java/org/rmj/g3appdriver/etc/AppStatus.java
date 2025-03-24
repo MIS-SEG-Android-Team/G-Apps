@@ -26,6 +26,7 @@ public class AppStatus {
 
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
             connected = networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
             return connected;
 

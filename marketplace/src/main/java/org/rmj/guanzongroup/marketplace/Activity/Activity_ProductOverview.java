@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -35,10 +36,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.rmj.g3appdriver.etc.CashFormatter;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.g3appdriver.utils.Dialogs.BottomDialog_AddToCart;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.g3appdriver.lib.Promotions.Adapter_ImageSlider;
 import org.rmj.guanzongroup.marketplace.Adapter.Adapter_ProductDescription;
 import org.rmj.guanzongroup.marketplace.Adapter.Adapter_ProductList;
@@ -62,7 +63,7 @@ public class Activity_ProductOverview extends AppCompatActivity {
     private VMProductOverview mViewModel;
     private Toolbar toolbar;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
     private LinearLayout poItmSpec;
     private SliderView poSliderx;
     private RecyclerView rvItmSpec, rvRatings, rvQueries, rvSuggest;
@@ -84,11 +85,17 @@ public class Activity_ProductOverview extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_product_overview);
+
         mViewModel = new ViewModelProvider(Activity_ProductOverview.this)
                 .get(VMProductOverview.class);
-        setContentView(R.layout.activity_product_overview);
+
         poAccount = new AccountInfo(Activity_ProductOverview.this);
-        poDialogx = new Dialog_SingleButton(Activity_ProductOverview.this);
+        poDialogx = new MessageBox(Activity_ProductOverview.this);
+
+        poDialogx.initDialog();
+
         getExtras();
         initViews();
         setUpToolbar();
@@ -157,15 +164,24 @@ public class Activity_ProductOverview extends AppCompatActivity {
     }
 
     private void getExtras() {
+
         if(getIntent().hasExtra("sListngId")) {
+
             psItemIdx = getIntent().getStringExtra("sListngId");
             Log.d(TAG, psItemIdx);
         } else {
-            poDialogx.setButtonText("Okay");
-            poDialogx.initDialog("Marketplace", "Product does not exist.", () -> {
-                poDialogx.dismiss();
-                finish();
+
+            poDialogx.setIcon(R.drawable.baseline_error_24);
+            poDialogx.setTitle("Marketplace");
+            poDialogx.setMessage("Product does not exist.");
+            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                @Override
+                public void OnButtonClick(View view, AlertDialog dialog) {
+                    dialog.dismiss();
+                    finish();
+                }
             });
+
             poDialogx.show();
         }
     }
@@ -422,10 +438,17 @@ public class Activity_ProductOverview extends AppCompatActivity {
                                 public void onSuccess(String fsMessage) {
                                     isClick = false;
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Add to Cart",
-                                            "Successfully added to cart.",
-                                            () -> poDialogx.dismiss());
+
+                                    poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                                    poDialogx.setTitle("Add to Cart");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
                                     poDialogx.show();
                                 }
 
@@ -433,10 +456,19 @@ public class Activity_ProductOverview extends AppCompatActivity {
                                 public void onFailed(String fsMessage) {
                                     isClick = false;
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Add to Cart", fsMessage,
-                                            () -> poDialogx.dismiss());
+
+                                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                                    poDialogx.setTitle("Add to Cart");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
                                     poDialogx.show();
+
                                 }
                             });
                         } catch (Exception e) {
@@ -449,20 +481,25 @@ public class Activity_ProductOverview extends AppCompatActivity {
                         isClick = false;
                     }
                 });
+
                 dialog.show(getSupportFragmentManager(), "Add To Cart");
             }
         }
     }
 
     private void buyNow() {
+
         if(!isClick) {
+
             if (isLoggedIn()) {
+
                 if (poAccount.getVerificationStatus() == 0) {
                     Intent loIntent = new Intent(Activity_ProductOverview.this,
                             Activity_CompleteAccountDetails.class);
                     startActivity(loIntent);
                     isClick = false;
                 } else {
+
                     mViewModel.buyNow(psItemIdx, 1, new OnTransactionsCallback() {
                         @Override
                         public void onLoading() {
@@ -485,9 +522,19 @@ public class Activity_ProductOverview extends AppCompatActivity {
                         public void onFailed(String fsMessage) {
                             isClick = false;
                             poLoading.dismiss();
-                            poDialogx.setButtonText("Okay");
-                            poDialogx.initDialog("Marketplace", fsMessage, () -> poDialogx.dismiss());
+
+                            poDialogx.setIcon(R.drawable.baseline_error_24);
+                            poDialogx.setTitle("Marketplace");
+                            poDialogx.setMessage(fsMessage);
+                            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                @Override
+                                public void OnButtonClick(View view, AlertDialog dialog) {
+                                    poDialogx.dismiss();
+                                }
+                            });
+
                             poDialogx.show();
+
                         }
                     });
                 }

@@ -1,27 +1,23 @@
 package org.guanzongroup.com.creditapp.ViewModel;
 
 import android.app.Application;
-import android.os.AsyncTask;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-
 import org.rmj.g3appdriver.dev.Database.Entities.EProducts;
 import org.rmj.g3appdriver.dev.Repositories.RProduct;
 import org.rmj.g3appdriver.etc.ConnectionUtil;
 import org.rmj.g3appdriver.lib.CreditApp.CreditApplication;
 import org.rmj.g3appdriver.lib.CreditApp.model.LoanTerm;
-
+import org.rmj.g3appdriver.utils.Task.OnTaskExecuteListener;
+import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 import java.util.List;
 
 public class VMLoanTerm extends AndroidViewModel {
     private static final String TAG = VMLoanTerm.class.getSimpleName();
-
     private final CreditApplication poApp;
     private final RProduct poProdct;
     private final ConnectionUtil poConn;
-
     private String message;
 
     public interface OnDownloadInstallmentPlan{
@@ -40,56 +36,42 @@ public class VMLoanTerm extends AndroidViewModel {
     public LiveData<EProducts> GetProductInfo(String args){
         return poProdct.GetProductInfo(args);
     }
-
     public void ImportInstallmentPlans(String args, OnDownloadInstallmentPlan listener){
-        new ImportInstallmentPlanTask(listener).execute(args);
-    }
+        TaskExecutor.Execute(args, new OnTaskExecuteListener() {
+            @Override
+            public void OnPreExecute() {
+                listener.OnDownload("Apply For A Loan", "Checking installment plans. Please wait...");
+            }
+            @Override
+            public Object DoInBackground(Object args) {
+                try{
+                    if(!poConn.isDeviceConnected()){
+                        message = "Unable to connect.";
+                        return null;
+                    }
 
-    private class ImportInstallmentPlanTask extends AsyncTask<String, Void, List<LoanTerm>>{
+                    List<LoanTerm> loDetail = poApp.GetLoanTerms(args.toString());
+                    if(loDetail == null){
+                        message = poApp.getMessage();
+                        return null;
+                    }
 
-        private final OnDownloadInstallmentPlan listener;
-
-        public ImportInstallmentPlanTask(OnDownloadInstallmentPlan listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            listener.OnDownload("Apply For A Loan", "Checking installment plans. Please wait...");
-        }
-
-        @Override
-        protected List<LoanTerm> doInBackground(String... strings) {
-            try{
-                if(!poConn.isDeviceConnected()){
-                    message = "Unable to connect.";
+                    return loDetail;
+                } catch (Exception e){
+                    e.printStackTrace();
+                    message = e.getMessage();
                     return null;
                 }
-
-                List<LoanTerm> loDetail = poApp.GetLoanTerms(strings[0]);
-
-                if(loDetail == null){
-                    message = poApp.getMessage();
-                    return null;
+            }
+            @Override
+            public void OnPostExecute(Object object) {
+                List<LoanTerm> result = (List<LoanTerm>) object;
+                if(result == null){
+                    listener.OnFailed(message);
+                } else {
+                    listener.OnDownload(result);
                 }
-
-                return loDetail;
-            } catch (Exception e){
-                e.printStackTrace();
-                message = e.getMessage();
-                return null;
             }
-        }
-
-        @Override
-        protected void onPostExecute(List<LoanTerm> result) {
-            super.onPostExecute(result);
-            if(result == null){
-                listener.OnFailed(message);
-            } else {
-                listener.OnDownload(result);
-            }
-        }
+        });
     }
 }

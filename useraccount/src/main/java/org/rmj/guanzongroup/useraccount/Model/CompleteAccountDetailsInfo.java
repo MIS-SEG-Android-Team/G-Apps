@@ -22,7 +22,6 @@ public class CompleteAccountDetailsInfo {
     private String sAddressx = "";
     private String sTownCity = "";
     private String sBarangay = "";
-    private String cVerified = "";
     private String sMessagex = "";
 
     public CompleteAccountDetailsInfo() {
@@ -145,13 +144,6 @@ public class CompleteAccountDetailsInfo {
     public String getBarangay() {
         return sBarangay;
     }
-    public String getVerified() {
-        return cVerified;
-    }
-
-    public void setVerified(String cVerified) {
-        this.cVerified = cVerified;
-    }
     public void setBarangay(String sBarangay) {
         this.sBarangay = sBarangay;
     }
@@ -166,12 +158,6 @@ public class CompleteAccountDetailsInfo {
         } else if(sMiddName.trim().isEmpty()) {
             sMessagex = "Please enter Middle Name";
             return false;
-//        } else if(sBirthDte.trim().isEmpty()) {
-//            sMessagex = "Please enter Birth Date";
-//            return false;
-//        } else if(sBirthPlc.trim().isEmpty()) {
-//            sMessagex = "Please enter Birth Place";
-//            return false;
         } else if(sGenderxx.trim().isEmpty()) {
             sMessagex = "Please select a Gender";
             return false;

@@ -1,7 +1,6 @@
 package org.rmj.g3appdriver.dev.ServerRequest;
 
 import static org.rmj.g3appdriver.dev.ServerRequest.APILocation.GCARD;
-import static org.rmj.g3appdriver.dev.ServerRequest.APILocation.GCARDs;
 import static org.rmj.g3appdriver.dev.ServerRequest.APILocation.LIVE;
 import static org.rmj.g3appdriver.dev.ServerRequest.APILocation.LOCAL;
 import static org.rmj.g3appdriver.dev.ServerRequest.APILocation.SECURITY;
@@ -16,6 +15,7 @@ public class ServerAPIs {
     private static final String RESEND_OTP = SECURITY + "send_otp.php";
     private static final String REGISTRATION = SECURITY + "signup.php";
     private static final String RETRIEVE_PASSWORD = SECURITY + "forgotpswd.php";
+    private static final String URL_SUBMIT_APP_VERSION = SECURITY + "updateUserAppVersion.php";
 
     private static final String URL_CHECK_APP_VERSION = GCARD + "version_checker.php";
     private static final String URL_ADD_NEW_GCARD = GCARD + "add_gcardnumber.php";
@@ -33,7 +33,7 @@ public class ServerAPIs {
     private static final String URL_REQUEST_AVAIL_POINTS = GCARD + "request_avl_points.php";
     private static final String URL_PLACE_ODER = GCARD + "place_order.php";
     private static final String URL_CANCEL_ORDER = GCARD + "cancel_order_item.php";
-    private static final String URL_IMPORT_EVENTS = GCARDs + "import_events.php";
+    private static final String URL_IMPORT_EVENTS = GCARD + "import_events.php";
     private static final String URL_CHANGE_PASSWORD = SECURITY + "acctupdate.php";
     private static final String URL_REQUEST_DEVICES = SECURITY + "acctdevice.php";
     private static final String URL_CLIENT_LOGIN = SECURITY + "signin.php";
@@ -118,6 +118,7 @@ public class ServerAPIs {
     private static final String URL_IMPORT_TERM_CATEGORY = "integsys/param/download_mc_term_category.php";
     private static final String URL_IMPORT_BRANCHES = "integsys/param/download_branch.php";
     private static final String URL_IMPORT_TOWN = "integsys/param/download_town.php";
+    private static final String URL_IMPORT_GCARD_POINTS = GCARD + "dgcard_points_request.php";
 
     public ServerAPIs(boolean isUnitTest) {
         this.isTestUnit = isUnitTest;
@@ -796,5 +797,17 @@ public class ServerAPIs {
         return LIVE + URL_IMPORT_TOWN;
     }
 
+    public String getUrlImportGcardPoints() {
+        if(isTestUnit){
+            return LOCAL + URL_IMPORT_GCARD_POINTS;
+        }
+        return LIVE + URL_IMPORT_GCARD_POINTS;
+    }
 
+    public String getUrlSubmitAppVersion() {
+        if(isTestUnit) {
+            return LOCAL + URL_SUBMIT_APP_VERSION;
+        }
+        return LIVE + URL_SUBMIT_APP_VERSION;
+    }
 }

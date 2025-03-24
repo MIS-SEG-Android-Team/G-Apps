@@ -4,22 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
-
-import org.rmj.g3appdriver.lib.GCardCore.CodeGenerator;
 import org.rmj.guanzongroup.digitalgcard.R;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -34,7 +29,7 @@ public class Activity_QrCodeScanner extends AppCompatActivity {
         setContentView(R.layout.activity_qr_code_scanner);
 
         scanner = findViewById(R.id.scanner);
-        Dexter.withActivity(this)
+        Dexter.withContext(this)
                 .withPermission(Manifest.permission.CAMERA)
                 .withListener(new PermissionListener() {
                     @Override

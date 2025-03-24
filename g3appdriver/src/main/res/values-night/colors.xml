@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_background">#242424</color>
+
+    <!--    Font Colors -->
+    <color name="font_heavy">#FFFFFF</color>
+    <color name="font_regular">#494949</color>
+    <color name="font_light">#B3B3B3</color>
+
+    <!--    This color designs has been created by sir kent-->
+    <color name="guanzon_digital_orange">#FF8200</color>
+    <color name="guanzon_digital_light_orange">#FF7F32</color>
+    <color name="guanzon_digital_grey">#616161</color>
+
+    <!--    This color has been given by the marketing dept. -->
+    <!--    for the design of guanzon panalo-->
+    <color name="marketplace_orange">#FF8200</color>
+    <color name="guanzon_digital_dark_grey">#121212</color>
+    <color name="background_lighten_orange">#F5D7A9</color>
+    <color name="white">#FFFFFF</color>
+    <color name="status_bar">#0A0A0A</color>
+    <color name="guanzon_digital_light_grey">#f0f0f5</color>
+    <color name="guanzon_digital_red">#ff1a1a</color>
+    <color name="black">#000000</color>
+
+    <color name="colorNavTop">#FF8200</color>
+    <color name="colorNavBottom">#FF7F32</color>.
+
+    <color name="colorNavTopDark">#FF8200</color>
+    <color name="colorNavBottomDark">#7E3915</color>
+</resources>

@@ -4,45 +4,42 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 import com.kofigyan.stateprogressbar.StateProgressBar;
-
-import org.rmj.g3appdriver.dev.Database.Entities
-        .EEmailInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EMobileInfo;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
-import org.rmj.guanzongroup.useraccount.Adapter.Adapter_AccountDetails;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMAccountDetails;
-
 import java.util.Objects;
 import org.rmj.guanzongroup.useraccount.R;
 
 
 public class Activity_AccountDetails extends AppCompatActivity {
     private static final String TAG = Activity_AccountDetails.class.getSimpleName();
+    private static final String[] descriptionData = {"Basic Account", "Account Verified", "Fully Verified"};
+
     private VMAccountDetails mViewModel;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
     private Toolbar toolbar;
-
-    String[] descriptionData = {"Basic Account", "Account Verified", "Fully Verified"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_account_details);
+
         mViewModel = new ViewModelProvider(Activity_AccountDetails.this)
                 .get(VMAccountDetails.class);
+
         initViews();
         setUpToolbar();
         importAccountInfo();
@@ -57,21 +54,22 @@ public class Activity_AccountDetails extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
         finish();
     }
 
-    // Initialize this first before anything else.
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
-        poDialogx = new Dialog_SingleButton(Activity_AccountDetails.this);
+        poDialogx = new MessageBox(Activity_AccountDetails.this);
+
+        poDialogx.initDialog();
 
         StateProgressBar progressBar = findViewById(R.id.your_state_progress_bar_id);
         progressBar.setStateDescriptionData(descriptionData);
     }
 
-    // Initialize initViews() before this method.
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -80,14 +78,16 @@ public class Activity_AccountDetails extends AppCompatActivity {
 
     private void setAdapter() {
         try {
+
             mViewModel.GetClientDetailForPreview().observe(this, clientInfo -> {
                 try {
                     TextView lblUserNm = findViewById(R.id.lbl_username);
                     TextView lblInfoVerify= findViewById(R.id.lbl_Info_verify);
                     lblUserNm.setText(clientInfo.sUserName);
+
                     if(clientInfo.cVerified.equalsIgnoreCase("1")) {
                         lblInfoVerify.setVisibility(View.GONE);
-                        Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_user_24);
+                        @SuppressLint("UseCompatLoadingForDrawables") Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_user_24);
                         img.setBounds(0, 0, 60, 60);
                         lblUserNm.setCompoundDrawables(null, null, img, null);
                     }
@@ -97,9 +97,11 @@ public class Activity_AccountDetails extends AppCompatActivity {
 
                     TextView lblFullNm = findViewById(R.id.lbl_fullName);
                     String lsFullNme = clientInfo.sLastName + ", " + clientInfo.sFrstName;
+
                     if(!clientInfo.sMiddName.trim().isEmpty()){
                         lsFullNme = lsFullNme + " " + clientInfo.sMiddName;
                     }
+
                     if(!clientInfo.sSuffixNm.trim().isEmpty()){
                         lsFullNme = lsFullNme + ", " + clientInfo.sSuffixNm;
                     }
@@ -122,10 +124,11 @@ public class Activity_AccountDetails extends AppCompatActivity {
 
                     TextView lblEmailx = findViewById(R.id.lbl_email);
                     lblEmailx.setText(clientInfo.sEmailAdd);
+
                     mViewModel.GetEmailInfo(clientInfo.sEmailAdd, args -> {
                         if(args != null){
                             if(args.getIsVerifd() == 1){
-                                Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_24);
+                                @SuppressLint("UseCompatLoadingForDrawables") Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_24);
                                 img.setBounds(0, 0, 60, 60);
                                 lblEmailx.setCompoundDrawables(null, null, img, null);
                             }
@@ -140,12 +143,13 @@ public class Activity_AccountDetails extends AppCompatActivity {
 
                     TextView lblMobile = findViewById(R.id.lbl_mobile);
                     lblMobile.setText(clientInfo.sMobileNo);
+
                     mViewModel.GetMobileInfo(clientInfo.sMobileNo, new VMAccountDetails.OnRetrieveMobileInfo() {
                         @Override
                         public void OnRetrieve(EMobileInfo args) {
                             if(args != null){
                                 if(args.getVerified().equalsIgnoreCase("1")){
-                                    Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_24);
+                                    @SuppressLint("UseCompatLoadingForDrawables") Drawable img = Activity_AccountDetails.this.getResources().getDrawable(R.drawable.ic_baseline_verified_24);
                                     img.setBounds(0, 0, 60, 60);
                                     lblMobile.setCompoundDrawables(null, null, img, null);
                                 }
@@ -159,15 +163,20 @@ public class Activity_AccountDetails extends AppCompatActivity {
                         startActivity(loIntent);
                     });
 
-                    findViewById(R.id.lbl_editPassword).setOnClickListener(v -> {
+                    TextView lblGcash = findViewById(R.id.lbl_gcash);
+                    lblGcash.setText(clientInfo.sGCashNox);
+
+                    findViewById(R.id.lbl_editGcashNo).setOnClickListener(v -> {
                         Intent loIntent = new Intent(Activity_AccountDetails.this, Activity_AccountUpdate.class);
                         loIntent.putExtra("sUpdatexx", 2);
                         startActivity(loIntent);
                     });
 
-//                    if(!clientInfo.cVerified.equalsIgnoreCase("1")){
-//                        findViewById(R.id.btnVerify).setVisibility(View.VISIBLE);
-//                    }
+                    findViewById(R.id.lbl_editPassword).setOnClickListener(v -> {
+                        Intent loIntent = new Intent(Activity_AccountDetails.this, Activity_AccountUpdate.class);
+                        loIntent.putExtra("sUpdatexx", 3);
+                        startActivity(loIntent);
+                    });
 
                     findViewById(R.id.btnVerify).setOnClickListener(v -> {
                         Intent loIntent = new Intent(Activity_AccountDetails.this, Activity_ProfileVerification.class);
@@ -183,7 +192,6 @@ public class Activity_AccountDetails extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     private void importAccountInfo() {
         try {
             mViewModel.importAccountInfo(new VMAccountDetails.OnTransactionCallBack() {
@@ -202,12 +210,20 @@ public class Activity_AccountDetails extends AppCompatActivity {
                 @Override
                 public void onFailed(String fsMessage) {
                     poLoading.dismiss();
-                    poDialogx.setButtonText("Okay");
-                    poDialogx.initDialog("Account Details", fsMessage, () -> {
-                        poDialogx.dismiss();
-                        finish();
+
+                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                    poDialogx.setTitle("Account Details");
+                    poDialogx.setMessage(fsMessage);
+                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
+                            finish();
+                        }
                     });
+
                     poDialogx.show();
+
                 }
             });
         } catch (Exception e) {

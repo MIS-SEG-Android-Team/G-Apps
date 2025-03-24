@@ -19,6 +19,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.EGCardTransactionLedger;
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
+import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
 import org.rmj.g3appdriver.dev.Database.Entities.ERedeemablesInfo;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
@@ -31,6 +32,7 @@ import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class SystemExtras implements iGCardSystem{
@@ -61,7 +63,28 @@ public class SystemExtras implements iGCardSystem{
     }
 
     @Override
+    public List<EGcardApp> hasActiveGcard() {
+        return null;
+    }
+
+    @Override
     public LiveData<List<EGcardApp>> GetGCardList() {
+        return null;
+    }
+    @Override
+    public LiveData<EGcardApp> hasNoGcard() {
+        return null;
+    }
+    @Override
+    public LiveData<List<EGcardApp>> hasUnCheckGCard() {
+        return null;
+    }
+    @Override
+    public LiveData<EGcardApp> getGCardInfo() {
+        return null;
+    }
+    @Override
+    public LiveData<List<EPointsRequest>> GetPointsRqsts() {
         return null;
     }
 
@@ -71,230 +94,152 @@ public class SystemExtras implements iGCardSystem{
     }
 
     @Override
-    public List<EGcardApp> hasGcard() {
-        return null;
-    }
-
-    @Override
-    public LiveData<EGcardApp> hasNoGcard() {
-        return null;
-    }
-
-    @Override
-    public LiveData<List<EGcardApp>> hasUnCheckGCard() {
-        return null;
-    }
-
-    @Override
-    public List<EGcardApp> hasActiveGcard() {
-        return null;
-    }
-
-    @Override
-    public List<EGcardApp> hasMultipleGCard() {
-        return null;
-    }
-
-    @Override
-    public LiveData<EGcardApp> getGCardInfo() {
-        return null;
-    }
-
-    @Override
-    public List<EGcardApp> getAllGCard() {
-        return null;
-    }
-
-    @Override
-    public void updateAvailablePoints(String fsGcardNo, String fsNewPts) {
-        throw new NullPointerException();
-    }
-
-    @Override
-    public LiveData<String> getActiveGcardNo() {
-        return null;
-    }
-
-    @Override
-    public LiveData<String> getActiveGcardAvlPoints() {
-        return null;
-    }
-
-    @Override
     public double getRemainingActiveCardPoints() {
         return 0;
     }
-
-    @Override
-    public double getAvailableGcardPoints() {
-        return 0;
-    }
-
-    @Override
-    public double getRedeemItemPoints() {
-        return 0;
-    }
-
     @Override
     public void updateGCardDeactiveStatus() {
         throw new NullPointerException();
+    }
+    @Override
+    public void SavePointsRqst(EPointsRequest loRqst) {
+    }
+    @Override
+    public void UpdateSendPointsRqst(String sTransNoxx) {
     }
 
     @Override
     public void AddGCardQrCode(String GcardNo, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void ConfirmAddGCard(GcardCredentials gcardInfo, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void DownloadGcardNumbers(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveGCardInfo(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void ActivateGcard(String GcardNo) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public Bitmap GenerateGCardQrCode() throws Exception {
         return null;
     }
-
     @Override
     public void ParseQrCode(String val, GCardSystem.ParseQrCodeCallback callback) throws Exception {
 
     }
-
+    @Override
+    public HashMap<String, String> ScanTDS() {
+        return null;
+    }
+    @Override
+    public Boolean DownloadGcardPoints(HashMap<String, String> params) {
+        return true;
+    }
     @Override
     public void DownloadRedeemables(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveRedeemables(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public LiveData<List<Double>> GetRedeemablePointsFilter() {
         return null;
     }
-
     @Override
     public LiveData<List<ERedeemablesInfo>> GetRedeemablesList() {
         return null;
     }
-
     @Override
     public LiveData<List<ERedeemablesInfo>> GetRedeemablesList(String fsVal) {
         return null;
     }
-
     @Override
     public void AddToCart(CartItem item, GCardSystem.GCardSystemCallback callback) {
         throw new NullPointerException();
     }
-
     @Override
     public void UpdateCartItem(CartItem item, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public LiveData<List<DRedeemItemInfo.GCardCartItem>> GetCartItems() {
         return null;
     }
-
     @Override
     public List<EBranchInfo> GetMCBranchesForRedemption() {
         return null;
     }
-
     @Override
     public LiveData<Integer> GetGcardCartItemCount() {
         return null;
     }
-
     @Override
     public LiveData<Double> GetGCardCartItemTotalPoints() {
         return null;
     }
-
     @Override
     public void DeleteItemCart(String fsVal) {
         throw new NullPointerException();
     }
-
     @Override
     public void PlaceOrder(List<DRedeemItemInfo.GCardCartItem> redeemables, String BranchCD, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public Bitmap GenerateGCardOrderQrCode(String BatchNox) throws Exception {
         return null;
     }
-
     @Override
     public void DownloadTransactions(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveTransactions(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public LiveData<List<EGCardTransactionLedger>> GetGcardTransactions() {
         return null;
     }
-
     @Override
     public LiveData<List<EGCardTransactionLedger>> GetPointsEntryTransactions() {
         return null;
     }
-
     @Override
     public LiveData<List<EGCardTransactionLedger>> GetRedemptionTransactions() {
         return null;
     }
-
     @Override
     public void DownloadMCServiceInfo(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void DownloadRegistrationInfo(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveMcServiceInfo(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveRegistrationInfo(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void ScheduleNextServiceDate(String date, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void DownloadBranchesList(GCardSystem.GCardSystemCallback callback) throws Exception {
         JSONObject params = new JSONObject();
@@ -317,17 +262,16 @@ public class SystemExtras implements iGCardSystem{
             }
         }
     }
-
     @Override
     public void SaveBranchesList(JSONObject detail) throws Exception {
         JSONArray laDetail = detail.getJSONArray("detail");
+
         for(int x = 0; x < laDetail.length(); x++){
             JSONObject loJson = laDetail.getJSONObject(x);
+
             EBranchInfo loBranch = poBranch.getBranchIfExist(loJson.getString("sBranchCD"));
-            //Insert new record if not exist
             if(loBranch == null){
                 //check the records from API, if record status is not equal to 1, record is inactive, do not insert
-//                if(!"1".equalsIgnoreCase(loJson.getString("cRecdStat"))){
                     // insert saving method inside...
                     EBranchInfo info = new EBranchInfo();
                     info.setBranchCd(loJson.getString("sBranchCD"));
@@ -335,6 +279,7 @@ public class SystemExtras implements iGCardSystem{
                     info.setDescript(loJson.getString("sDescript"));
                     info.setAddressx(loJson.getString("sAddressx"));
                     info.setTownIDxx(loJson.getString("sTownIDxx"));
+
                     if(loJson.has("nLatitude") &&
                     loJson.has("nLongtude") &&
                     !loJson.getString("nLatitude").isEmpty() &&
@@ -343,29 +288,10 @@ public class SystemExtras implements iGCardSystem{
                         info.setLongtude(Double.parseDouble(loJson.getString("nLongtude")));
                     }
 
-//                    info.setContactx(loJson.getString("sContactx"));
                     info.setTelNumbr(loJson.getString("sTelNumbr"));
                     info.setEmailAdd(loJson.getString("sEMailAdd"));
-//                    info.setRecdStat(loJson.getString("cRecdStat"));
-//                    info.setTimeStmp(loJson.getString("dTimeStmp"));
                     poBranch.insert(info);
                     Log.d(TAG, "New record save!");
-//                }
-            } else {
-                // if exist check timestamp for latest record and replace current record on local
-//                Date ldDate1 = SQLUtil.toDate(loBranch.getTimeStmp(), SQLUtil.FORMAT_TIMESTAMP);
-//                Date ldDate2 = SQLUtil.toDate((String) loJson.get("dTimeStmp"), SQLUtil.FORMAT_TIMESTAMP);
-//                if(!ldDate1.equals(ldDate2)){
-//                    poBranch.UpdateBranchInfo(
-//                            loJson.getString("sBranchCD"),
-//                            loJson.getString("sBranchNm"),
-//                            loJson.getString("sDescript"),
-//                            loJson.getString("sAddressx"),
-//                            loJson.getString("sContactx"),
-//                            loJson.getString("sTelNumbr"),
-//                            loJson.getString("sEMailAdd"));
-//                    Log.d(TAG, "A record has been updated!");
-//                }
             }
         }
     }
@@ -374,7 +300,6 @@ public class SystemExtras implements iGCardSystem{
     public LiveData<List<EBranchInfo>> GetMobileBranchList() {
         return poBranch.getMobileBranches();
     }
-
     @Override
     public LiveData<List<EBranchInfo>> GetMotorcycleBranchList() {
         return poBranch.getMotorBranches();
@@ -406,12 +331,13 @@ public class SystemExtras implements iGCardSystem{
     @Override
     public void SavePromotions(JSONObject detail) throws Exception {
         JSONArray laDetail = detail.getJSONArray("detail");
+
         for(int x = 0; x < laDetail.length(); x++){
             JSONObject loJson = laDetail.getJSONObject(x);
+
             EPromo loPromo = poPromo.getPromoInfoIfExist(loJson.getString("sTransNox"));
             if(loPromo == null) {
                 //check the records from API, if record status is not equal to 1, record is inactive, do not insert
-//                if(!"1".equalsIgnoreCase(loJson.getString("cRecdStat"))){
                     // insert saving method inside...
                     EPromo info = new EPromo();
                     info.setTransNox(loJson.getString("sTransNox"));
@@ -423,29 +349,9 @@ public class SystemExtras implements iGCardSystem{
                     info.setCaptionx(loJson.getString("sCaptionx"));
                     info.setDateFrom(loJson.getString("dDateFrom"));
                     info.setDateThru(loJson.getString("dDateThru"));
-//                    info.setRecdStat(loJson.getString("cRecdStat"));
-//                    info.setTimeStmp(loJson.getString("dTimeStmp"));
+
                     poPromo.insert(info);
                     Log.d(TAG, "New record save!");
-//                }
-//            } else {
-//                Date ldDate1 = SQLUtil.toDate(loPromo.getTimeStmp(), SQLUtil.FORMAT_TIMESTAMP);
-//                Date ldDate2 = SQLUtil.toDate((String) loJson.get("dTimeStmp"), SQLUtil.FORMAT_TIMESTAMP);
-//
-//                if(!ldDate1.equals(ldDate2)){
-//                    poPromo.UpdatePromoInfo(loJson.getString("dTransact"),
-//                            loJson.getString("dDateFrom"),
-//                            loJson.getString("dDateThru"),
-//                            loJson.getString("sCaptionx"),
-//                            loJson.getString("sImageURL"),
-//                            loJson.getString("cRecdStat"),
-//                            loJson.getString("sImageNme"),
-//                            loJson.getString("dTimeStmp"),
-//                            loJson.getString("sPromoUrl"),
-//                            loJson.getString("cDivision"),
-//                            loJson.getString("sTransNox"));
-//                    Log.d(TAG, "A record has been updated!");
-//                }
             }
         }
     }
@@ -498,6 +404,7 @@ public class SystemExtras implements iGCardSystem{
             info.setNotified("0");
             info.setModified(new AppConstants().DATE_MODIFIED);
             info.setDirectoryFolder("Events");
+
             poEvents.insert(info);
         }
     }
@@ -505,6 +412,21 @@ public class SystemExtras implements iGCardSystem{
     @Override
     public LiveData<List<EEvents>> GetNewsEvents() {
         return poEvents.getAllEvents();
+    }
+
+    @Override
+    public String GetMessage() {
+        return null;
+    }
+
+    @Override
+    public Boolean ValidateQR(String sUserIDxx, String sMobileNoxx) {
+        return null;
+    }
+
+    @Override
+    public Boolean ValidateGCardInfo(String sFrstnm, String sLstnm, String sMdnm, String sSuffix, String dBirthdt, String sGCardNox) {
+        return null;
     }
 
     @Override

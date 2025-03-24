@@ -1,5 +1,6 @@
 package org.rmj.guanzongroup.documentscanner.utils
 
+import android.annotation.SuppressLint
 import android.os.Environment
 import android.util.Log
 import androidx.core.app.ComponentActivity
@@ -24,7 +25,7 @@ class FileUtil {
    * @param pageNumber the current document page number
    */
   @Throws(IOException::class)
-  fun createImageFile(activity: ComponentActivity, pageNumber: Int): File {
+  fun createImageFile(@SuppressLint("RestrictedApi") activity: ComponentActivity, pageNumber: Int): File {
     // use current time to make file name more unique
     val dateTime: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
 

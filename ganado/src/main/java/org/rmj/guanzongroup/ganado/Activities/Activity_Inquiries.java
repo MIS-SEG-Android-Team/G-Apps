@@ -24,19 +24,20 @@ import org.rmj.guanzongroup.ganado.ViewModel.VMInquiry;
 import java.util.Objects;
 
 public class Activity_Inquiries extends AppCompatActivity {
-
     private VMInquiry mViewModel;
     private RecyclerView rvInquiries;
-    private InquiryListAdapter inquiryList;
     private LoadDialog poLoad;
     private MessageBox poMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_inquiries);
+
         mViewModel = new ViewModelProvider(this).get(VMInquiry.class);
         mViewModel.RemoveInquiry();
-        setContentView(R.layout.activity_inquiries);
+
         intWidgets();
 
         poLoad = new LoadDialog(Activity_Inquiries.this);
@@ -58,9 +59,10 @@ public class Activity_Inquiries extends AppCompatActivity {
             public void OnFailed(String message) {
                 poLoad.dismiss();
                 poMessage.initDialog();
-                poMessage.setTitle("Product Inquiry");
+                poMessage.setIcon(R.drawable.baseline_error_24);
+                poMessage.setTitle("Kita Moto");
                 poMessage.setMessage(message);
-                poMessage.setPositiveButton("Okay", new MessageBox.DialogButton() {
+                poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
                     public void OnButtonClick(View view, AlertDialog dialog) {
                         dialog.dismiss();
@@ -104,6 +106,7 @@ public class Activity_Inquiries extends AppCompatActivity {
     private void intWidgets(){
         MaterialToolbar toolbar = findViewById(R.id.toolbar_Inquiries);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         rvInquiries = findViewById(R.id.rvInquiries);
     }

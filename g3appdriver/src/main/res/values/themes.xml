@@ -1,26 +1,25 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="GuanzonMarketplace.Theme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-
+    <style name="GuanzonMarketplace.Theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!--   color for the app bar and other primary UI elements -->
-        <item name="colorPrimary">@color/marketplace_orange</item>
+        <item name="colorPrimary">@color/guanzon_digital_light_orange</item>
         <item name="colorPrimaryVariant">@color/marketplace_orange</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
 
         <!--   a darker variant of the primary color, used for
            the status bar (on Android 5.0+) and contextual app bars -->
-        <item name="colorPrimaryDark">@color/marketplace_orange</item>
+        <item name="colorPrimaryDark">@color/guanzon_digital_dark_grey</item>
 
         <!--   a secondary color for controls like checkboxes and text fields -->
         <item name="colorAccent">@color/guanzon_digital_orange</item>
+
         <!-- Secondary brand color. -->
         <item name="searchViewStyle">@style/MySearchView</item>
         <item name="colorSecondary">@color/guanzon_digital_orange</item>
         <item name="colorSecondaryVariant">@color/guanzon_digital_orange</item>
         <item name="colorOnSecondary">@color/white</item>
-        <item name="android:windowBackground">@color/app_background</item>
+
+        <item name="android:windowBackground">@drawable/app_background_light</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
@@ -58,8 +57,22 @@
         <item name="android:layout_marginBottom">5dp</item>
     </style>
 
+    <style name="Title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:spacing">1dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SubTitle">
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="SubText">
+        <item name="android:textSize">10sp</item>
+    </style>
+
     <style name="LoginLinkLabel">
-        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textColor">@color/link_text_color</item>
         <item name="android:textSize">14sp</item>
         <item name="android:layout_marginLeft">10dp</item>
@@ -68,17 +81,20 @@
     </style>
 
     <style name="TextInputStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:layout_margin">2dp</item>
-        <item name="boxStrokeColor">@color/guanzon_digital_light_orange</item>
-        <item name="hintTextColor">@color/guanzon_digital_light_orange</item>
-        <item name="colorControlActivated">@color/guanzon_digital_light_orange</item>
-        <item name="boxBackgroundColor">#FCFCFC</item>
-        <item name="background">@color/app_background</item>
-        <item name="fontFamily">@font/roboto</item>
         <item name="boxCornerRadiusBottomEnd">10dp</item>
         <item name="boxCornerRadiusBottomStart">10dp</item>
         <item name="boxCornerRadiusTopStart">10dp</item>
         <item name="boxCornerRadiusTopEnd">10dp</item>
+    </style>
+
+    <style name="TextInputStyleRequired" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusBottomEnd">10dp</item>
+        <item name="boxCornerRadiusBottomStart">10dp</item>
+        <item name="boxCornerRadiusTopStart">10dp</item>
+        <item name="boxCornerRadiusTopEnd">10dp</item>
+        <item name="boxStrokeColor">@color/custom_focus_color</item>
+        <item name="android:textColorHint">@color/custom_focus_color_hint</item>
+        <item name="hintTextColor">@color/guanzon_digital_red</item>
     </style>
 
     <style name="AutoCompleteStyleTheme" parent="TextInputStyle">
@@ -90,14 +106,6 @@
     </style>
 
     <style name="CustomDropDownTilStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-        <item name="android:popupBackground">@color/app_background</item>
-        <item name="android:layout_margin">2dp</item>
-        <item name="boxStrokeColor">@color/guanzon_digital_light_orange</item>
-        <item name="hintTextColor">@color/guanzon_digital_light_orange</item>
-        <item name="colorControlActivated">@color/guanzon_digital_light_orange</item>
-        <item name="boxBackgroundColor">#FCFCFC</item>
-        <item name="background">@color/app_background</item>
-        <item name="fontFamily">@font/roboto</item>
         <item name="boxCornerRadiusBottomEnd">10dp</item>
         <item name="boxCornerRadiusBottomStart">10dp</item>
         <item name="boxCornerRadiusTopStart">10dp</item>
@@ -220,6 +228,14 @@
 
     <style name="MySearchView" parent="Widget.AppCompat.Light.SearchView">
         <item name="searchHintIcon">@null</item>
+    </style>
+
+    <style name="Drawer_Design">
+        <item name="android:background">@drawable/bg_header_light</item>
+    </style>
+
+    <style name="Orange_Bg_Light">
+        <item name="android:background">@drawable/rounded_bottom_cardview</item>
     </style>
 
 </resources>

@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGcardApp;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRedeemItemInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 import org.rmj.g3appdriver.dev.Repositories.RRedeemablesInfo;
 import org.rmj.g3appdriver.dev.ServerRequest.ServerAPIs;
@@ -33,6 +34,7 @@ import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class RedemptionManager implements iGCardSystem{
@@ -65,59 +67,28 @@ public class RedemptionManager implements iGCardSystem{
     public LiveData<List<EGcardApp>> GetGCardList() {
         return null;
     }
-
     @Override
     public void updateGCardActiveStatus(String GCardNmbr) {
         throw new NullPointerException();
     }
-
-    @Override
-    public List<EGcardApp> hasGcard() {
-        return null;
-    }
-
     @Override
     public LiveData<EGcardApp> hasNoGcard() {
         return null;
     }
-
     @Override
     public LiveData<List<EGcardApp>> hasUnCheckGCard() {
         return null;
     }
-
     @Override
     public List<EGcardApp> hasActiveGcard() {
         return null;
     }
-
-    @Override
-    public List<EGcardApp> hasMultipleGCard() {
-        return null;
-    }
-
     @Override
     public LiveData<EGcardApp> getGCardInfo() {
         return null;
     }
-
     @Override
-    public List<EGcardApp> getAllGCard() {
-        return null;
-    }
-
-    @Override
-    public void updateAvailablePoints(String fsGcardNo, String fsNewPts) {
-        throw new NullPointerException();
-    }
-
-    @Override
-    public LiveData<String> getActiveGcardNo() {
-        return null;
-    }
-
-    @Override
-    public LiveData<String> getActiveGcardAvlPoints() {
+    public LiveData<List<EPointsRequest>> GetPointsRqsts() {
         return null;
     }
 
@@ -125,55 +96,54 @@ public class RedemptionManager implements iGCardSystem{
     public double getRemainingActiveCardPoints() {
         return 0;
     }
-
-    @Override
-    public double getAvailableGcardPoints() {
-        return 0;
-    }
-
-    @Override
-    public double getRedeemItemPoints() {
-        return 0;
-    }
-
     @Override
     public void updateGCardDeactiveStatus() {
         throw new NullPointerException();
+    }
+    @Override
+    public void SavePointsRqst(EPointsRequest loRqst) {
+    }
+    @Override
+    public void UpdateSendPointsRqst(String sTransNoxx) {
     }
 
     @Override
     public void AddGCardQrCode(String GcardNo, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void ConfirmAddGCard(GcardCredentials gcardInfo, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void DownloadGcardNumbers(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveGCardInfo(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void ActivateGcard(String GcardNo) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public Bitmap GenerateGCardQrCode() throws Exception {
         return null;
     }
-
     @Override
     public void ParseQrCode(String val, GCardSystem.ParseQrCodeCallback callback) throws Exception {
 
+    }
+
+    @Override
+    public HashMap<String, String> ScanTDS() {
+        return null;
+    }
+
+    @Override
+    public Boolean DownloadGcardPoints(HashMap<String, String> params) {
+        return true;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -459,6 +429,21 @@ public class RedemptionManager implements iGCardSystem{
 
     @Override
     public LiveData<List<EEvents>> GetNewsEvents() {
+        return null;
+    }
+
+    @Override
+    public String GetMessage() {
+        return null;
+    }
+
+    @Override
+    public Boolean ValidateQR(String sUserIDxx, String sMobileNoxx) {
+        return null;
+    }
+
+    @Override
+    public Boolean ValidateGCardInfo(String sFrstnm, String sLstnm, String sMdnm, String sSuffix, String dBirthdt, String sGCardNox) {
         return null;
     }
 

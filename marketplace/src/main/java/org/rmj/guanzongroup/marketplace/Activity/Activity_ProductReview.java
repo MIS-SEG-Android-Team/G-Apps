@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,8 +16,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.marketplace.Adapter.Adapter_ProductReview;
 import org.rmj.guanzongroup.marketplace.R;
 import org.rmj.guanzongroup.marketplace.ViewModel.VMProductReview;
@@ -28,7 +29,7 @@ public class Activity_ProductReview extends AppCompatActivity {
     private static final String TAG = Activity_ProductOverview.class.getSimpleName();
     private VMProductReview mViewModel;
     private ActivityProductReviewBinding mBinding;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
     private Dialog_Loading poLoad;
     private String psItemIdx = "", psEntryNo = "";
 
@@ -45,7 +46,8 @@ public class Activity_ProductReview extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Product Review");
 
-        poDialogx = new Dialog_SingleButton(Activity_ProductReview.this);
+        poDialogx = new MessageBox(Activity_ProductReview.this);
+        poDialogx.initDialog();
 
         displayData();
     }
@@ -64,16 +66,26 @@ public class Activity_ProductReview extends AppCompatActivity {
     }
 
     private void getExtras() {
+
         if(getIntent().hasExtra("sListngId")) {
+
             psItemIdx = getIntent().getStringExtra("sListngId");
         } else {
-            poDialogx.setButtonText("Okay");
-            poDialogx.initDialog("Marketplace", "Product does not exist.", () -> {
-                poDialogx.dismiss();
-                finish();
+
+            poDialogx.setIcon(R.drawable.baseline_error_24);
+            poDialogx.setTitle("Marketplace");
+            poDialogx.setMessage("Product does not exist.");
+            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                @Override
+                public void OnButtonClick(View view, AlertDialog dialog) {
+                    dialog.dismiss();
+                    finish();
+                }
             });
+
             poDialogx.show();
         }
+
         if(getIntent().hasExtra("nEntryNox")){
             psEntryNo = getIntent().getStringExtra("nEntryNox");
         }

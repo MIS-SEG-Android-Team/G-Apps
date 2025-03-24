@@ -1,39 +1,69 @@
 package org.rmj.guanzongroup.gconnect.Service;
 
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.util.Log;
-
 import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
+import org.rmj.g3appdriver.dev.Repositories.RMcModel;
+import org.rmj.g3appdriver.dev.Repositories.RNotificationInfo;
 import org.rmj.g3appdriver.dev.Repositories.ROrder;
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
 import org.rmj.g3appdriver.lib.GCardCore.iGCardSystem;
+import org.rmj.g3appdriver.lib.Ganado.Obj.ImportBrand;
+import org.rmj.g3appdriver.lib.Ganado.Obj.ImportBrandModel;
+import org.rmj.g3appdriver.lib.Ganado.Obj.ImportCategory;
+import org.rmj.g3appdriver.lib.Ganado.Obj.ImportMcModelPrice;
+import org.rmj.g3appdriver.lib.Ganado.Obj.ImportMcTermCategory;
+import org.rmj.g3appdriver.lib.Ganado.Obj.ImportTown;
+import org.rmj.g3appdriver.lib.Ganado.Obj.Import_McColors;
+import org.rmj.g3appdriver.lib.Ganado.Obj.Import_Relation;
+import org.rmj.g3appdriver.lib.Ganado.model.ImportDataCallback;
+import org.rmj.g3appdriver.lib.Ganado.model.ImportInstance;
+import org.rmj.g3appdriver.utils.Task.OnDoBackgroundTaskListener;
+import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 import org.rmj.guanzongroup.notifications.Activity.Activity_Browser;
 import org.rmj.guanzongroup.notifications.Activity.Activity_GuanzonPanalo;
-import org.rmj.guanzongroup.notifications.Activity.Activity_ViewNotification;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_ProfileVerification;
 
 public class DashboardActionReceiver extends BroadcastReceiver {
     private static final String TAG = DashboardActionReceiver.class.getSimpleName();
+    private char cImportxx;
+    private Context loContext;
+    private Application loApplication;
+    private iGCardSystem loGcard;
+    private iGCardSystem loGcardExtra;
+    private iGCardSystem loGcardRedeemables;
+    private RClientInfo loClient;
+    private ROrder loPurchase;
+    private RNotificationInfo loNotif;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
+            loContext = context;
+            loApplication = (Application) context.getApplicationContext();
+            loClient = new RClientInfo(context);
+            loPurchase = new ROrder(context);
+            loNotif = new RNotificationInfo(context);
+            loGcard = new GCardSystem(context).getInstance(GCardSystem.CoreFunctions.GCARD);
+            loGcardExtra = new GCardSystem(context).getInstance(GCardSystem.CoreFunctions.EXTRAS);
+            loGcardRedeemables = new GCardSystem(context).getInstance(GCardSystem.CoreFunctions.REDEMPTION);
+
             if (intent.hasExtra("args")) {
                 String args = intent.getStringExtra("args");
-                Log.e("args", args);
+
                 Intent loIntent;
                 switch (args) {
                     case "auth":
                         Thread.sleep(1000);
-                        new CheckDataImportTask(context).execute();
+                        CheckDataImportTask();
                         break;
                     case "client":
                         Thread.sleep(1000);
-                        new ImportClientCompleteInfoTask(context).execute();
+                        ImportClientCompleteInfoTask();
                         break;
                     case "promo":
                         Thread.sleep(1000);
@@ -53,7 +83,7 @@ public class DashboardActionReceiver extends BroadcastReceiver {
                         break;
                     case "purchase":
                         Thread.sleep(1000);
-                        new ImportClientPurchasesTask(context).execute();
+                        ImportClientPurchasesTask();
                         break;
                     case "verify":
                         Thread.sleep(1000);
@@ -68,16 +98,10 @@ public class DashboardActionReceiver extends BroadcastReceiver {
         }
     }
 
-    private static class CheckDataImportTask extends AsyncTask<String, Void, String>{
-
-        private final Context mContext;
-        private iGCardSystem loGcard;
-        private char cImportxx;
-
+    private void CheckDataImportTask(){
         GCardSystem.GCardSystemCallback callback = new GCardSystem.GCardSystemCallback() {
             @Override
             public void OnSuccess(String args) {
-                Log.d(TAG, args);
                 try {
                     switch (cImportxx) {
                         case '0':
@@ -87,160 +111,183 @@ public class DashboardActionReceiver extends BroadcastReceiver {
                             loGcard.SaveMcServiceInfo(new JSONObject(args));
                             break;
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void OnFailed(String message) {
                 Log.e(TAG, message);
             }
         };
 
-        public CheckDataImportTask(Context mContext) {
-            this.mContext = mContext;
-        }
+        TaskExecutor.Execute(callback, new OnDoBackgroundTaskListener() {
+            @Override
+            public Object DoInBackground(Object args) {
+                try{
 
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                pause();
-                loGcard = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.GCARD);
+                    //TODO: IMPORT PROMOS, NEWS AND EVENTS. PRIORITY FOR THIS FOR IMAGE LOADING
+                    GCardSystem.GCardSystemCallback callback = (GCardSystem.GCardSystemCallback) args;
+                    cImportxx = '0';
 
-                cImportxx = '0';
-                loGcard.DownloadGcardNumbers(callback);
-                pause();
-                if(loGcard.hasActiveGcard().size() > 0){
-                    cImportxx = '1';
-                    loGcard.DownloadMCServiceInfo(callback);
-                    pause();
-                    loGcard.DownloadTransactions(callback);
-                }
-
-                pause();
-                RClientInfo loClient = new RClientInfo(mContext);
-                if (loClient.ImportAccountInfo()) {
-                    Log.d(TAG, "Client info downloaded successfully.");
-                } else {
-                    Log.e(TAG, "Failed to download client info. " + loClient.getMessage());
-                }
-                pause();
-                if (loClient.getClientId() != null) {
-                    ROrder loPurchase = new ROrder(mContext);
-                    if (loPurchase.ImportMarketPlaceItemCart()) {
-                        Log.d(TAG, "Cart items downloaded successfully.");
+                    //TODO: IMPORT ACCOUNT INFO
+                    if (loClient.ImportAccountInfo()) {
+                        Log.d(TAG, "Client info downloaded successfully.");
                     } else {
-                        Log.e(TAG, "Failed to download cart items. " + loPurchase.getMessage());
+                        Log.e(TAG, "Failed to download client info. " + loClient.getMessage());
                     }
-                    pause();
+
+                    Thread.sleep(500);
+                    loGcardExtra.DownloadPromotions(callback);
+                    Log.d(TAG, "Promotions imported successfully...");
+
+                    Thread.sleep(500);
+                    loGcardExtra.DownloadNewsEvents(callback);
+                    Log.d(TAG, "News events imported successfully...");
+
+                    //TODO: IMPORT MC DATA. SECOND PRIORITY
+                    Thread.sleep(500);
+                    if (new RMcModel(loContext).ImportCashPrices()){
+                        Log.d(TAG, "Cash price imported successfully");
+                    }
+
+                    Thread.sleep(500);
+                    ImportInstance[]  importInstances = {
+                            new Import_Relation(loApplication),
+                            new ImportBrand(loApplication),
+                            new ImportBrandModel(loApplication),
+                            new Import_McColors(loApplication),
+                            new ImportCategory(loApplication),
+                            new ImportMcModelPrice(loApplication),
+                            new ImportTown(loApplication),
+                            new ImportMcTermCategory(loApplication)};
+
+                    for (ImportInstance importInstance : importInstances) {
+                        importInstance.ImportData(new ImportDataCallback() {
+                            @Override
+                            public void OnSuccessImportData() {
+                                Log.e(TAG, importInstance.getClass().getSimpleName() + " import success.");
+                            }
+                            @Override
+                            public void OnFailedImportData(String message) {
+                                Log.e(TAG, importInstance.getClass().getSimpleName() + " import failed. " + message);
+                            }
+                        });
+
+                        Thread.sleep(500);
+                    }
+
+                    //TODO: IMPORT GCARD DATA
+                    loGcard.DownloadGcardNumbers(callback);
+                    if(loGcard.hasActiveGcard().size() > 0){
+                        cImportxx = '1';
+
+                        Thread.sleep(500);
+                        loGcard.DownloadMCServiceInfo(callback);
+
+                        Thread.sleep(500);
+                        loGcard.DownloadTransactions(callback);
+                    }
+
+                    Thread.sleep(500);
+                    loGcardExtra.DownloadBranchesList(callback);
+                    Log.d(TAG, "Branches imported successfully...");
+
+                    Thread.sleep(500);
+                    loGcardRedeemables.DownloadRedeemables(callback);
+
+                    if (loClient.getClientId() != null) {
+                        Thread.sleep(500);
+                        if (loPurchase.ImportMarketPlaceItemCart()) {
+                            Log.d(TAG, "Cart items downloaded successfully.");
+                        } else {
+                            Log.e(TAG, "Failed to download cart items. " + loPurchase.getMessage());
+                        }
+
+                        Thread.sleep(500);
+                        if (loPurchase.ImportPurchases()) {
+                            Log.d(TAG, "Purchases downloaded successfully.");
+                        } else {
+                            Log.e(TAG, "Failed to download purchases. " + loPurchase.getMessage());
+                        }
+                    }
+
+                    Thread.sleep(500);
+                    if (loNotif.ImportClientNotifications(0)){
+                        Log.d(TAG, "Client notifications downloaded successfully.");
+                    }else {
+                        Log.d(TAG, loNotif.getMessage());
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+            @Override
+            public void OnPostExecute(Object object) {
+                Log.d(TAG, "Local imports has finished.");
+            }
+        });
+    }
+    private void ImportClientCompleteInfoTask(){
+        TaskExecutor.Execute(null, new OnDoBackgroundTaskListener() {
+            @Override
+            public Object DoInBackground(Object args) {
+                try {
+                    if (loClient.ImportAccountInfo()) {
+                        Log.d(TAG, "Client info downloaded successfully. " + loClient.getClientId());
+                    } else {
+                        Log.e(TAG, "Failed to download client info. " + loClient.getMessage());
+                    }
+
+                    if (loClient.getClientId() != null) {
+                        if (loPurchase.ImportMarketPlaceItemCart()) {
+                            Log.d(TAG, "Cart items downloaded successfully.");
+                        } else {
+                            Log.e(TAG, "Failed to download cart items. " + loPurchase.getMessage());
+                        }
+
+                        Thread.sleep(1000);
+                        if (loPurchase.ImportPurchases()) {
+                            Log.d(TAG, "Purchases downloaded successfully.");
+                        } else {
+                            Log.e(TAG, "Failed to download purchases. " + loPurchase.getMessage());
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+            @Override
+            public void OnPostExecute(Object object) {
+                Log.d(TAG, "Local imports for user account has finished.");
+            }
+        });
+    }
+    private void ImportClientPurchasesTask(){
+        TaskExecutor.Execute(null, new OnDoBackgroundTaskListener() {
+            @Override
+            public Object DoInBackground(Object args) {
+                try {
                     if (loPurchase.ImportPurchases()) {
                         Log.d(TAG, "Purchases downloaded successfully.");
                     } else {
                         Log.e(TAG, "Failed to download purchases. " + loPurchase.getMessage());
                     }
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
-            } catch (Exception e){
-                e.printStackTrace();
+
+                return null;
             }
-            return null;
-        }
-
-        private void pause() throws Exception{
-            Thread.sleep(1000);
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Log.d(TAG, "Local imports for user account has finished.");
-        }
-    }
-
-    private static class ImportClientCompleteInfoTask extends AsyncTask<String, Void, String>{
-
-        private final Context mContext;
-        private iGCardSystem loGcard;
-        private char cImportxx;
-
-        public ImportClientCompleteInfoTask(Context mContext) {
-            this.mContext = mContext;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                RClientInfo loClient = new RClientInfo(mContext);
-                if (loClient.ImportAccountInfo()) {
-                    Log.d(TAG, "Client info downloaded successfully. " + loClient.getClientId());
-                } else {
-                    Log.e(TAG, "Failed to download client info. " + loClient.getMessage());
-                }
-                pause();
-                if (loClient.getClientId() != null) {
-                    ROrder loPurchase = new ROrder(mContext);
-                    if (loPurchase.ImportMarketPlaceItemCart()) {
-                        Log.d(TAG, "Cart items downloaded successfully.");
-                    } else {
-                        Log.e(TAG, "Failed to download cart items. " + loPurchase.getMessage());
-                    }
-                    pause();
-                    if (loPurchase.ImportPurchases()) {
-                        Log.d(TAG, "Purchases downloaded successfully.");
-                    } else {
-                        Log.e(TAG, "Failed to download purchases. " + loPurchase.getMessage());
-                    }
-                }
-            } catch (Exception e){
-                e.printStackTrace();
+            @Override
+            public void OnPostExecute(Object object) {
+                Log.d(TAG, "Local imports for purchase has finished.");
             }
-            return null;
-        }
-
-        private void pause() throws Exception{
-            Thread.sleep(1000);
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Log.d(TAG, "Local imports for user account has finished.");
-        }
-    }
-
-    private static class ImportClientPurchasesTask extends AsyncTask<String, Void, String>{
-
-        private final Context mContext;
-        private iGCardSystem loGcard;
-        private char cImportxx;
-
-        public ImportClientPurchasesTask(Context mContext) {
-            this.mContext = mContext;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                ROrder loPurchase = new ROrder(mContext);
-                if (loPurchase.ImportPurchases()) {
-                    Log.d(TAG, "Purchases downloaded successfully.");
-                } else {
-                    Log.e(TAG, "Failed to download purchases. " + loPurchase.getMessage());
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        private void pause() throws Exception{
-            Thread.sleep(1000);
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Log.d(TAG, "Local imports for user account has finished.");
-        }
+        });
     }
 }

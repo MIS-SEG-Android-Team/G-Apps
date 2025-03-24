@@ -43,7 +43,7 @@ public class GCardTransactionTest {
     @Test
     public void test01AuthenticateAccount() throws Exception{
         AccountAuthentication loAuth = new AccountAuthentication(mContext);
-        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "12345678", "09270359402"), new AccountAuthentication.OnLoginCallback() {
+        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "12345678"), new AccountAuthentication.OnLoginCallback() {
             @Override
             public void OnSuccessLogin(String message) {
                 isSuccess = true;

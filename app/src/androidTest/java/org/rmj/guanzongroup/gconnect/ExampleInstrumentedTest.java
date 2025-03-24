@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 import androidx.test.InstrumentationRegistry;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 /**
@@ -20,7 +21,7 @@ public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
+        Context appContext = ApplicationProvider.getApplicationContext();
 
         assertEquals("com.guanzongroup.restgk.g_apps", appContext.getPackageName());
     }

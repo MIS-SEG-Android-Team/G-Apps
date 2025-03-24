@@ -2,6 +2,7 @@ package org.rmj.guanzongroup.useraccount.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,6 @@ import org.rmj.g3appdriver.etc.AppConstants;
 import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_AccountDetails;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_CompleteAccountDetails;
-import org.rmj.guanzongroup.useraccount.Activity.Activity_Login;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_ShippingAddress;
 import org.rmj.guanzongroup.useraccount.Adapter.Adapter_AccountSettings;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMAccountSettings;
@@ -98,16 +98,6 @@ public class Fragment_AccountSettings extends Fragment {
                         Intent loIntent = new Intent(requireActivity(), Activity_AccountDetails.class);
                         startActivity(loIntent);
                     }
-//                    mViewModel.getClientInfo().observe(requireActivity(), eClientInfo -> {
-//                        if (poAccount.getVerificationStatus() == 0){
-//                            Intent loIntent = new Intent(requireActivity(), Activity_CompleteAccountDetails.class);
-//                            loIntent.putExtra("args", "account");
-//                            poArl.launch(loIntent);
-//                        } else {
-//                            Intent loIntent = new Intent(requireActivity(), Activity_AccountDetails.class);
-//                            startActivity(loIntent);
-//                        }
-//                    });
                     break;
                 case 1:
                     if (poAccount.getVerificationStatus() == 0){

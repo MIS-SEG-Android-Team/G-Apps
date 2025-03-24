@@ -92,7 +92,7 @@ public class VMGCardSystemTest extends TestCase {
 
     @Test
     public void testAddGCardQrCode() {
-        mViewModel.addGCardQrCode("02138216378", new VMGCardSystem.GcardTransactionCallback() {
+        mViewModel.addGCardQrCode(new VMGCardSystem.GcardTransactionCallback() {
             @Override
             public void onLoad() {
 

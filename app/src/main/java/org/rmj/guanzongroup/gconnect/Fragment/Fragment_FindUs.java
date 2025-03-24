@@ -54,9 +54,11 @@ public class Fragment_FindUs extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(requireActivity()).get(VMBranchDetails.class);
         View view = inflater.inflate(R.layout.fragment_find_us, container, false);
         initViews(view);
+
+        mViewModel = new ViewModelProvider(requireActivity()).get(VMBranchDetails.class);
+
         mViewModel.DownloadBranches();
         mViewModel.getMotorBranches().observe(getViewLifecycleOwner(), motorBranches -> {
             try {

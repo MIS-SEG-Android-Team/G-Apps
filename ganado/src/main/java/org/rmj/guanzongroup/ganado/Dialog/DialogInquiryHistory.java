@@ -23,7 +23,6 @@ import android.view.View;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.textview.MaterialTextView;
 
 import org.json.JSONException;
@@ -31,7 +30,6 @@ import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGanadoOnline;
 import org.rmj.g3appdriver.dev.Database.Entities.EGanadoOnline;
 import org.rmj.g3appdriver.etc.FormatUIText;
-import org.rmj.g3appdriver.lib.Ganado.Obj.Ganado;
 import org.rmj.g3appdriver.lib.Ganado.Obj.ProductInquiry;
 import org.rmj.g3appdriver.lib.Ganado.model.GConstants;
 import org.rmj.guanzongroup.ganado.R;
@@ -42,23 +40,22 @@ public class DialogInquiryHistory {
 
     private static final String TAG = DialogInquiryHistory.class.getSimpleName();
     private AlertDialog poDialogx;
-    private MaterialButton btnPositive;
     private MaterialButton btnClose;
     private MaterialTextView lblDate,lblDateTarget, lblStatus, lblclientName,
-            lblclientMbilNo, lblAddress,
+            lblclientMbilNo,
             lblModelNme, lblInquiryType, lblCashAmount , lblTerm,
             lblDownPayment, lblMonthAmrt;
     LinearLayoutCompat lnCash, lnInstTerm;
     private MaterialTextView lblMsgxx;
-    private MaterialDivider midBorder;
 
     private final Context context;
     private String message = "";
     private String nMAort = "";
+
     public DialogInquiryHistory(Context context){
-        // Must be, at all times, pass Activity Context.
         this.context = Objects.requireNonNull(context);
     }
+
     public void initDialog(Application apps, EGanadoOnline foDetail){
         AlertDialog.Builder poBuilder = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_inquiry_history, null);
@@ -66,27 +63,28 @@ public class DialogInquiryHistory {
                 .setView(view);
         poDialogx = poBuilder.create();
         poDialogx.setCancelable(false);
-        initView(view);
-        try {
-            Ganado poSys = new Ganado(apps);
-            ProductInquiry poInq = new ProductInquiry(apps);
 
-//            poSys.
+        initView(view);
+
+        try {
+            ProductInquiry poInq = new ProductInquiry(apps);
             JSONObject joClient = new JSONObject(foDetail.getClntInfo());
             JSONObject joProduct = new JSONObject(foDetail.getProdInfo());
+
             lblDate.setText(FormatUIText.formatGOCasBirthdate(foDetail.getTransact()));
             lblStatus.setText(GConstants.INQUIRY_STATUS[Integer.parseInt(foDetail.getTranStat())]);
             lblclientName.setText(foDetail.getClientNm());
             lblclientMbilNo.setText(joClient.getString("sMobileNo"));
 
             DGanadoOnline.McInfo mcInfo = poInq.GetMCInfo(joProduct.getString("sModelIDx"),joProduct.getString("sBrandIDx"), joProduct.getString("sColorIDx"));
+
             lblDateTarget.setText(FormatUIText.formatGOCasBirthdate(foDetail.getTargetxx()));
             lblModelNme.setText(mcInfo.ModelNme);
             lblInquiryType.setText(GConstants.PAYMENT_FORM[Integer.parseInt(foDetail.getPaymForm())]);
+
             if(foDetail.getPaymForm().equalsIgnoreCase("0")){
                 lnInstTerm.setVisibility(View.GONE);
                 lnCash.setVisibility(View.VISIBLE);
-                //lblCashAmount.setText(FormatUIText.getCurrencyUIFormat(foDetail.getCashPrce().toString()));
                 lblCashAmount.setText(FormatUIText.getCurrencyUIFormat(joProduct.getString("nSelPrice")));
                 Log.d("CASH PRICE", joProduct.getString("nSelPrice"));
             }else{
@@ -104,20 +102,13 @@ public class DialogInquiryHistory {
                 lblTerm.setText(GConstants.INSTALLMENT_TERM[pos]);
                 lblDownPayment.setText(FormatUIText.getCurrencyUIFormat(joPaymInfo.getString("nDownPaym")));
                 lblMonthAmrt.setText(FormatUIText.getCurrencyUIFormat(joPaymInfo.getString("nMonthAmr")));
-
-//                lblMonthAmrt.setText(FormatUIText.getCurrencyUIFormat(String.valueOf(CalculateNewDownpayment(poInq, joProduct.getString("sModelIDx"), Integer.parseInt(joPaymInfo.getString("sTermIDxx")), Double.parseDouble(joPaymInfo.getString("nDownPaym"))))));
             }
-;
         } catch (JSONException e) {
-            Log.e(TAG,e.getMessage());
             lblMonthAmrt.setText(FormatUIText.getCurrencyUIFormat("0.00"));
-//            throw new RuntimeException(e);
         }
     }
 
     private void initView(View v){
-
-
         lblDate = v.findViewById(R.id.lblDate);
         lblStatus = v.findViewById(R.id.lblStatus);
         lblclientName = v.findViewById(R.id.lbl_clientName);
@@ -134,21 +125,10 @@ public class DialogInquiryHistory {
         btnClose = v.findViewById(R.id.btn_close);
     }
 
-    public interface AsyncTaskCallback {
-        void onTaskComplete(double result);
-    }
     public void setMessage(String psMessage) {
         try {
             lblMsgxx.setText(Objects.requireNonNull(psMessage));
         } catch(NullPointerException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void setTitle(String psTitlexx) {
-        try {
-//            lblTitle.setText(Objects.requireNonNull(psTitlexx));
-        } catch(NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -158,10 +138,8 @@ public class DialogInquiryHistory {
         btnClose.setText(psBtnPost);
         btnClose.setOnClickListener(view -> {
             listener.OnButtonClick(view, poDialogx);
-//            isDialogShown = false;
         });
     }
-
 
     public void show() {
         if(!poDialogx.isShowing()) {

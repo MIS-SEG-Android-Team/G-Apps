@@ -19,8 +19,6 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -412,7 +410,7 @@
                 android:id="@+id/lblGCashNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/lblGCashNumber"
+                android:text="@string/lblGCashNo"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/til_maidenNm"
                 app:layout_constraintRight_toRightOf="parent"
