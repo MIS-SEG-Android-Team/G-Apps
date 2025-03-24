@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
-import com.kofigyan.stateprogressbar.StateProgressBar;
 
 import org.rmj.g3appdriver.etc.AppConstants;
 import org.rmj.g3appdriver.etc.CashFormatter;
@@ -78,8 +77,8 @@ public class Activity_Purchases extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        StateProgressBar progressBar = findViewById(R.id.your_state_progress_bar_id);
-        progressBar.setStateDescriptionData(descriptionData);
+//        StateProgressBar progressBar = findViewById(R.id.your_state_progress_bar_id);
+//        progressBar.setStateDescriptionData(descriptionData);
 
         String lsOrderIDx = getIntent().getStringExtra("sOrderIDx");
         MaterialButton btnPay = findViewById(R.id.btn_Pay);
@@ -161,8 +160,8 @@ public class Activity_Purchases extends AppCompatActivity {
 
                     if (!foOrder.cTranStat.equalsIgnoreCase("3")) {
                         toolbar.setTitle("Order Detail");
-                        progressBar.setVisibility(View.VISIBLE);
-                        progressBar.setCurrentStateNumber(GetStateNumber(foOrder.cTranStat));
+//                        progressBar.setVisibility(View.VISIBLE);
+//                        progressBar.setCurrentStateNumber(GetStateNumber(foOrder.cTranStat));
                     } else {
                         toolbar.setTitle("Cancellation Detail");
                         btnCancel.setVisibility(View.GONE);
@@ -331,20 +330,20 @@ public class Activity_Purchases extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private StateProgressBar.StateNumber GetStateNumber(String fsVal){
-        switch (fsVal){
-            case "0":
-                return StateProgressBar.StateNumber.ONE;
-            case "1":
-                return StateProgressBar.StateNumber.TWO;
-            case "2":
-                return StateProgressBar.StateNumber.THREE;
-            case "4":
-                return StateProgressBar.StateNumber.FOUR;
-            default:
-                return StateProgressBar.StateNumber.FIVE;
-        }
-    }
+//    private StateProgressBar.StateNumber GetStateNumber(String fsVal){
+//        switch (fsVal){
+//            case "0":
+//                return StateProgressBar.StateNumber.ONE;
+//            case "1":
+//                return StateProgressBar.StateNumber.TWO;
+//            case "2":
+//                return StateProgressBar.StateNumber.THREE;
+//            case "4":
+//                return StateProgressBar.StateNumber.FOUR;
+//            default:
+//                return StateProgressBar.StateNumber.FIVE;
+//        }
+//    }
 
     private String getDate(String val){
         SimpleDateFormat fromUser = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import com.kofigyan.stateprogressbar.StateProgressBar;
 import org.rmj.g3appdriver.dev.Database.Entities.EMobileInfo;
 import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
@@ -65,9 +64,6 @@ public class Activity_AccountDetails extends AppCompatActivity {
         poDialogx = new MessageBox(Activity_AccountDetails.this);
 
         poDialogx.initDialog();
-
-        StateProgressBar progressBar = findViewById(R.id.your_state_progress_bar_id);
-        progressBar.setStateDescriptionData(descriptionData);
     }
 
     private void setUpToolbar() {

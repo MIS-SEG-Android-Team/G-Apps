@@ -73,21 +73,21 @@
 
             </LinearLayout>
 
-            <com.kofigyan.stateprogressbar.StateProgressBar
-                android:id="@+id/your_state_progress_bar_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:spb_maxStateNumber="four"
-                android:visibility="gone"
-                app:spb_stateBackgroundColor="#BDBDBD"
-                app:spb_stateForegroundColor="@color/guanzon_digital_light_orange"
-                app:spb_stateNumberBackgroundColor="#808080"
-                app:spb_stateNumberForegroundColor="#eeeeee"
-                app:spb_currentStateDescriptionColor="@color/guanzon_digital_light_orange"
-                app:spb_stateDescriptionColor="#808080"
-                app:spb_animateToCurrentProgressState="true"
-                app:spb_checkStateCompleted="true"
-                android:layout_marginVertical="30dp"/>
+<!--            <com.kofigyan.stateprogressbar.StateProgressBar-->
+<!--                android:id="@+id/your_state_progress_bar_id"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:spb_maxStateNumber="four"-->
+<!--                android:visibility="gone"-->
+<!--                app:spb_stateBackgroundColor="#BDBDBD"-->
+<!--                app:spb_stateForegroundColor="@color/guanzon_digital_light_orange"-->
+<!--                app:spb_stateNumberBackgroundColor="#808080"-->
+<!--                app:spb_stateNumberForegroundColor="#eeeeee"-->
+<!--                app:spb_currentStateDescriptionColor="@color/guanzon_digital_light_orange"-->
+<!--                app:spb_stateDescriptionColor="#808080"-->
+<!--                app:spb_animateToCurrentProgressState="true"-->
+<!--                app:spb_checkStateCompleted="true"-->
+<!--                android:layout_marginVertical="30dp"/>-->
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_cancellation_detail"
