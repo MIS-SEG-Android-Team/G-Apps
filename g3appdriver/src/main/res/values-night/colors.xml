@@ -17,11 +17,11 @@
     <color name="marketplace_orange">#FF8200</color>
     <color name="guanzon_digital_dark_grey">#121212</color>
     <color name="background_lighten_orange">#F5D7A9</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#000000</color>
     <color name="status_bar">#0A0A0A</color>
     <color name="guanzon_digital_light_grey">#f0f0f5</color>
     <color name="guanzon_digital_red">#ff1a1a</color>
-    <color name="black">#000000</color>
+    <color name="black">#FFFFFF</color>
 
     <color name="colorNavTop">#FF8200</color>
     <color name="colorNavBottom">#FF7F32</color>.

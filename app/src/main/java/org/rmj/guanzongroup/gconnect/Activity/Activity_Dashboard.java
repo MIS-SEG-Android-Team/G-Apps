@@ -10,20 +10,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
+import com.google.android.material.badge.ExperimentalBadgeUtils;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -79,12 +85,19 @@ public class Activity_Dashboard extends AppCompatActivity {
     private LayoutInflater loInflate;
     private Dialog_Loading poLoading;
     private MessageBox poDialog;
-    private Toolbar toolbar;
+    private MaterialToolbar toolbar;
     private BadgeDrawable loBadge;
     private TextView lblBadge;
     private DashboardActionReceiver poLogRcv = new DashboardActionReceiver();
     private ConnectionUtil poConn;
     private AccountInfo loAccount;
+
+    private ShapeableImageView icon_move;
+    private MaterialCardView mcv_menu;
+
+    float dX;
+    float dY;
+    int lastAction;
 
     private final ActivityResultLauncher<Intent> poArl = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -111,20 +124,148 @@ public class Activity_Dashboard extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.appBarActivityDashboardId.toolbar);
 
-        DrawerLayout drawer = binding.drawerLayout;
+        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
+
+        initViews(); //todo: init views
+
+        initNavigation(); //todo: init navigation
+
+        initObservables(); //todo: init observables
+
+        initMenuListener(); //todo: init menu listener
+
+        initListener(); //todo: init listener
+
+        setUpHeader(navigationView); //todo: init header
+
+        setUpNotifications(); //todo: init notifications
+
+        //TODO: UPLOAD UNSENT GCARD OFFLINE ENTRIES
+        if (loAccount.getVerificationStatus() > 0){
+            SendOfflineEntries();
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        /*MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_mrktplc, menu);
+
+        // Get the SearchView and set the searchable configuration
+        mViewModel.getClientInfo().observe(Activity_Dashboard.this, eClientinfo -> {
+
+            //This area of code has been commented to avoid users from accessing
+            // the marketplace cart while the marketplace has not yet fully develop yet.
+            try {
+                if(eClientinfo != null){
+                    menu.findItem(R.id.item_notifications).setVisible(true);
+                } else {
+                    menu.findItem(R.id.item_notifications).setVisible(false);
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        });*/
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent loIntent;
+
+        if(item.getItemId() == android.R.id.home){
+
+        } else if (item.getItemId() == R.id.item_search) {
+            loIntent = new Intent(Activity_Dashboard.this, Activity_SearchItem.class);
+            startActivity(loIntent);
+        } else if (item.getItemId() == R.id.item_cart) {
+            Intent intent = new Intent(Activity_Dashboard.this, Activity_ItemCart.class);
+            intent.putExtra("args", "1");
+            startActivity(intent);
+        } else {
+            startActivity(new Intent(Activity_Dashboard.this, Activity_NotificationList.class));
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+
+        poDialog.setIcon(R.drawable.baseline_contact_support_24);
+        poDialog.setTitle("Guanzon App");
+        poDialog.setMessage("Exit Guanzon App?");
+
+        poDialog.setPositiveButton("Yes", new MessageBox.DialogButton() {
+            @Override
+            public void OnButtonClick(View view, AlertDialog dialog) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+
+        poDialog.setNegativeButton("No", new MessageBox.DialogButton() {
+            @Override
+            public void OnButtonClick(View view, AlertDialog dialog) {
+                dialog.dismiss();
+            }
+        });
+
+        poDialog.show();
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter("android.intent.action.SUCCESS_LOGIN");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(poLogRcv, intentFilter, RECEIVER_EXPORTED);
+        }else {
+            registerReceiver(poLogRcv, intentFilter, RECEIVER_EXPORTED);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(poLogRcv);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_activity_dashboard);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
+    }
+
+    private void initViews(){
 
         loInflate = LayoutInflater.from(Activity_Dashboard.this);
         mViewModel = new ViewModelProvider(Activity_Dashboard.this).get(VMHome.class);
         poLoading = new Dialog_Loading(Activity_Dashboard.this);
         poDialog = new MessageBox(Activity_Dashboard.this);
-        poDialog.initDialog();
+
+        icon_move = binding.appBarActivityDashboardId.iconMove;
+        mcv_menu = binding.appBarActivityDashboardId.mcvMenu;
 
         navigationView = binding.navView;
+
+        poDialog.initDialog();
 
         loAccount = new AccountInfo(this);
         poConn = new ConnectionUtil(this);
 
-        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
+    }
+
+    private void initNavigation(){
+
+        DrawerLayout drawer = binding.drawerLayout;
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -155,16 +296,10 @@ public class Activity_Dashboard extends AppCompatActivity {
 
         setupIntentArguments(navController);
 
-        //TODO: SET DRAWER MENUS
-        setUpHeader(navigationView);
+    }
 
-        //TODO: SET NOTIFICATIONS
-        setUpNotifications();
-
-        //TODO: UPLOAD UNSENT GCARD OFFLINE ENTRIES
-        if (loAccount.getVerificationStatus() > 0){
-            SendOfflineEntries();
-        }
+    @OptIn(markerClass = ExperimentalBadgeUtils.class)
+    private void initObservables(){
 
         mViewModel.GetUnreadMessagesCount().observe(Activity_Dashboard.this, count -> {
             try{
@@ -212,6 +347,10 @@ public class Activity_Dashboard extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+
+    }
+
+    private void initMenuListener(){
 
         navigationView.getMenu().findItem(R.id.nav_scan_qrcode).setOnMenuItemClickListener(menuItem -> {
             Intent loIntent = new Intent(Activity_Dashboard.this, Activity_QrCodeScanner.class);
@@ -339,100 +478,44 @@ public class Activity_Dashboard extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_mrktplc, menu);
+    @SuppressLint("ClickableViewAccessibility")
+    private void initListener(){
 
-        // Get the SearchView and set the searchable configuration
-        mViewModel.getClientInfo().observe(Activity_Dashboard.this, eClientinfo -> {
+        icon_move.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
 
-            //This area of code has been commented to avoid users from accessing
-            // the marketplace cart while the marketplace has not yet fully develop yet.
-            try {
-                if(eClientinfo != null){
-                    menu.findItem(R.id.item_notifications).setVisible(true);
-                } else {
-                    menu.findItem(R.id.item_notifications).setVisible(false);
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        dX = v.getX() - event.getRawX();
+                        dY = v.getY() - event.getRawY();
+                        lastAction = MotionEvent.ACTION_DOWN;
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        v.setY(event.getRawY() + dY);
+                        v.setX(event.getRawX() + dX);
+                        lastAction = MotionEvent.ACTION_MOVE;
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        if (lastAction == MotionEvent.ACTION_DOWN)
+
+                            if (mcv_menu.getVisibility() == View.GONE || mcv_menu.getVisibility() == View.INVISIBLE){
+                                mcv_menu.setVisibility(View.VISIBLE);
+                            }else {
+                                mcv_menu.setVisibility(View.GONE);
+                            }
+
+                        break;
+
+                    default:
+                        return false;
                 }
-            } catch(Exception e) {
-                e.printStackTrace();
+
+                return true;
             }
         });
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent loIntent;
-
-        if(item.getItemId() == android.R.id.home){
-
-        } else if (item.getItemId() == R.id.item_search) {
-            loIntent = new Intent(Activity_Dashboard.this, Activity_SearchItem.class);
-            startActivity(loIntent);
-        } else if (item.getItemId() == R.id.item_cart) {
-            Intent intent = new Intent(Activity_Dashboard.this, Activity_ItemCart.class);
-            intent.putExtra("args", "1");
-            startActivity(intent);
-        } else {
-            startActivity(new Intent(Activity_Dashboard.this, Activity_NotificationList.class));
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    public void onBackPressed() {
-
-        poDialog.setIcon(R.drawable.baseline_contact_support_24);
-        poDialog.setTitle("Guanzon App");
-        poDialog.setMessage("Exit Guanzon App?");
-
-        poDialog.setPositiveButton("Yes", new MessageBox.DialogButton() {
-            @Override
-            public void OnButtonClick(View view, AlertDialog dialog) {
-                dialog.dismiss();
-                finish();
-            }
-        });
-
-        poDialog.setNegativeButton("No", new MessageBox.DialogButton() {
-            @Override
-            public void OnButtonClick(View view, AlertDialog dialog) {
-                dialog.dismiss();
-            }
-        });
-
-        poDialog.show();
-    }
-
-    @SuppressLint("NewApi")
-    @Override
-    protected void onStart() {
-        super.onStart();
-        IntentFilter intentFilter = new IntentFilter("android.intent.action.SUCCESS_LOGIN");
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(poLogRcv, intentFilter, RECEIVER_EXPORTED);
-        }else {
-            registerReceiver(poLogRcv, intentFilter, RECEIVER_EXPORTED);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(poLogRcv);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_activity_dashboard);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
     }
 
     private void setUpHeader(NavigationView foNavigxx) {
@@ -621,16 +704,6 @@ public class Activity_Dashboard extends AppCompatActivity {
         }
     }
 
-    private String GetBadgeValue(int val){
-        if(val > 0){
-            lblBadge.setVisibility(View.VISIBLE);
-            return String.valueOf(val);
-        } else {
-            lblBadge.setVisibility(View.GONE);
-            return "0";
-        }
-    }
-
     public void ParseQrCode(String fsVal){
         mViewModel.ParseQrCode(fsVal, new GCardSystem.ParseQrCodeCallback() {
             @Override
@@ -808,5 +881,15 @@ public class Activity_Dashboard extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private String GetBadgeValue(int val){
+        if(val > 0){
+            lblBadge.setVisibility(View.VISIBLE);
+            return String.valueOf(val);
+        } else {
+            lblBadge.setVisibility(View.GONE);
+            return "0";
+        }
     }
 }

@@ -1,26 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activity.Activity_Dashboard">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Theme.GApps.AppBarOverlay">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintWidth_percent="0.5">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.GApps.PopupOverlay">
-        </androidx.appcompat.widget.Toolbar>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/icon_move"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/kay_wave"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"/>
 
-    </com.google.android.material.appbar.AppBarLayout>
+       <com.google.android.material.card.MaterialCardView
+           android:id="@+id/mcv_menu"
+           android:layout_width="match_parent"
+           android:layout_height="35dp"
+           android:layout_gravity="center"
+           android:visibility="visible"
+           app:cardElevation="10dp"
+           app:cardCornerRadius="10dp"
+           app:cardBackgroundColor="@color/app_background">
+
+           <com.google.android.material.appbar.AppBarLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:theme="@style/Theme.GApps.AppBarOverlay"
+               android:background="?attr/colorOnSecondary">
+
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="horizontal">
+
+                  <com.google.android.material.appbar.MaterialToolbar
+                      android:id="@+id/toolbar"
+                      android:layout_width="50dp"
+                      android:layout_height="match_parent"
+                      android:background="@color/zxing_transparent"
+                      app:popupTheme="@style/Theme.GApps.PopupOverlay"/>
+
+                  <ImageButton
+                      android:layout_width="50dp"
+                      android:layout_height="match_parent"
+                      android:src="@drawable/ic_settings_person_24"
+                      android:background="@color/zxing_transparent"/>
+
+                  <ImageButton
+                      android:layout_width="50dp"
+                      android:layout_height="match_parent"
+                      android:src="@drawable/ic_baseline_notifications_24"
+                      android:backgroundTint="@color/zxing_transparent"/>
+
+              </LinearLayout>
+
+           </com.google.android.material.appbar.AppBarLayout>
+
+       </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
 
     <include layout="@layout/content_activity_dashboard" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
