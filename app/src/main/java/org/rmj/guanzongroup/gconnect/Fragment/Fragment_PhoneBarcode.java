@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,7 +43,6 @@ import org.rmj.guanzongroup.gconnect.ViewModel.VMBarcode;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
 
 public class Fragment_PhoneBarcode extends Fragment {
@@ -212,8 +210,8 @@ public class Fragment_PhoneBarcode extends Fragment {
             @Override
             public void onAnimationEnd(Animation animation) {
                 //todo: after animation, load another animation
-                mtv_tapme.startAnimation(AnimationUtils.loadAnimation(requireActivity(), R.anim.bounce_animation));
-                mtv_tapmesubmit.startAnimation(AnimationUtils.loadAnimation(requireActivity(), R.anim.bounce_animation));
+                mtv_tapme.startAnimation(AnimationUtils.loadAnimation(requireActivity(), R.anim.bounce_animation_up));
+                mtv_tapmesubmit.startAnimation(AnimationUtils.loadAnimation(requireActivity(), R.anim.bounce_animation_up));
             }
 
             @Override

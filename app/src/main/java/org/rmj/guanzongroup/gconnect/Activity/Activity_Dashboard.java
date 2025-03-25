@@ -4,15 +4,18 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +33,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -95,9 +97,9 @@ public class Activity_Dashboard extends AppCompatActivity {
     private ShapeableImageView icon_move;
     private MaterialCardView mcv_menu;
 
-    float dX;
-    float dY;
-    int lastAction;
+    private float dX;
+    private float dY;
+    private int lastAction;
 
     private final ActivityResultLauncher<Intent> poArl = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -124,6 +126,8 @@ public class Activity_Dashboard extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.appBarActivityDashboardId.toolbar);
 
+        getSupportActionBar().setTitle("");
+
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 
         initViews(); //todo: init views
@@ -135,6 +139,8 @@ public class Activity_Dashboard extends AppCompatActivity {
         initMenuListener(); //todo: init menu listener
 
         initListener(); //todo: init listener
+
+        initAnimation(); //todo: init animation
 
         setUpHeader(navigationView); //todo: init header
 
@@ -250,10 +256,10 @@ public class Activity_Dashboard extends AppCompatActivity {
         poLoading = new Dialog_Loading(Activity_Dashboard.this);
         poDialog = new MessageBox(Activity_Dashboard.this);
 
+        navigationView = binding.navView;
+
         icon_move = binding.appBarActivityDashboardId.iconMove;
         mcv_menu = binding.appBarActivityDashboardId.mcvMenu;
-
-        navigationView = binding.navView;
 
         poDialog.initDialog();
 
@@ -485,37 +491,83 @@ public class Activity_Dashboard extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
+                Log.d("Y Axis", String.valueOf(event.getRawY()));
+                Log.d("X Axis", String.valueOf(event.getRawX()));
+
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
-                        dX = v.getX() - event.getRawX();
-                        dY = v.getY() - event.getRawY();
+                        dX = binding.appBarActivityDashboardId.layoutAppbar.getX() - event.getRawX();
+                        dY = binding.appBarActivityDashboardId.layoutAppbar.getY() - event.getRawY();
                         lastAction = MotionEvent.ACTION_DOWN;
                         break;
 
                     case MotionEvent.ACTION_MOVE:
-                        v.setY(event.getRawY() + dY);
-                        v.setX(event.getRawX() + dX);
+
+                        binding.appBarActivityDashboardId.layoutAppbar.setY(event.getRawY() + dY);
+                        binding.appBarActivityDashboardId.layoutAppbar.setX(event.getRawX() + dX);
                         lastAction = MotionEvent.ACTION_MOVE;
+
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        if (lastAction == MotionEvent.ACTION_DOWN)
 
-                            if (mcv_menu.getVisibility() == View.GONE || mcv_menu.getVisibility() == View.INVISIBLE){
-                                mcv_menu.setVisibility(View.VISIBLE);
-                            }else {
-                                mcv_menu.setVisibility(View.GONE);
-                            }
+                        Log.d("IS BOUND?", String.valueOf(validateCoordinates(event.getRawY(), event.getRawX())));
+
+                        if (!validateCoordinates(event.getRawY(), event.getRawX())) {
+                            binding.appBarActivityDashboardId.layoutAppbar.setY(
+                                    Float.valueOf(binding.appBarActivityDashboardId.getRoot().getBottom()) / 2f
+                            );
+
+                            binding.appBarActivityDashboardId.layoutAppbar.setX(
+                                    (Float.valueOf(binding.appBarActivityDashboardId.getRoot().getRight()) / 2f)
+                            );
+                        }
+
+                        if (mcv_menu.getVisibility() == View.GONE || mcv_menu.getVisibility() == View.INVISIBLE){
+                            mcv_menu.setVisibility(View.VISIBLE);
+                        }else {
+                            mcv_menu.setVisibility(View.GONE);
+                        }
 
                         break;
-
-                    default:
-                        return false;
                 }
 
                 return true;
             }
         });
+    }
+
+    private void initAnimation(){
+
+        icon_move.startAnimation(AnimationUtils.loadAnimation(Activity_Dashboard.this, R.anim.bounce_animation_down));
+    }
+
+    private Boolean validateCoordinates(float Ycoordinate, float Xcoordinate){
+
+        float topCoord = binding.appBarActivityDashboardId.getRoot().getTop() + 5f;
+        float bottCoord = binding.appBarActivityDashboardId.getRoot().getBottom() - 5f;
+        float leftCoord = binding.appBarActivityDashboardId.getRoot().getLeft() + 5f;
+        float rightCoord = binding.appBarActivityDashboardId.getRoot().getRight() - 5f;
+
+        Log.d("Bound Top", String.valueOf(topCoord));
+        Log.d("Bound Bottom", String.valueOf(bottCoord));
+
+        Log.d("Bound Left", String.valueOf(leftCoord));
+        Log.d("Bound Right", String.valueOf(rightCoord));
+
+        //todo: validate coordinates, should not be outside the view bounds
+        if(topCoord > Ycoordinate){
+            return false;
+        }else if(bottCoord < Ycoordinate) {
+            return false;
+        } else if (leftCoord > Xcoordinate) {
+            return false;
+        } else if (rightCoord < Xcoordinate) {
+            return false;
+        }else {
+            return true;
+        }
+
     }
 
     private void setUpHeader(NavigationView foNavigxx) {

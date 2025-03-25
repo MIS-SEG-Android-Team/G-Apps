@@ -5,74 +5,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/GuanzonMarketplace.Theme"
     tools:context=".Activity.Activity_Dashboard">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/layout_appbar"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/zxing_transparent"
+        android:outlineProvider="none"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHeight_percent="0.2"
-        app:layout_constraintWidth_percent="0.5">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintWidth_percent="0.6">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/icon_move"
-            android:layout_width="50dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/kay_wave"
+            android:orientation="horizontal"
             android:layout_gravity="center"
-            android:scaleType="centerInside"/>
+            android:padding="10dp">
 
-       <com.google.android.material.card.MaterialCardView
-           android:id="@+id/mcv_menu"
-           android:layout_width="match_parent"
-           android:layout_height="35dp"
-           android:layout_gravity="center"
-           android:visibility="visible"
-           app:cardElevation="10dp"
-           app:cardCornerRadius="10dp"
-           app:cardBackgroundColor="@color/app_background">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/icon_move"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/kay_wave"/>
 
-           <com.google.android.material.appbar.AppBarLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:theme="@style/Theme.GApps.AppBarOverlay"
-               android:background="?attr/colorOnSecondary">
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_menu"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="10dp"
+                android:visibility="gone">
 
-              <LinearLayout
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
-                  <com.google.android.material.appbar.MaterialToolbar
-                      android:id="@+id/toolbar"
-                      android:layout_width="50dp"
-                      android:layout_height="match_parent"
-                      android:background="@color/zxing_transparent"
-                      app:popupTheme="@style/Theme.GApps.PopupOverlay"/>
+                    <com.google.android.material.appbar.MaterialToolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/zxing_transparent"
+                        app:popupTheme="@style/Theme.GApps.PopupOverlay"/>
 
-                  <ImageButton
-                      android:layout_width="50dp"
-                      android:layout_height="match_parent"
-                      android:src="@drawable/ic_settings_person_24"
-                      android:background="@color/zxing_transparent"/>
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_settings_person_24"
+                        android:background="@color/zxing_transparent"/>
 
-                  <ImageButton
-                      android:layout_width="50dp"
-                      android:layout_height="match_parent"
-                      android:src="@drawable/ic_baseline_notifications_24"
-                      android:backgroundTint="@color/zxing_transparent"/>
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_baseline_notifications_24"
+                        android:backgroundTint="@color/zxing_transparent"/>
 
-              </LinearLayout>
+                </LinearLayout>
 
-           </com.google.android.material.appbar.AppBarLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-       </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
 
-    </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_activity_dashboard" />
 
