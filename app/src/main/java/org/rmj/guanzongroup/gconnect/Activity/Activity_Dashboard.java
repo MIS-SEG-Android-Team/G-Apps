@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import com.google.android.material.badge.ExperimentalBadgeUtils;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -94,8 +96,16 @@ public class Activity_Dashboard extends AppCompatActivity {
     private ConnectionUtil poConn;
     private AccountInfo loAccount;
 
+    private View headerLayout;
+    private LinearLayout lnAuthxxx;
+    private MaterialTextView txtSignUp;
+    private MaterialTextView txtLoginx;
+    private MaterialTextView txtFullNm;
+
     private ShapeableImageView icon_move;
     private MaterialCardView mcv_menu;
+    private ImageButton btn_profile;
+    private ImageButton btn_notif;
 
     private float dX;
     private float dY;
@@ -141,8 +151,6 @@ public class Activity_Dashboard extends AppCompatActivity {
         initListener(); //todo: init listener
 
         initAnimation(); //todo: init animation
-
-        setUpHeader(navigationView); //todo: init header
 
         setUpNotifications(); //todo: init notifications
 
@@ -258,8 +266,18 @@ public class Activity_Dashboard extends AppCompatActivity {
 
         navigationView = binding.navView;
 
+        headerLayout = navigationView.getHeaderView(0);
+
+        lnAuthxxx = headerLayout.findViewById(R.id.ln_authenticate);
+        txtSignUp = headerLayout.findViewById(R.id.lbl_Signup);
+        txtLoginx = headerLayout.findViewById(R.id.lbl_Login);
+        txtFullNm = headerLayout.findViewById(R.id.lbl_UserFullName);
+
         icon_move = binding.appBarActivityDashboardId.iconMove;
         mcv_menu = binding.appBarActivityDashboardId.mcvMenu;
+
+        btn_profile = binding.appBarActivityDashboardId.btnProfile;
+        btn_notif = binding.appBarActivityDashboardId.btnNotification;
 
         poDialog.initDialog();
 
@@ -306,6 +324,86 @@ public class Activity_Dashboard extends AppCompatActivity {
 
     @OptIn(markerClass = ExperimentalBadgeUtils.class)
     private void initObservables(){
+
+        mViewModel.getClientInfo().observe(Activity_Dashboard.this, eClientinfo -> {
+            try {
+                Menu nav_Menu = navigationView.getMenu();
+
+                //todo: display nav menus, if logged account
+                if(eClientinfo != null) {
+                    String lsFullNme = eClientinfo.getUserName();
+
+                    lnAuthxxx.setVisibility(View.GONE);
+                    txtFullNm.setVisibility(View.VISIBLE);
+                    txtFullNm.setText(Objects.requireNonNull(lsFullNme));
+
+                    btn_profile.setEnabled(true);
+                    btn_notif.setEnabled(true);
+
+                    nav_Menu.findItem(R.id.nav_my_gcard).setVisible(true);
+                    nav_Menu.findItem(R.id.nav_account_settings).setVisible(true);
+                    nav_Menu.findItem(R.id.nav_logout).setVisible(true);
+
+                    //todo: should complete account to access the ff transactions
+                    if (loAccount.getVerificationStatus() > 0){
+                        nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(true);
+                        nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(true);
+                        nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(true);
+
+                        nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
+                        nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
+
+                        Thread.sleep(1000);
+                        mViewModel.GetActiveGCard().observe(Activity_Dashboard.this, eGcardApp -> {
+                            try {
+                                navigationView = findViewById(R.id.nav_view);
+                                if (eGcardApp == null) {
+                                    nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
+                                    nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
+                                    nav_Menu.findItem(R.id.nav_redeemables).setVisible(false);
+                                    nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(false);
+                                } else {
+                                    nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(true);
+                                    nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(true);
+                                    nav_Menu.findItem(R.id.nav_redeemables).setVisible(true);
+                                    nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(true);
+                                }
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        });
+                    }else {
+                        nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
+                        nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(false);
+                        nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(false);
+
+                        nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
+                        nav_Menu.findItem(R.id.nav_redeemables).setVisible(false);
+                        nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(false);
+                    }
+                } else {
+
+                    lnAuthxxx.setVisibility(View.VISIBLE);
+                    txtFullNm.setVisibility(View.GONE);
+
+                    btn_profile.setEnabled(false);
+                    btn_notif.setEnabled(false);
+
+                    nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
+                    nav_Menu.findItem(R.id.nav_my_gcard).setVisible(false);
+                    nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
+                    nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(false);
+                    nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(false);
+                    nav_Menu.findItem(R.id.nav_account_settings).setVisible(false);
+                    nav_Menu.findItem(R.id.nav_logout).setVisible(false);
+
+                    nav_Menu.findItem(R.id.nav_redeemables).setVisible(false);
+                    nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(false);
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         mViewModel.GetUnreadMessagesCount().observe(Activity_Dashboard.this, count -> {
             try{
@@ -535,6 +633,17 @@ public class Activity_Dashboard extends AppCompatActivity {
                 return true;
             }
         });
+
+        txtSignUp.setOnClickListener(v -> {
+            Intent loIntent = new Intent(Activity_Dashboard.this, Activity_SignUp.class);
+            startActivity(loIntent);
+        });
+
+
+        txtLoginx.setOnClickListener(v -> {
+            Intent loIntent = new Intent(Activity_Dashboard.this, Activity_Login.class);
+            startActivity(loIntent);
+        });
     }
 
     private void initAnimation(){
@@ -568,97 +677,6 @@ public class Activity_Dashboard extends AppCompatActivity {
             return true;
         }
 
-    }
-
-    private void setUpHeader(NavigationView foNavigxx) {
-        View headerLayout = foNavigxx.getHeaderView(0);
-        LinearLayout lnAuthxxx = headerLayout.findViewById(R.id.ln_authenticate);
-        TextView txtSignUp = headerLayout.findViewById(R.id.lbl_Signup);
-        TextView txtLoginx = headerLayout.findViewById(R.id.lbl_Login);
-        TextView txtFullNm = headerLayout.findViewById(R.id.lbl_UserFullName);
-
-        mViewModel.getClientInfo().observe(Activity_Dashboard.this, eClientinfo -> {
-            try {
-                Menu nav_Menu = navigationView.getMenu();
-
-                //todo: display nav menus, if logged account
-                if(eClientinfo != null) {
-                    String lsFullNme = eClientinfo.getUserName();
-
-                    lnAuthxxx.setVisibility(View.GONE);
-                    txtFullNm.setVisibility(View.VISIBLE);
-                    txtFullNm.setText(Objects.requireNonNull(lsFullNme));
-
-                    nav_Menu.findItem(R.id.nav_my_gcard).setVisible(true);
-                    nav_Menu.findItem(R.id.nav_account_settings).setVisible(true);
-                    nav_Menu.findItem(R.id.nav_logout).setVisible(true);
-
-                    //todo: should complete account to access the ff transactions
-                    if (loAccount.getVerificationStatus() > 0){
-                        nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(true);
-                        nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(true);
-                        nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(true);
-
-                        nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
-
-                        Thread.sleep(1000);
-                        mViewModel.GetActiveGCard().observe(Activity_Dashboard.this, eGcardApp -> {
-                            try {
-                                navigationView = findViewById(R.id.nav_view);
-                                if (eGcardApp == null) {
-                                    nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
-                                    nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
-                                    nav_Menu.findItem(R.id.nav_redeemables).setVisible(false);
-                                    nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(false);
-                                } else {
-                                    nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(true);
-                                    nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(true);
-                                    nav_Menu.findItem(R.id.nav_redeemables).setVisible(true);
-                                    nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(true);
-                                }
-                            } catch (Exception e){
-                                e.printStackTrace();
-                            }
-                        });
-                    }else {
-                        nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(false);
-
-                        nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_redeemables).setVisible(false);
-                        nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(false);
-                    }
-                } else {
-                    lnAuthxxx.setVisibility(View.VISIBLE);
-                    txtFullNm.setVisibility(View.GONE);
-                    txtSignUp.setOnClickListener(v -> {
-                        Intent loIntent = new Intent(Activity_Dashboard.this, Activity_SignUp.class);
-                        startActivity(loIntent);
-                    });
-
-
-                    txtLoginx.setOnClickListener(v -> {
-                        Intent loIntent = new Intent(Activity_Dashboard.this, Activity_Login.class);
-                        startActivity(loIntent);
-                    });
-
-                    nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_my_gcard).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_gcard_offline).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_account_settings).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_logout).setVisible(false);
-
-                    nav_Menu.findItem(R.id.nav_redeemables).setVisible(false);
-                    nav_Menu.findItem(R.id.nav_gcard_transactions).setVisible(false);
-                }
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        });
     }
 
     private void setUpNotifications(){
