@@ -92,5 +92,6 @@ public class Fragment_Dashboard extends Fragment {
         loAdapter.initFragments(loFragments);
 
         viewPager.setAdapter(loAdapter);
+        viewPager.setUserInputEnabled(false);
     }
 }
