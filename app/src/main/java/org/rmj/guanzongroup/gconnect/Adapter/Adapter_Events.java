@@ -1,5 +1,6 @@
 package org.rmj.guanzongroup.gconnect.Adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,8 @@ import java.util.List;
 
 public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider_Events> {
 
-    private List<GuanzonEvents> laEvents;
-    private ViewPager2 viewPager2;
+    private final List<GuanzonEvents> laEvents;
+    private final ViewPager2 viewPager2;
 
     public Adapter_Events(List<GuanzonEvents> laEvents, ViewPager2 viewPager2) {
         this.laEvents = laEvents;
@@ -36,7 +37,16 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
 
     @Override
     public void onBindViewHolder(@NonNull VHSlider_Events holder, int position) {
+
         holder.btn_event.setImageResource(laEvents.get(position).getImage());
+
+        if (viewPager2.getCurrentItem() == position){
+            holder.btn_event.setElevation(0.85f);
+            holder.btn_event.setAlpha(1f);
+        }else {
+            holder.btn_event.setElevation(0.15f);
+            holder.btn_event.setAlpha(0.8f);
+        }
     }
 
     @Override
