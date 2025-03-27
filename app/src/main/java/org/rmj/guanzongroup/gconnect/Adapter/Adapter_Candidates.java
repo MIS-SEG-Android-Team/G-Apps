@@ -49,24 +49,10 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
     @Override
     public void onBindViewHolder(@NonNull VH_Candidates holder, int position) {
 
-        String imgPath = "http://192.165.10.65:80/candidatesimage/";
-
         holder.mtv_name.setText(candidatesFiltered.get(position).getName());
 
-        ImageFileManager.LoadImageToView(imgPath + candidatesFiltered.get(position)+".jpg",
+        ImageFileManager.LoadImageToView(candidatesFiltered.get(position).getUrlImg(),
                 holder.img_candidate);
-
-        //todo: set image preview
-        holder.img_candidate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Dialog_Candidate_Details loDialog = new Dialog_Candidate_Details(context,
-                        candidatesFiltered.get(position));
-
-                loDialog.new Dialog_Preview_Image().initDialog();
-            }
-        });
 
         //todo: view candidate details
         holder.btn_view.setOnClickListener(new View.OnClickListener() {

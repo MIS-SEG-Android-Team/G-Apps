@@ -23,6 +23,7 @@ public class Dialog_Candidate_Details {
 
     public Dialog_Candidate_Details(Context context, Adapter_Candidates.Candidate_Details details){
         this.context = context;
+        this.details = details;
     }
 
     public class Dialog_Preview_Image{
@@ -59,8 +60,10 @@ public class Dialog_Candidate_Details {
             View view = LayoutInflater.from(context).inflate(R.layout.dialog_candidate_details, null, false);
 
             AlertDialog.Builder loBuilder =  new AlertDialog.Builder(context);
-            loBuilder.setCancelable(true)
-                    .setView(view);
+            loBuilder
+                    .setView(view)
+                    .setCancelable(true);
+
             poDialogx = loBuilder.create();
 
             initViews(view);
@@ -87,11 +90,17 @@ public class Dialog_Candidate_Details {
 
         private void initDetails(){
 
-            ImageFileManager.LoadImageToView(details.getUrlImg(), loImg);
+            try{
 
-            mtv_name.setText(details.getName());
-            mtv_school.setText(details.getSchool());
-            mtv_number.setText(details.getNumber());
+                ImageFileManager.LoadImageToView(details.getUrlImg(), loImg);
+
+                mtv_name.setText(details.getName());
+                mtv_school.setText(details.getSchool());
+                mtv_number.setText(details.getNumber());
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
         }
     }

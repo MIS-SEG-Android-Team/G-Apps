@@ -89,6 +89,7 @@ public class Fragment_Poll extends Fragment {
 
         //TODO: CHANGE TAB INDICATOR ON SELECTION
         tab_candidates.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 

@@ -11,13 +11,12 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/layout_appbar"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:background="@color/zxing_transparent"
         android:outlineProvider="none"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.1"
         app:layout_constraintWidth_percent="0.6">
 
         <LinearLayout
@@ -30,8 +29,44 @@
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/icon_move"
                 android:layout_width="50dp"
-                android:layout_height="match_parent"
+                android:layout_height="200dp"
                 android:src="@drawable/kay_wave"/>
+
+            <LinearLayout
+                android:id="@+id/layout_notifkay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:visibility="visible">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="10dp"
+                    app:cardBackgroundColor="@color/app_background">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="Hello! I am Kay,\n Your assistant for today"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:id="@+id/btn_notifbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Okay"
+                    android:textSize="12sp"
+                    android:backgroundTint="@color/app_background"
+                    android:elevation="10dp"/>
+
+            </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcv_menu"

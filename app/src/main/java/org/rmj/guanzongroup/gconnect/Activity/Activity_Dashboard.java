@@ -609,23 +609,8 @@ public class Activity_Dashboard extends AppCompatActivity {
 
                     case MotionEvent.ACTION_UP:
 
-                        Log.d("IS BOUND?", String.valueOf(validateCoordinates(event.getRawY(), event.getRawX())));
-
-                        if (!validateCoordinates(event.getRawY(), event.getRawX())) {
-                            binding.appBarActivityDashboardId.layoutAppbar.setY(
-                                    Float.valueOf(binding.appBarActivityDashboardId.getRoot().getBottom()) / 2f
-                            );
-
-                            binding.appBarActivityDashboardId.layoutAppbar.setX(
-                                    (Float.valueOf(binding.appBarActivityDashboardId.getRoot().getRight()) / 2f)
-                            );
-                        }
-
-                        if (mcv_menu.getVisibility() == View.GONE || mcv_menu.getVisibility() == View.INVISIBLE){
-                            mcv_menu.setVisibility(View.VISIBLE);
-                        }else {
-                            mcv_menu.setVisibility(View.GONE);
-                        }
+                        initToolbarBounds(event);
+                        initToolbarDisplay();
 
                         break;
                 }
@@ -634,11 +619,18 @@ public class Activity_Dashboard extends AppCompatActivity {
             }
         });
 
+        binding.appBarActivityDashboardId.btnNotifbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                binding.appBarActivityDashboardId.layoutNotifkay.setVisibility(View.GONE);
+            }
+        });
+
         txtSignUp.setOnClickListener(v -> {
             Intent loIntent = new Intent(Activity_Dashboard.this, Activity_SignUp.class);
             startActivity(loIntent);
         });
-
 
         txtLoginx.setOnClickListener(v -> {
             Intent loIntent = new Intent(Activity_Dashboard.this, Activity_Login.class);
@@ -649,6 +641,22 @@ public class Activity_Dashboard extends AppCompatActivity {
     private void initAnimation(){
 
         icon_move.startAnimation(AnimationUtils.loadAnimation(Activity_Dashboard.this, R.anim.bounce_animation_down));
+    }
+
+    private void initToolbarBounds(MotionEvent event){
+
+        Log.d("IS BOUND?", String.valueOf(validateCoordinates(event.getRawY(), event.getRawX())));
+
+        if (!validateCoordinates(event.getRawY(), event.getRawX())) {
+            binding.appBarActivityDashboardId.layoutAppbar.setY(
+                    Float.valueOf(binding.appBarActivityDashboardId.getRoot().getBottom()) / 2f
+            );
+
+            binding.appBarActivityDashboardId.layoutAppbar.setX(
+                    (Float.valueOf(binding.appBarActivityDashboardId.getRoot().getRight()) / 2f)
+            );
+        }
+
     }
 
     private Boolean validateCoordinates(float Ycoordinate, float Xcoordinate){
@@ -675,6 +683,20 @@ public class Activity_Dashboard extends AppCompatActivity {
             return false;
         }else {
             return true;
+        }
+
+    }
+
+    private void initToolbarDisplay(){
+
+        if (binding.appBarActivityDashboardId.layoutNotifkay.getVisibility() == View.GONE ||
+                binding.appBarActivityDashboardId.layoutNotifkay.getVisibility() == View.INVISIBLE){
+
+            if (mcv_menu.getVisibility() == View.GONE || mcv_menu.getVisibility() == View.INVISIBLE){
+                mcv_menu.setVisibility(View.VISIBLE);
+            }else {
+                mcv_menu.setVisibility(View.GONE);
+            }
         }
 
     }
