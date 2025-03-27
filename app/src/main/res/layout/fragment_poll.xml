@@ -5,101 +5,129 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/mcv_tabHead"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_header"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:cardElevation="10dp"
+        android:background="@drawable/gradient_orange_dark"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintDimensionRatio="5:1">
+        app:layout_constraintHeight_percent="0.15">
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/Title"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="Choose your candidates"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_percent="0.5"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/kay_wave"
+            app:layout_constraintStart_toEndOf="@+id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="0.9"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/layout_poll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="-20dp"
+        android:layout_marginBottom="10dp"
+        app:cardElevation="15dp"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_header"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/gradient_orange_dark">
+            android:layout_margin="15dp"
+            android:background="@drawable/gradient_orange_event">
 
-            <com.google.android.material.textview.MaterialTextView
-                style="@style/Title"
-                android:id="@+id/title"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_candidates"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:elevation="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabDreamboy"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Dream Boy"/>
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabBikerBabe"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Biker Babe"/>
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabCampusPrincess"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Campus Princess"/>
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabGuanBulilit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Guanzon Bulilit"/>
+
+            </com.google.android.material.tabs.TabLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="10dp"
+                android:textColorHint="@color/guanzon_digital_grey"
+                app:layout_constraintTop_toBottomOf="@+id/tab_candidates"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tv_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Search your candidate"
+                    android:textColor="@color/guanzon_digital_grey"
+                    android:background="#ffff"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_candidates"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:text="Choose your candidates"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginVertical="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/til_search"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintWidth_percent="0.5"/>
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:src="@drawable/kay_wave"
-                app:layout_constraintStart_toEndOf="@+id/title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHeight_percent="0.9"/>
+                app:layout_constraintStart_toStartOf="@+id/til_search"
+                app:layout_constraintEnd_toEndOf="@+id/til_search"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_candidates"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:tabIndicator="@drawable/background_guanzontableft"
-        app:tabTextColor="?attr/colorOnPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mcv_tabHead">
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabTeens"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Campus Princess"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabAdults"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Biker Babe"/>
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/TextInputStyle"
-        android:id="@+id/til_search"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/tab_candidates"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tv_search"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Search your candidate"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_candidates"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginVertical="10dp"
-        android:layout_marginHorizontal="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/til_search"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

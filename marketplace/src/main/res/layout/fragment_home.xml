@@ -83,10 +83,19 @@
                     android:elevation="5dp"
                     android:paddingVertical="5dp"/>
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/vpage_products"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_products"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/siv_kay"
+                    android:layout_width="120dp"
+                    android:layout_height="500dp"
+                    android:src="@drawable/kay"
+                    android:layout_gravity="center"
+                    android:alpha="0.6"/>
 
             </LinearLayout>
 

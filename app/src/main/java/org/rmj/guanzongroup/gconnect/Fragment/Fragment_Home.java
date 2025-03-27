@@ -12,15 +12,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.tabs.TabLayout;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
 import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.g3appdriver.etc.ViewPagerProperty;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Events;
-import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Product_Tabs;
+import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Products;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.guanzongroup.marketplace.ViewModel.VMHome;
 
@@ -37,7 +40,8 @@ public class Fragment_Home extends Fragment {
 
     private LinearLayout layout_products;
     private TabLayout tab_products;
-    private ViewPager2 vpage_products;
+    private RecyclerView rcv_products;
+    private ShapeableImageView siv_kay;
 
     public Fragment_Home() {}
 
@@ -63,7 +67,8 @@ public class Fragment_Home extends Fragment {
 
         layout_products = v.findViewById(R.id.layout_products);
         tab_products = v.findViewById(R.id.tab_products);
-        vpage_products = v.findViewById(R.id.vpage_products);
+        rcv_products = v.findViewById(R.id.rcv_products);
+        siv_kay = v.findViewById(R.id.siv_kay);
     }
 
     private void initListener(){
@@ -87,6 +92,7 @@ public class Fragment_Home extends Fragment {
     }
 
     private void initTabs(){
+        tab_products.removeAllTabs();
         tab_products.addTab(tab_products.newTab().setText("Motorcycles"));
         tab_products.addTab(tab_products.newTab().setText("Mobile"));
     }
@@ -113,30 +119,66 @@ public class Fragment_Home extends Fragment {
 
         loViewPagerProperty.initSliderPageTransformer();
 
-        List<Fragment> laFragments = new ArrayList<>();
+        tab_products.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
 
-        Fragment_Products fragment_motor = new Fragment_Products();
+                List<Adapter_Products.Product_Data> laProducts = new ArrayList<>();
 
-        Bundle args1 = new Bundle();
-        args1.putString("product", "motorcycle");
-        fragment_motor.setArguments(args1);
+                switch (tab.getPosition()){
 
-        Fragment_Products fragment_mobile = new Fragment_Products();
+                    case 0:
 
-        Bundle args2 = new Bundle();
-        args2.putString("product", "mobile");
-        fragment_mobile.setArguments(args2);
+                        rcv_products.setVisibility(View.VISIBLE);
+                        siv_kay.setVisibility(View.GONE);
 
-        laFragments.add(fragment_motor);
-        laFragments.add(fragment_mobile);
+                        laProducts.add(
+                                new Adapter_Products.Product_Data(
+                                        "Yamaha", R.drawable.yamaha, R.drawable.yamahalogo)
+                        );
 
+                        laProducts.add(
+                                new Adapter_Products.Product_Data(
+                                        "Honda", R.drawable.honda, R.drawable.hondalogo)
+                        );
 
-        Adapter_Product_Tabs adapterProductTabs = new Adapter_Product_Tabs(getParentFragmentManager(), getLifecycle());
+                        laProducts.add(
+                                new Adapter_Products.Product_Data(
+                                        "Suzuki", R.drawable.suzuki, R.drawable.suzukilogo)
+                        );
 
-        adapterProductTabs.initFragments(laFragments);
+                        laProducts.add(
+                                new Adapter_Products.Product_Data(
+                                        "Kawasaki", R.drawable.kay, R.drawable.kay)
+                        );
 
-        vpage_products.setAdapter(adapterProductTabs);
+                        break;
 
+                    case 1:
+
+                        rcv_products.setVisibility(View.GONE);
+                        siv_kay.setVisibility(View.VISIBLE);
+
+                        break;
+                }
+
+                rcv_products.setAdapter(new Adapter_Products(laProducts));
+                rcv_products.setLayoutManager(
+                        new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+                );
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     private void initDisplayonLogin(int isDisplayed){

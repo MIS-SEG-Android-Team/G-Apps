@@ -4,13 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_margin="10dp"
+    android:background="@color/app_background"
+    android:layout_margin="3dp"
+    android:theme="@style/GuanzonMarketplace.Theme"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/mcv_img"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_margin="5dp"
         app:cardElevation="10dp"
         app:cardCornerRadius="10dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,16 +57,29 @@
         app:layout_constraintTop_toBottomOf="@+id/mcv_img"/>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_vote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Vote"
+        android:textColor="?attr/colorOnSecondary"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:layout_marginHorizontal="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mtv_name"/>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="View Details"
-        android:background="@drawable/gradient_orange_dark"
-        android:padding="10dp"
         android:textColor="?attr/colorOnSecondary"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/mtv_name"
+        android:textSize="12sp"
+        android:layout_marginHorizontal="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_vote"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

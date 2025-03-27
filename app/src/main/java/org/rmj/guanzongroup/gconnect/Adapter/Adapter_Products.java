@@ -33,7 +33,7 @@ public class Adapter_Products  extends RecyclerView.Adapter<Adapter_Products.VHP
     public void onBindViewHolder(@NonNull VHProducts holder, int position) {
 
         holder.icon_product.setImageResource(laProducts.get(position).getImage());
-
+        holder.img_logo.setImageResource(laProducts.get(position).getImagelogo());
     }
 
     @Override
@@ -44,11 +44,13 @@ public class Adapter_Products  extends RecyclerView.Adapter<Adapter_Products.VHP
     public class VHProducts extends RecyclerView.ViewHolder {
 
         private ShapeableImageView icon_product;
+        private ShapeableImageView img_logo;
 
         public VHProducts(@NonNull View itemView) {
             super(itemView);
 
             this.icon_product = itemView.findViewById(R.id.icon_product);
+            this.img_logo = itemView.findViewById(R.id.img_logo);
         }
     }
 
@@ -56,7 +58,6 @@ public class Adapter_Products  extends RecyclerView.Adapter<Adapter_Products.VHP
 
         private String brand;
         private int image;
-
         private int imagelogo;
 
         public Product_Data(String brand, int image, int imagelogo) {

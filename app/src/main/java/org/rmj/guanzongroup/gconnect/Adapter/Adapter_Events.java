@@ -55,7 +55,7 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
     }
 
 
-    public class VHSlider_Events extends RecyclerView.ViewHolder{
+    public static class VHSlider_Events extends RecyclerView.ViewHolder{
 
         private ImageButton btn_event;
 

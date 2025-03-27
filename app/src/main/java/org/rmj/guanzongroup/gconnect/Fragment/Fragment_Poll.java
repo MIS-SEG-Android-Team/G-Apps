@@ -72,7 +72,6 @@ public class Fragment_Poll extends Fragment {
         switch (tab_candidates.getSelectedTabPosition()){
 
             case 0:
-                tab_candidates.setSelectedTabIndicator(R.drawable.background_guanzontableft);
                 adapter_candidates = new Adapter_Candidates(requireContext(), candidates1);
 
                 adapter_candidates.notifyDataSetChanged();
@@ -80,7 +79,6 @@ public class Fragment_Poll extends Fragment {
                 rv_candidates.setAdapter(adapter_candidates);
                 break;
             case 1:
-                tab_candidates.setSelectedTabIndicator(R.drawable.background_guanzontabright);
                 adapter_candidates = new Adapter_Candidates(requireContext (), candidates2);
 
                 adapter_candidates.notifyDataSetChanged();
@@ -97,7 +95,6 @@ public class Fragment_Poll extends Fragment {
                 switch (tab.getPosition()){
 
                     case 0:
-                        tab_candidates.setSelectedTabIndicator(R.drawable.background_guanzontableft);
                         adapter_candidates = new Adapter_Candidates(requireContext(), candidates1);
 
                         adapter_candidates.notifyDataSetChanged();
@@ -105,7 +102,6 @@ public class Fragment_Poll extends Fragment {
                         rv_candidates.setAdapter(adapter_candidates);
                         break;
                     case 1:
-                        tab_candidates.setSelectedTabIndicator(R.drawable.background_guanzontabright);
                         adapter_candidates = new Adapter_Candidates(requireContext(), candidates2);
 
                         adapter_candidates.notifyDataSetChanged();
