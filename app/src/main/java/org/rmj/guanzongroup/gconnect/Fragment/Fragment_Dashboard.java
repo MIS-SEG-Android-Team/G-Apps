@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -22,9 +23,13 @@ import org.rmj.guanzongroup.notifications.Fragment.Fragment_Promotion;
 
 public class Fragment_Dashboard extends Fragment {
     private static final String TAG = Fragment_Dashboard.class.getSimpleName();
+
     private View view;
-    private BottomNavigationView botNav;
-    private ViewPager2 viewPager;
+
+    public BottomNavigationView botNav;
+    public ViewPager2 viewPager;
+    public Fragment_Poll loPoll = new Fragment_Poll();
+
     private RClientInfo loClient;
 
     public static Fragment_Dashboard newInstance() {
@@ -36,10 +41,39 @@ public class Fragment_Dashboard extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
         loClient = new RClientInfo(requireActivity());
 
-        initViews();
-        setupPages();
+        initViews(); //todo init views
+        initListener(); //todo init listener
+        initObservables(); //todo init observables
+        setupPages(); // todo init pages
+
+        return view;
+    }
+    private void initViews() {
+
+        viewPager = view.findViewById(R.id.viewpager);
+        botNav = view.findViewById(R.id.bottom_navigation);
+
+        botNav.setBackground(null);
+    }
+    private void initListener() {
+
+        botNav.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_home) {
+                viewPager.setCurrentItem(0);
+            }  else if(item.getItemId() == R.id.nav_promos){
+                viewPager.setCurrentItem(1);
+            }  else if(item.getItemId() == R.id.nav_Barcode){
+                viewPager.setCurrentItem(2);
+            }  else if(item.getItemId() == R.id.nav_Poll){
+                viewPager.setCurrentItem(3);
+            }
+            return true;
+        });
+    }
+    private void initObservables() {
 
         loClient.getClientInfo().observe(getViewLifecycleOwner(), new Observer<EClientInfo>() {
             @Override
@@ -56,37 +90,13 @@ public class Fragment_Dashboard extends Fragment {
                 }
             }
         });
-
-        botNav.setBackground(null);
-        botNav.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_home) {
-                viewPager.setCurrentItem(0);
-                Log.d(TAG, "Home Selected.");
-            }  else if(item.getItemId() == R.id.nav_promos){
-                viewPager.setCurrentItem(1);
-                Log.d(TAG, "Guanzon Panalo Selected.");
-            }  else if(item.getItemId() == R.id.nav_Barcode){
-                viewPager.setCurrentItem(2);
-                Log.d(TAG, "Barcode Selected.");
-            }  else if(item.getItemId() == R.id.nav_Poll){
-                viewPager.setCurrentItem(3);
-                Log.d(TAG, "Voting Poll Selected.");
-            }
-            return true;
-        });
-
-        return view;
-    }
-    private void initViews() {
-        viewPager = view.findViewById(R.id.viewpager);
-        botNav = view.findViewById(R.id.bottom_navigation);
     }
     private void setupPages(){
         Fragment[] loFragments = new Fragment[]{
                 new Fragment_Home(),
                 new Fragment_Promotion(),
                 new Fragment_PhoneBarcode(),
-                new Fragment_Poll()};
+                loPoll};
 
         FragmentAdapter loAdapter = new FragmentAdapter(getChildFragmentManager(), getLifecycle());
         loAdapter.initFragments(loFragments);

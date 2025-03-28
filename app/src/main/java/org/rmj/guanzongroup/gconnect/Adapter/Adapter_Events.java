@@ -1,6 +1,5 @@
 package org.rmj.guanzongroup.gconnect.Adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +7,7 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
-import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import org.rmj.guanzongroup.gconnect.R;
 
@@ -21,10 +17,12 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
 
     private final List<GuanzonEvents> laEvents;
     private final ViewPager2 viewPager2;
+    private final onSelectListener callback;
 
-    public Adapter_Events(List<GuanzonEvents> laEvents, ViewPager2 viewPager2) {
+    public Adapter_Events(List<GuanzonEvents> laEvents, ViewPager2 viewPager2, onSelectListener callback) {
         this.laEvents = laEvents;
         this.viewPager2 = viewPager2;
+        this.callback = callback;
     }
 
     @NonNull
@@ -47,6 +45,15 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
             holder.btn_event.setElevation(0.15f);
             holder.btn_event.setAlpha(0.8f);
         }
+
+        holder.btn_event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                callback.onSelect(position, laEvents.get(position).getName());
+            }
+        });
+
     }
 
     @Override
@@ -82,5 +89,9 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
         public int getImage(){
             return image;
         }
+    }
+
+    public interface onSelectListener{
+        void onSelect(int position, String eventIDxx);
     }
 }

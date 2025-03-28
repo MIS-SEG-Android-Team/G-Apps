@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -14,24 +15,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.imageview.ShapeableImageView;
-
-import org.rmj.g3appdriver.dev.Database.DataAccessObject.DClientInfo;
-import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 import org.rmj.g3appdriver.etc.MessageBox;
+import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
 import org.rmj.guanzongroup.ganado.Adapter.ProductSelectionAdapter;
+import org.rmj.guanzongroup.ganado.Dialog.DialogDisclosure;
 import org.rmj.guanzongroup.ganado.R;
 import org.rmj.guanzongroup.ganado.ViewModel.VMProductSelection;
 
 import java.util.Objects;
 
 public class Activity_ProductSelection extends AppCompatActivity {
-    private RecyclerView rvMcModel;
-    private TextView txtBrandNm;
+
+    private ActivityResultLauncher<String[]> poRequest;
+
     private VMProductSelection mViewModel;
     private ProductSelectionAdapter adapter;
-    private SearchView searchView;
 
     private ShapeableImageView brandselectedimg;
+    private RecyclerView rvMcModel;
+    private TextView txtBrandNm;
+    private SearchView searchView;
+
+    private String lsBrandIDxx;
+
     private int backgroundResId;
     private String backgroundResIdCat;
 
@@ -40,21 +46,111 @@ public class Activity_ProductSelection extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_product_selection);
 
         mViewModel = new ViewModelProvider(Activity_ProductSelection.this).get(VMProductSelection.class);
         poMessage = new MessageBox(Activity_ProductSelection.this);
 
-        initView();
+        initView(); //todo: init views
+        initListener(); //todo: init listeners
 
+        //todo: init passed brand id from intent
+        if (getIntent().hasExtra("lsBrandID")){
+
+            String lsBrandID = getIntent().getStringExtra("lsBrandID");
+
+            if (!lsBrandID.isEmpty()){
+
+                lsBrandIDxx = lsBrandID;
+            }
+        }
+
+        //todo: init passed brand name from intent
+        if (getIntent().hasExtra("lsBrandNm")){
+
+            String lsBrandNm = getIntent().getStringExtra("lsBrandNm");
+
+            if (!lsBrandNm.isEmpty()){
+
+                txtBrandNm.setText(lsBrandNm);
+            }
+        }
+
+        initObservables(); //todo: init observables
+
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.anim_intent_slide_in_left, R.anim.anim_intent_slide_out_right);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void intentToSelection(String BrandID, String ModelID, String ImgLink){
+
+        Intent intent = new Intent(Activity_ProductSelection.this, Activity_ProductInquiry.class);
+        intent.putExtra("lsBrandID", BrandID);
+        intent.putExtra("lsModelID", ModelID);
+        intent.putExtra("lsBrandNm", getIntent().getStringExtra("lsBrandNm"));
+        intent.putExtra("lsImgLink", ImgLink);
+        intent.putExtra("bgbrandimage", backgroundResId);
+        intent.putExtra("backgroundold", backgroundResIdCat);
+
+        startActivity(intent);
+        overridePendingTransition(R.anim.anim_intent_slide_in_right, R.anim.anim_intent_slide_out_left);
+
+    }
+
+    private void initView() {
+
+        rvMcModel = findViewById(R.id.rvMcModel);
+        txtBrandNm = findViewById(R.id.lblBrand);
+        searchView = findViewById(R.id.searchview);
         brandselectedimg = findViewById(R.id.imageprodselection);
 
-        String lsBrandID = getIntent().getStringExtra("lsBrandID");
-        mViewModel.GetModelsList(lsBrandID).observe(Activity_ProductSelection.this, eMcModels -> {
+        MaterialToolbar toolbar = findViewById(R.id.toolbar_selection);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void initListener(){
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                try {
+                    adapter.filterModel(newText);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        });
+    }
+
+    private void initObservables(){
+
+        mViewModel.GetModelsList(lsBrandIDxx).observe(Activity_ProductSelection.this, eMcModels -> {
 
             if (eMcModels.size() > 0){
 
-                brandselectedimg.setImageResource(getBrandImageResource(lsBrandID));
+                brandselectedimg.setImageResource(getBrandImageResource(lsBrandIDxx));
+
                 adapter = new ProductSelectionAdapter(eMcModels, new ProductSelectionAdapter.OnModelClickListener() {
                     @Override
                     public void OnClick(String ModelID, String BrandID, String ImgLink) {
@@ -87,63 +183,7 @@ public class Activity_ProductSelection extends AppCompatActivity {
 
             }
         });
-        txtBrandNm.setText(getIntent().getStringExtra("lsBrandNm"));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                try {
-                    adapter.filterModel(newText);
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-                return true;
-            }
-        });
-    }
-
-    private void intentToSelection(String BrandID, String ModelID, String ImgLink){
-
-        Intent intent = new Intent(Activity_ProductSelection.this, Activity_ProductInquiry.class);
-        intent.putExtra("lsBrandID", BrandID);
-        intent.putExtra("lsModelID", ModelID);
-        intent.putExtra("lsBrandNm", getIntent().getStringExtra("lsBrandNm"));
-        intent.putExtra("lsImgLink", ImgLink);
-        intent.putExtra("bgbrandimage", backgroundResId);
-        intent.putExtra("backgroundold", backgroundResIdCat);
-
-        startActivity(intent);
-        overridePendingTransition(R.anim.anim_intent_slide_in_right, R.anim.anim_intent_slide_out_left);
-
-    }
-
-    private void initView() {
-        rvMcModel = findViewById(R.id.rvMcModel);
-        txtBrandNm = findViewById(R.id.lblBrand);
-        searchView = findViewById(R.id.searchview);
-
-        MaterialToolbar toolbar = findViewById(R.id.toolbar_selection);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.anim_intent_slide_in_left, R.anim.anim_intent_slide_out_right);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private int getBrandImageResource(String brandIndex) {

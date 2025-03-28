@@ -1,15 +1,11 @@
 package org.rmj.guanzongroup.ganado.ViewModel;
 
 import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import org.rmj.g3appdriver.dev.Database.DataAccessObject.DClientInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EMcModel;
-import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
-import org.rmj.g3appdriver.etc.ConnectionUtil;
 import org.rmj.g3appdriver.lib.Ganado.Obj.ProductInquiry;
 
 import java.util.List;

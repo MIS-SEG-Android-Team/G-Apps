@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,8 @@ public class Fragment_Poll extends Fragment {
     private RecyclerView rv_candidates;
     private Adapter_Candidates adapter_candidates;
 
+    private Bundle argsParams;
+
     @SuppressLint("NotifyDataSetChanged")
     @Nullable
     @Override
@@ -39,20 +40,26 @@ public class Fragment_Poll extends Fragment {
 
         initViews(view);
         initListener();
+        initArguments(); //todo: trigger on first view initialization
 
         return view;
 
     }
 
-    private Adapter_Candidates.Candidate_Details initData(String name, String school, String number, String urlImg){
+    @Override
+    public void setArguments(@Nullable Bundle args) {
+        super.setArguments(args);
 
-        Adapter_Candidates.Candidate_Details details = new Adapter_Candidates.Candidate_Details();
-        details.setName(name);
-        details.setSchool(school);
-        details.setNumber(number);
-        details.setUrlImg(urlImg);
+        argsParams = args;
 
-        return details;
+        initArguments(); //todo: trigger on every argument passed
+
+    }
+
+    private void initViews(View view){
+        tab_candidates = view.findViewById(R.id.tab_candidates);
+        tv_search = view.findViewById(R.id.tv_search);
+        rv_candidates = view.findViewById(R.id.rv_candidates);
     }
 
     private void initListener(){
@@ -159,9 +166,50 @@ public class Fragment_Poll extends Fragment {
 
     }
 
-    private void initViews(View view){
-        tab_candidates = view.findViewById(R.id.tab_candidates);
-        tv_search = view.findViewById(R.id.tv_search);
-        rv_candidates = view.findViewById(R.id.rv_candidates);
+    private void initArguments(){
+
+        if (tab_candidates != null){
+
+            if (argsParams != null){
+
+                if (argsParams.containsKey("eventID")){
+
+                    String eventID = argsParams.getString("eventID");
+
+                    switch (eventID){
+
+                        case "dreamboy":
+                            tab_candidates.selectTab(tab_candidates.getTabAt(0), true);
+                            break;
+
+                        case "campusprincess":
+                            tab_candidates.selectTab(tab_candidates.getTabAt(1), true);
+                            break;
+
+                        case "bikerbabe":
+                            tab_candidates.selectTab(tab_candidates.getTabAt(2), true);
+                            break;
+
+                        case "guanzonbulilit":
+                            tab_candidates.selectTab(tab_candidates.getTabAt(3), true);
+                            break;
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
+    private Adapter_Candidates.Candidate_Details initData(String name, String school, String number, String urlImg){
+
+        Adapter_Candidates.Candidate_Details details = new Adapter_Candidates.Candidate_Details();
+        details.setName(name);
+        details.setSchool(school);
+        details.setNumber(number);
+        details.setUrlImg(urlImg);
+
+        return details;
     }
 }

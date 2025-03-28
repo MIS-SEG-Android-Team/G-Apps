@@ -1,5 +1,6 @@
 package org.rmj.guanzongroup.marketplace.ViewModel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
@@ -16,6 +17,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
+import org.rmj.g3appdriver.dev.Repositories.RMcBrand;
 import org.rmj.g3appdriver.dev.Repositories.RNotificationInfo;
 import org.rmj.g3appdriver.dev.Repositories.ROrder;
 import org.rmj.g3appdriver.dev.Repositories.RProduct;
@@ -33,15 +35,19 @@ import java.util.List;
 
 public class VMHome extends AndroidViewModel {
     private static final String TAG = VMHome.class.getSimpleName();
+
     private String lsPromo, lsPmUrl;
     private String lsEvent, lsEvUrl;
+
     private final RClientInfo poClient;
-    private final RProduct poProduct;
     private final ROrder poOrder;
     private final ConnectionUtil poConn;
     private final RNotificationInfo poNotif;
     private iGCardSystem poSystem;
     private AccountInfo loAccount;
+    private RMcBrand poBrand;
+
+    @SuppressLint("StaticFieldLeak")
     private Context mContext;
     private char cResult;
     private String tranSrc;
@@ -51,13 +57,15 @@ public class VMHome extends AndroidViewModel {
 
     public VMHome(@NonNull Application application) {
         super(application);
+
         this.mContext = application;
+
         this.poClient = new RClientInfo(application);
-        this.poProduct = new RProduct(application);
         this.poOrder = new ROrder(application);
         this.poConn = new ConnectionUtil(application);
         this.poNotif = new RNotificationInfo(application);
-        this.loAccount = new AccountInfo(mContext);
+        this.loAccount = new AccountInfo(application);
+        this.poBrand = new RMcBrand(application);
 
         new GuanzonAppConfig(application).setFirstLaunch(false);
     }
@@ -105,8 +113,8 @@ public class VMHome extends AndroidViewModel {
         return poSystem.GetPromotions();
     }
 
-    public LiveData<List<String>> GetBrandNames() {
-        return poProduct.GetBrandNames();
+    public String GetBrandID(String sBrandNme){
+        return poBrand.getBrandID(sBrandNme);
     }
 
     public void LogoutUserSession(OnLogoutListener listener) {

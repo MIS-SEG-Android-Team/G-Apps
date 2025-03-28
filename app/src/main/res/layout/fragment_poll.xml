@@ -76,16 +76,16 @@
                     android:text="Dream Boy"/>
 
                 <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tabBikerBabe"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Biker Babe"/>
-
-                <com.google.android.material.tabs.TabItem
                     android:id="@+id/tabCampusPrincess"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Campus Princess"/>
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabBikerBabe"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Biker Babe"/>
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/tabGuanBulilit"

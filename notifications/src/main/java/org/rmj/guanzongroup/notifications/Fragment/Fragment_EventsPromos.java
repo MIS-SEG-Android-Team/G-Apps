@@ -32,9 +32,12 @@ public class Fragment_EventsPromos extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         mViewModel = new ViewModelProvider(this).get(VMEventsPromos.class);
+
         View view = inflater.inflate(R.layout.fragment_events_promos, container, false);
         initViews(view);
+
         // TODO: Use the ViewModel
         if(getArguments().get("gcardInstance").toString().equalsIgnoreCase("1")){
             mViewModel.DownloadPromos();

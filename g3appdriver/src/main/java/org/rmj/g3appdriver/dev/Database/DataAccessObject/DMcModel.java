@@ -66,22 +66,8 @@ public interface DMcModel {
     @Query("SELECT * FROM MC_Model_Color WHERE sModelIDx =:ModelID AND sColorIDx =:ColorID")
     EMCColor GetModelColor(String ModelID, String ColorID);
 
-    @Query("SELECT * FROM Mc_Model WHERE sBrandIDx = :BrandID")
-    LiveData<List<EMcModel>> getAllModeFromBrand(String BrandID);
-
-    @Query("SELECT (sModelNme || \" \" || sModelCde) AS ModelInfo FROM Mc_Model WHERE sBrandIDx = :BrandID")
-    LiveData<String[]> getAllModelName(String BrandID);
-
-    @Query("SELECT sModelNme FROM Mc_Model WHERE sModelIDx = :ModelIDx")
-    String getModelName(String ModelIDx);
-
     @Query("SELECT MAX(dTimeStmp) FROM Mc_Model")
     String getLatestDataTime();
-
-    @Query("SELECT * FROM Mc_Model WHERE sModelIDx =:ModelID")
-    EMcModel getModelInfo(String ModelID);
-
-
 
     @Query("SELECT  " +
             "a.sModelIDx, " +

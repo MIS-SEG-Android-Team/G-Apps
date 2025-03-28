@@ -1,7 +1,11 @@
 package org.rmj.guanzongroup.gconnect.Fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +26,7 @@ import com.google.android.material.tabs.TabLayout;
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
 import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.g3appdriver.etc.ViewPagerProperty;
+import org.rmj.guanzongroup.ganado.Activities.Activity_ProductSelection;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Events;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Products;
 import org.rmj.guanzongroup.gconnect.R;
@@ -80,11 +85,18 @@ public class Fragment_Home extends Fragment {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
 
-                slider_events.setCurrentItem(position);
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
 
-                //todo: observe, this might cause a crash / delay of updating the adapter.
-                //todo: should be called once only
-                loAdapter.notifyDataSetChanged();
+                        slider_events.setCurrentItem(position);
+
+                        //todo: observe, this might cause a crash / delay of updating the adapter.
+                        //todo: should be called once only
+                        loAdapter.notifyDataSetChanged();
+
+                    }
+                });
 
             }
         });
@@ -99,6 +111,8 @@ public class Fragment_Home extends Fragment {
 
     private void initAdapter(){
 
+        /** EVENT LIST ADAPTER INITIALIZATION **/
+
         List<Adapter_Events.GuanzonEvents> laEvents = new ArrayList<>();
 
         laEvents.add(new Adapter_Events.GuanzonEvents("dreamboy", R.drawable.dreamboy));
@@ -106,10 +120,34 @@ public class Fragment_Home extends Fragment {
         laEvents.add(new Adapter_Events.GuanzonEvents("bikerbabe", R.drawable.kay));
         laEvents.add(new Adapter_Events.GuanzonEvents("guanzonbulilit", R.drawable.kay));
 
-        loAdapter = new Adapter_Events(laEvents, slider_events);
+        loAdapter = new Adapter_Events(laEvents, slider_events, new Adapter_Events.onSelectListener() {
+            @Override
+            public void onSelect(int position, String eventIDxx) {
+
+                Fragment_Dashboard loParent = (Fragment_Dashboard) getParentFragment();
+
+                if (loParent != null){
+
+                    Bundle loArgs = new Bundle();
+                    loArgs.putString("eventID", String.valueOf(eventIDxx));
+
+                    loParent.viewPager.setCurrentItem(3);
+                    loParent.loPoll.setArguments(loArgs);
+                    loParent.botNav.setSelectedItemId(R.id.nav_Poll);
+
+                }
+
+            }
+        });
+
         slider_events.setAdapter(loAdapter);
 
-        //todo: set viewpager properties, this is a custom library for designing viewpager
+        /**
+         * Set viewpager properties and design
+         * Custom library for designing viewpager.
+         * Add new designs , for future layout viewpager design
+         * Guillier 03/28/2025
+         **/
         ViewPagerProperty loViewPagerProperty = new ViewPagerProperty(slider_events);
 
         loViewPagerProperty.initSliderPadding(
@@ -118,6 +156,8 @@ public class Fragment_Home extends Fragment {
         );
 
         loViewPagerProperty.initSliderPageTransformer();
+
+        /** PRODUCT LIST ADAPTER INITIALIZATION **/
 
         tab_products.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -162,7 +202,25 @@ public class Fragment_Home extends Fragment {
                         break;
                 }
 
-                rcv_products.setAdapter(new Adapter_Products(laProducts));
+                rcv_products.setAdapter(new Adapter_Products(laProducts, new Adapter_Products.onSelectListener() {
+                    @Override
+                    public void onSelect(String brandName) {
+
+                        if (mViewModel.GetBrandID(brandName.toUpperCase()) != null){
+
+                            if (!mViewModel.GetBrandID(brandName.toUpperCase()).isEmpty()){
+
+                                Intent loIntent = new Intent(requireActivity(), Activity_ProductSelection.class);
+                                loIntent.putExtra("lsBrandID", mViewModel.GetBrandID(brandName.toUpperCase()));
+                                loIntent.putExtra("lsBrandNm", brandName.toUpperCase());
+
+                                startActivity(loIntent);
+
+                            }
+                        }
+                    }
+                }));
+
                 rcv_products.setLayoutManager(
                         new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
                 );

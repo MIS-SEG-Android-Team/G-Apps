@@ -185,9 +185,6 @@ public interface DProduct {
             "ORDER BY nUnitPrce ASC")
     LiveData<List<oProduct>> SearchProducts(String fsVal);
 
-    @Query("SELECT xBrandNme FROM Product_Inventory GROUP BY xBrandNme ORDER BY SUM(nSoldQtyx) DESC")
-    LiveData<List<String>> GetBrandNames();
-
     @Query("SELECT nUnitPrce " +
             "FROM Product_Inventory " +
             "WHERE xBrandNme LIKE '%' || :fsArgs || '%' " +

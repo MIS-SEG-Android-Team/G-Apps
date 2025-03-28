@@ -48,6 +48,7 @@ public class Activity_BrandSelection extends AppCompatActivity {
         setContentView(R.layout.activity_brand_selection);
 
         mViewModel = new ViewModelProvider(this).get(VMBrandList.class);
+        poLoading = new Dialog_Loading(Activity_BrandSelection.this);
         dialogDisclosure = new DialogDisclosure(this);
 
         intWidgets();
@@ -66,16 +67,17 @@ public class Activity_BrandSelection extends AppCompatActivity {
     }
 
     private void intWidgets() {
+
         rvc_brandlist = findViewById(R.id.rv_brands);
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar_brand);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        poLoading = new Dialog_Loading(Activity_BrandSelection.this);
     }
 
     private void initProductList(){
+
         mViewModel.importCriteria(new VMBrandList.OnDownloadModels() {
             @Override
             public void onLoad() {
@@ -98,6 +100,7 @@ public class Activity_BrandSelection extends AppCompatActivity {
 
             }
         });
+
         mViewModel.getBrandList().observe(Activity_BrandSelection.this, brandList -> {
             if (brandList.size() > 0) {
                 rec_brandList = new RecyclerViewAdapter_BrandSelection(brandList, new RecyclerViewAdapter_BrandSelection.OnBrandSelectListener() {

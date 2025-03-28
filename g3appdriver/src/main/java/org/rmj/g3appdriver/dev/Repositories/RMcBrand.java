@@ -64,10 +64,6 @@ public class RMcBrand {
         return poDao.getLatestDataTime();
     }
 
-    public LiveData<List<EMcBrand>> getAllBrandInfo(){
-        return poDao.getAllMcBrand();
-    }
-
     public boolean ImportMCBrands(){
         try{
             JSONObject params = new JSONObject();
@@ -134,5 +130,9 @@ public class RMcBrand {
             message = getLocalMessage(e);
             return false;
         }
+    }
+
+    public String getBrandID(String sBrandNme){
+        return poDao.GetBrandID(sBrandNme);
     }
 }

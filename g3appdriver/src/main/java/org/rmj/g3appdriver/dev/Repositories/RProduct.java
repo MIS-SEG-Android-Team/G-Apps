@@ -282,10 +282,6 @@ public class RProduct {
         return poDao.SearchProducts(fsVal);
     }
 
-    public LiveData<List<String>> GetBrandNames(){
-        return poDao.GetBrandNames();
-    }
-
     public LiveData<List<DProduct.oProduct>> GetProductsOnBrand(String fsArgs, String fsArgs1){
         return poDao.GetProductsOnBrand(fsArgs, fsArgs1);
     }

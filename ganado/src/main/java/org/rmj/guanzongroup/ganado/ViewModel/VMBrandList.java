@@ -41,7 +41,9 @@ public class VMBrandList extends AndroidViewModel {
     public LiveData<List<EMcBrand>> getBrandList(){
         return poSys.GetMotorcycleBrands();
     }
+
     public void importCriteria(OnDownloadModels loCallback){
+
         TaskExecutor.Execute(null, new OnTaskExecuteListener() {
             @Override
             public void OnPreExecute() {
@@ -50,11 +52,14 @@ public class VMBrandList extends AndroidViewModel {
             @Override
             public Object DoInBackground(Object args) {
                 try {
+
                     if (!poConn.isDeviceConnected()){
                         return poConn.getMessage();
                     }
+
                     RMcModel rMcModel = new RMcModel(mContext);
                     rMcModel.ImportCashPrices();
+
                     ImportInstance[]  importInstances = {
                             new Import_Relation(getApplication()),
                             new ImportBrand(getApplication()),
@@ -64,6 +69,7 @@ public class VMBrandList extends AndroidViewModel {
                             new ImportMcModelPrice(getApplication()),
                             new ImportTown(getApplication()),
                             new ImportMcTermCategory(getApplication())};
+
                     new Thread(() -> {
                         for (ImportInstance importInstance : importInstances) {
                             importInstance.ImportData(new ImportDataCallback() {
