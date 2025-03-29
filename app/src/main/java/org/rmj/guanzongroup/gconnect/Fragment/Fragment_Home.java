@@ -114,6 +114,7 @@ public class Fragment_Home extends Fragment {
     private void initAdapterData(int tabIndex){
 
         List<Adapter_Products.Product_Data> laProducts = new ArrayList<>();
+        String baseURL = "http://192.165.10.65/productimages/";
 
         switch (tabIndex){
 
@@ -124,22 +125,22 @@ public class Fragment_Home extends Fragment {
 
                 laProducts.add(
                         new Adapter_Products.Product_Data(
-                                "Yamaha", R.drawable.yamaha, R.drawable.yamahalogo)
+                                "Yamaha", baseURL + "yamaha.png", baseURL + "yamahalogo.png")
                 );
 
                 laProducts.add(
                         new Adapter_Products.Product_Data(
-                                "Honda", R.drawable.honda, R.drawable.hondalogo)
+                                "Honda", baseURL + "honda.png", baseURL + "hondalogo.png")
                 );
 
                 laProducts.add(
                         new Adapter_Products.Product_Data(
-                                "Suzuki", R.drawable.suzuki, R.drawable.suzukilogo)
+                                "Suzuki", baseURL + "suzuki.png", baseURL + "suzukilogo.png")
                 );
 
                 laProducts.add(
                         new Adapter_Products.Product_Data(
-                                "Kawasaki", R.drawable.kay, R.drawable.kay)
+                                "Kawasaki", baseURL + "kawasaki.png", baseURL + "kawasakilogo.png")
                 );
 
                 break;

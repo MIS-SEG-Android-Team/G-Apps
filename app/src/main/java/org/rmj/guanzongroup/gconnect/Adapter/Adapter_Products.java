@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -35,8 +36,15 @@ public class Adapter_Products  extends RecyclerView.Adapter<Adapter_Products.VHP
     @Override
     public void onBindViewHolder(@NonNull VHProducts holder, int position) {
 
-        holder.icon_product.setImageResource(laProducts.get(position).getImage());
-        holder.img_logo.setImageResource(laProducts.get(position).getImagelogo());
+        Glide.with(holder.itemView)
+                .load(laProducts.get(position).getImage())
+                .fitCenter()
+                .into(holder.icon_product);
+
+        Glide.with(holder.itemView)
+                .load(laProducts.get(position).getImagelogo())
+                .fitCenter()
+                .into(holder.img_logo);
 
         holder.btn_inquire.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,25 +77,25 @@ public class Adapter_Products  extends RecyclerView.Adapter<Adapter_Products.VHP
     public static class Product_Data{
 
         private final String brand;
-        private final int image;
-        private final int imagelogo;
+        private final String imageURL;
+        private final String imagelogoURL;
 
-        public Product_Data(String brand, int image, int imagelogo) {
+        public Product_Data(String brand, String image, String imagelogo) {
             this.brand = brand;
-            this.image = image;
-            this.imagelogo = imagelogo;
+            this.imageURL = image;
+            this.imagelogoURL = imagelogo;
         }
 
         public String getBrand() {
             return brand;
         }
 
-        public int getImage() {
-            return image;
+        public String getImage() {
+            return imageURL;
         }
 
-        public int getImagelogo() {
-            return imagelogo;
+        public String getImagelogo() {
+            return imagelogoURL;
         }
 
     }
