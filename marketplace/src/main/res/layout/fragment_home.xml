@@ -16,37 +16,39 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/layout_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/white">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/img_logo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_guanzon_logo"
+                    android:layout_margin="10dp"
+                    android:adjustViewBounds="true"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="GUANZON"
+                    android:gravity="start"
+                    android:layout_gravity="center"
+                    android:letterSpacing="0.2"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/marketplace_orange"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/layout_events"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/abstractwihteorange"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/img_logo"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/ic_guanzon_logo"
-                        android:layout_margin="10dp"
-                        android:adjustViewBounds="true"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        style="@style/Title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="GUANZON"
-                        android:gravity="start"
-                        android:layout_gravity="center"
-                        android:letterSpacing="0.2"
-                        android:layout_marginStart="10dp"
-                        android:textColor="@color/marketplace_orange"/>
-
-                </LinearLayout>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
@@ -55,6 +57,7 @@
                     android:padding="10dp"
                     android:textStyle="bold"
                     android:textSize="15sp"
+                    android:textColor="?attr/colorPrimary"
                     android:gravity="center_vertical"/>
 
                 <androidx.viewpager2.widget.ViewPager2

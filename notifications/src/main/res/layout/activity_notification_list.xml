@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/guanzon_digital_light_grey"
     android:orientation="vertical"
     android:theme="@style/GuanzonMarketplace.Theme"
     tools:context=".Activity.Activity_NotificationList">
 
-
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_orange_dark">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_notification"
@@ -22,8 +22,8 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tablayout_notifList"
         style="@style/Widget.MaterialComponents.TabLayout"
+        android:id="@+id/tablayout_notifList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/app_background"
@@ -45,11 +45,12 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/Notif_viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/zxing_transparent">
 
     </androidx.viewpager2.widget.ViewPager2>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/lbl_no_notifications"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

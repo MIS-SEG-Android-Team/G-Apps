@@ -2,15 +2,12 @@ package org.rmj.g3appdriver.lib.GCardCore;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.rmj.apprdiver.util.SQLUtil;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBranchInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DEvents;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPromo;
@@ -31,7 +28,6 @@ import org.rmj.g3appdriver.etc.GuanzonAppConfig;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -307,19 +303,25 @@ public class SystemExtras implements iGCardSystem{
 
     @Override
     public void DownloadPromotions(GCardSystem.GCardSystemCallback callback) throws Exception {
+
         JSONObject params = new JSONObject();
         String lsResponse = WebClient.httpsPostJSon(poAPI.getImportPromosAPI(), params.toString(), poHeaders.getHeaders());
+
         if(lsResponse == null){
             callback.OnFailed("Server no response.");
             Log.d(TAG, "Unable to retrieve data from server. Server no response.");
         } else {
+
             JSONObject loResponse = new JSONObject(lsResponse);
             String lsResult = loResponse.getString("result");
+
             if(lsResult.equalsIgnoreCase("success")){
+
                 callback.OnSuccess(loResponse.toString());
                 SavePromotions(loResponse);
                 Log.d(TAG, "Promo records retrieve successfully.");
             } else {
+
                 JSONObject loError = loResponse.getJSONObject("error");
                 String lsMessage = loError.getString("message");
                 callback.OnFailed(lsMessage);
@@ -330,6 +332,7 @@ public class SystemExtras implements iGCardSystem{
 
     @Override
     public void SavePromotions(JSONObject detail) throws Exception {
+
         JSONArray laDetail = detail.getJSONArray("detail");
 
         for(int x = 0; x < laDetail.length(); x++){
@@ -389,6 +392,7 @@ public class SystemExtras implements iGCardSystem{
     @Override
     public void SaveNewsEvents(JSONObject detail) throws Exception {
         JSONArray laDetail = detail.getJSONArray("detail");
+
         for(int x = 0; x < laDetail.length(); x++){
             JSONObject loJson = laDetail.getJSONObject(x);
 
@@ -430,7 +434,7 @@ public class SystemExtras implements iGCardSystem{
     }
 
     @Override
-    public EEvents CheckEvents() {
+    public List<EEvents> CheckEvents() {
         return poEvents.CheckEvent();
     }
 

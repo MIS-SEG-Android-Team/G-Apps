@@ -9,17 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
+
+import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.guanzongroup.gconnect.R;
 
 import java.util.List;
 
 public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider_Events> {
 
-    private final List<GuanzonEvents> laEvents;
+    private final List<EEvents> laEvents;
     private final ViewPager2 viewPager2;
     private final onSelectListener callback;
 
-    public Adapter_Events(List<GuanzonEvents> laEvents, ViewPager2 viewPager2, onSelectListener callback) {
+    public Adapter_Events(List<EEvents> laEvents, ViewPager2 viewPager2, onSelectListener callback) {
         this.laEvents = laEvents;
         this.viewPager2 = viewPager2;
         this.callback = callback;
@@ -36,7 +39,10 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
     @Override
     public void onBindViewHolder(@NonNull VHSlider_Events holder, int position) {
 
-        holder.btn_event.setImageResource(laEvents.get(position).getImage());
+        Glide.with(holder.itemView)
+                .load(laEvents.get(position).getImageURL())
+                .fitCenter()
+                .into(holder.btn_event);
 
         if (viewPager2.getCurrentItem() == position){
             holder.btn_event.setElevation(0.85f);
@@ -50,7 +56,8 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
             @Override
             public void onClick(View v) {
 
-                callback.onSelect(position, laEvents.get(position).getName());
+                callback.onSelect(position, laEvents.get(position).getTransNox());
+
             }
         });
 
@@ -61,7 +68,6 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
         return laEvents.size();
     }
 
-
     public static class VHSlider_Events extends RecyclerView.ViewHolder{
 
         private ImageButton btn_event;
@@ -70,24 +76,6 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
             super(itemView);
 
             btn_event = itemView.findViewById(R.id.btn_event);
-        }
-    }
-
-    public static class GuanzonEvents{
-        private String name;
-        private int image;
-
-        public GuanzonEvents(String name, int image){
-            this.name = name;
-            this.image = image;
-        }
-
-        public String getName(){
-            return name;
-        }
-
-        public int getImage(){
-            return image;
         }
     }
 

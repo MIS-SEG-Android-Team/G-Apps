@@ -15,8 +15,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textview.MaterialTextView;
 
 import org.rmj.guanzongroup.notifications.Adapter.Adapter_Fragment;
 import org.rmj.guanzongroup.notifications.Adapter.Adapter_Notifications;
@@ -33,7 +33,7 @@ public class Activity_NotificationList extends AppCompatActivity {
     private TabLayout tabLayout_NotifList;
     private ViewPager2 viewPager;
     private Toolbar toolbar;
-    private TextView noNotif;
+    private MaterialTextView noNotif;
     private RecyclerView recyclerView;
     private Adapter_Notifications adapter;
 
@@ -42,6 +42,7 @@ public class Activity_NotificationList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_notification_list);
 
         initViews();

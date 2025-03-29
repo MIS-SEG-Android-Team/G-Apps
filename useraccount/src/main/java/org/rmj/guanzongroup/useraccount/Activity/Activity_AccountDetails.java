@@ -12,7 +12,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+
+import com.google.android.material.textview.MaterialTextView;
+
 import org.rmj.g3appdriver.dev.Database.Entities.EMobileInfo;
 import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
@@ -77,8 +79,8 @@ public class Activity_AccountDetails extends AppCompatActivity {
 
             mViewModel.GetClientDetailForPreview().observe(this, clientInfo -> {
                 try {
-                    TextView lblUserNm = findViewById(R.id.lbl_username);
-                    TextView lblInfoVerify= findViewById(R.id.lbl_Info_verify);
+                    MaterialTextView lblUserNm = findViewById(R.id.lbl_username);
+                    MaterialTextView lblInfoVerify= findViewById(R.id.lbl_Info_verify);
                     lblUserNm.setText(clientInfo.sUserName);
 
                     if(clientInfo.cVerified.equalsIgnoreCase("1")) {
@@ -88,10 +90,10 @@ public class Activity_AccountDetails extends AppCompatActivity {
                         lblUserNm.setCompoundDrawables(null, null, img, null);
                     }
 
-                    TextView lblUserID = findViewById(R.id.lbl_appID);
+                    MaterialTextView lblUserID = findViewById(R.id.lbl_appID);
                     lblUserID.setText(clientInfo.sUserIDxx);
 
-                    TextView lblFullNm = findViewById(R.id.lbl_fullName);
+                    MaterialTextView lblFullNm = findViewById(R.id.lbl_fullName);
                     String lsFullNme = clientInfo.sLastName + ", " + clientInfo.sFrstName;
 
                     if(!clientInfo.sMiddName.trim().isEmpty()){
@@ -103,22 +105,22 @@ public class Activity_AccountDetails extends AppCompatActivity {
                     }
                     lblFullNm.setText(lsFullNme);
 
-                    TextView lblGender = findViewById(R.id.lbl_gender);
+                    MaterialTextView lblGender = findViewById(R.id.lbl_gender);
                     String lsGenderx = mViewModel.getGenderList().get(Integer.parseInt(clientInfo.cGenderCd));
                     lblGender.setText(lsGenderx);
 
-                    TextView lblCvilSt = findViewById(R.id.lbl_civilStatus);
+                    MaterialTextView lblCvilSt = findViewById(R.id.lbl_civilStatus);
                     String lsCivilSt = mViewModel.getCivilStatusList().get(Integer.parseInt(clientInfo.cCvilStat));
                     lblCvilSt.setText(lsCivilSt);
 
-                    TextView lblBirthP = findViewById(R.id.lbl_birthPlace);
+                    MaterialTextView lblBirthP = findViewById(R.id.lbl_birthPlace);
                     lblBirthP.setText(clientInfo.sBirthPlc);
 
-                    TextView lblBirthD = findViewById(R.id.lbl_birthDate);
+                    MaterialTextView lblBirthD = findViewById(R.id.lbl_birthDate);
                     String lsBirthDt = mViewModel.getDate(clientInfo.dBirthDte);
                     lblBirthD.setText(lsBirthDt);
 
-                    TextView lblEmailx = findViewById(R.id.lbl_email);
+                    MaterialTextView lblEmailx = findViewById(R.id.lbl_email);
                     lblEmailx.setText(clientInfo.sEmailAdd);
 
                     mViewModel.GetEmailInfo(clientInfo.sEmailAdd, args -> {
@@ -137,7 +139,7 @@ public class Activity_AccountDetails extends AppCompatActivity {
                         startActivity(loIntent);
                     });
 
-                    TextView lblMobile = findViewById(R.id.lbl_mobile);
+                    MaterialTextView lblMobile = findViewById(R.id.lbl_mobile);
                     lblMobile.setText(clientInfo.sMobileNo);
 
                     mViewModel.GetMobileInfo(clientInfo.sMobileNo, new VMAccountDetails.OnRetrieveMobileInfo() {
@@ -159,7 +161,7 @@ public class Activity_AccountDetails extends AppCompatActivity {
                         startActivity(loIntent);
                     });
 
-                    TextView lblGcash = findViewById(R.id.lbl_gcash);
+                    MaterialTextView lblGcash = findViewById(R.id.lbl_gcash);
                     lblGcash.setText(clientInfo.sGCashNox);
 
                     findViewById(R.id.lbl_editGcashNo).setOnClickListener(v -> {

@@ -29,10 +29,7 @@ public class VMSplashScreen extends AndroidViewModel {
     private final GuanzonAppConfig loConfig;
     private final RAddressMobile loAddress;
     private final RProduct loProduct;
-    private final AccountInfo loAccount;
-    private final RNotificationInfo loNotif;
-    private final ROrder loOrder;
-    private iGCardSystem loGcard;
+
     public VMSplashScreen(@NonNull Application application) {
         super(application);
         this.mContext = application;
@@ -40,15 +37,12 @@ public class VMSplashScreen extends AndroidViewModel {
         loConfig = new GuanzonAppConfig(mContext);
         loAddress = new RAddressMobile(mContext);
         loProduct = new RProduct(mContext);
-        loAccount = new AccountInfo(mContext);
-        loNotif = new RNotificationInfo(mContext);
-        loOrder = new ROrder(mContext);
 
         loConfig.setProductID("GuanzonApp");
         loConfig.setClientID(AppConstants.APP_CLIENT);
         loConfig.setIfPermissionsGranted(true);
 
-        loConfig.setTestCase(false);
+        loConfig.setTestCase(true);
     }
     public void setsAppVrsnCd(String sAppVrsnCd){
         loConfig.setAppversionCode(sAppVrsnCd);

@@ -10,13 +10,14 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_orange_dark">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:theme="@style/AppToolbar"/>
+            android:theme="@style/AppToolbar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -59,7 +60,7 @@
                     android:paddingStart="10dp"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/lbl_username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -70,7 +71,7 @@
                         android:gravity="center_vertical"
                         android:drawablePadding="10dp"/>
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/lbl_appID"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -91,34 +92,35 @@
                 android:visibility="gone"
                 android:text="@string/lblVerifyAccount"
                 style="@style/ButtonStyle.Orange.Medium"/>
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-        <TextView
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lbl_Personal_Info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_medium"
             android:text="Personal Information"
-            android:textColor="@color/font_regular"
             android:paddingHorizontal="19dp"
             android:paddingVertical="17dp"
             android:textSize="16sp"/>
 
-    <TextView
-        android:id="@+id/lbl_Info_verify"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lbl_Personal_Info"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="5dp"
-        android:gravity="center"
-        android:text="ⓘ Personal Information is not yet verified"
-        android:textColor="@color/guanzon_digital_red"
-        android:visibility="gone"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/lbl_Info_verify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lbl_Personal_Info"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="ⓘ Personal Information is not yet verified"
+            android:textColor="@color/guanzon_digital_red"
+            android:visibility="gone"/>
 
 
-</RelativeLayout>
+    </RelativeLayout>
 
 
             <View
@@ -135,18 +137,17 @@
                 android:paddingHorizontal="19dp"
                 android:paddingVertical="17dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".6"
                     android:fontFamily="@font/roboto_regular"
-                    android:textColor="@color/font_regular"
                     android:textSize="16sp"
                     android:text="Full Name :"
                     android:maxLines="1"
                     android:ellipsize="end"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_fullName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -169,18 +170,17 @@
                 android:paddingHorizontal="19dp"
                 android:paddingVertical="17dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".6"
                     android:fontFamily="@font/roboto_regular"
-                    android:textColor="@color/font_regular"
                     android:textSize="16sp"
                     android:text="Gender :"
                     android:maxLines="1"
                     android:ellipsize="end"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_gender"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -201,18 +201,17 @@
                 android:paddingHorizontal="19dp"
                 android:paddingVertical="17dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".6"
                     android:fontFamily="@font/roboto_regular"
-                    android:textColor="@color/font_regular"
                     android:textSize="16sp"
                     android:text="Birth Date :"
                     android:maxLines="1"
                     android:ellipsize="end"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_birthDate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -233,18 +232,17 @@
                 android:paddingHorizontal="19dp"
                 android:paddingVertical="17dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".6"
                     android:fontFamily="@font/roboto_regular"
-                    android:textColor="@color/font_regular"
                     android:textSize="16sp"
                     android:text="Birth Place :"
                     android:maxLines="1"
                     android:ellipsize="end"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_birthPlace"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -267,18 +265,17 @@
                 android:paddingHorizontal="19dp"
                 android:paddingVertical="17dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".6"
                     android:fontFamily="@font/roboto_regular"
-                    android:textColor="@color/font_regular"
                     android:textSize="16sp"
                     android:text="Civil Status :"
                     android:maxLines="1"
                     android:ellipsize="end"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_civilStatus"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -290,20 +287,22 @@
                     android:gravity="right"/>
 
             </LinearLayout>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-            <TextView
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/lbl_Acct_Info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_medium"
                 android:text="Account Information"
-                android:textColor="@color/font_regular"
                 android:textSize="16sp"
                 android:paddingHorizontal="19dp"
                 android:paddingVertical="17dp"/>
-            <TextView
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/lbl_Acct_verify"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -315,7 +314,8 @@
                 android:textColor="@color/guanzon_digital_red"
                 android:visibility="gone"/>
 
-</RelativeLayout>
+    </RelativeLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.4dp"
@@ -331,18 +331,17 @@
                 android:paddingHorizontal="19dp"
                 android:paddingVertical="17dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".8"
                     android:fontFamily="@font/roboto_regular"
-                    android:textColor="@color/font_regular"
                     android:textSize="16sp"
                     android:text="Email :"
                     android:maxLines="1"
                     android:ellipsize="end"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_email"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -357,7 +356,7 @@
                     android:gravity="right|center_vertical"
                     android:paddingEnd="15dp"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_editEmail"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -381,18 +380,17 @@
                 android:paddingHorizontal="19dp"
                 android:paddingVertical="17dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".8"
                     android:fontFamily="@font/roboto_regular"
-                    android:textColor="@color/font_regular"
                     android:textSize="16sp"
                     android:text="Mobile No :"
                     android:maxLines="1"
                     android:ellipsize="end"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_mobile"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -407,7 +405,7 @@
                     android:paddingEnd="15dp"
                     android:drawablePadding="10dp"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_editMobileNo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -431,18 +429,17 @@
                 android:paddingHorizontal="19dp"
                 android:paddingVertical="17dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".8"
                     android:fontFamily="@font/roboto_regular"
-                    android:textColor="@color/font_regular"
                     android:textSize="16sp"
                     android:text="Gcash No :"
                     android:maxLines="1"
                     android:ellipsize="end"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_gcash"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -457,7 +454,7 @@
                     android:paddingEnd="15dp"
                     android:drawablePadding="10dp"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_editGcashNo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -482,7 +479,7 @@
                 android:paddingVertical="17dp"
                 android:visibility="gone">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.65"
@@ -493,7 +490,7 @@
                     android:maxLines="1"
                     android:ellipsize="end"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_editPassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

@@ -448,7 +448,7 @@ public class RedemptionManager implements iGCardSystem{
     }
 
     @Override
-    public EEvents CheckEvents() {
+    public List<EEvents> CheckEvents() {
         return null;
     }
 

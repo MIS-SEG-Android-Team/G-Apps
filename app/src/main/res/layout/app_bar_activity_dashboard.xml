@@ -43,28 +43,19 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardElevation="10dp"
+                    app:cardCornerRadius="15dp"
                     app:cardBackgroundColor="@color/app_background">
 
                     <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/mtv_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
-                        android:text="Hello! I am Kay,\n Your assistant for today"
+                        android:text="Hello! I am Kay,\nYour assistant for today"
                         android:textSize="12sp"
                         android:textStyle="bold"/>
 
                 </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:id="@+id/btn_notifbtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Okay"
-                    android:textSize="12sp"
-                    android:backgroundTint="@color/app_background"
-                    android:elevation="10dp"/>
 
             </LinearLayout>
 
@@ -84,24 +75,15 @@
 
                     <com.google.android.material.appbar.MaterialToolbar
                         android:id="@+id/toolbar"
-                        android:layout_width="50dp"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/zxing_transparent"
-                        app:popupTheme="@style/Theme.GApps.PopupOverlay"/>
-
-                    <ImageButton
-                        android:id="@+id/btn_profile"
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_settings_person_24"
-                        android:background="@color/zxing_transparent"/>
-
-                    <ImageButton
-                        android:id="@+id/btn_notification"
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_baseline_notifications_24"
-                        android:backgroundTint="@color/zxing_transparent"/>
+                        app:popupTheme="@style/Theme.GApps.PopupOverlay"
+                        app:titleMargin="0dp"
+                        app:contentInsetLeft="0dp"
+                        app:contentInsetStart="0dp"
+                        app:collapseContentDescription=""
+                        app:contentInsetStartWithNavigation="0dp"/>
 
                 </LinearLayout>
 

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:textStyle="bold"
-    android:text="10"
+    android:text="0"
     android:textColor="@color/guanzon_digital_orange"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:id="@+id/lbl_action_item_badge"/>

@@ -1,5 +1,7 @@
 package org.rmj.guanzongroup.gconnect.Activity;
 
+import static com.google.android.material.badge.BadgeDrawable.TOP_START;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,6 +48,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.guanzongroup.com.creditapp.Activities.Activity_LoanProductList;
+import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.etc.ConnectionUtil;
 import org.rmj.g3appdriver.etc.MessageBox;
@@ -66,8 +70,10 @@ import org.rmj.guanzongroup.gconnect.databinding.ActivityDashboardBinding;
 import org.rmj.guanzongroup.notifications.Activity.Activity_Browser;
 import org.rmj.guanzongroup.notifications.Activity.Activity_GuanzonPanalo;
 import org.rmj.guanzongroup.notifications.Activity.Activity_NotificationList;
+import org.rmj.guanzongroup.notifications.Activity.Activity_ViewNotification;
 import org.rmj.guanzongroup.panalo.Dialog.DialogRaffelEntry;
 import org.rmj.guanzongroup.panalo.Dialog.DialogRaffleEntryQrCode;
+import org.rmj.guanzongroup.useraccount.Activity.Activity_AccountDetails;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_CompleteAccountDetails;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_LoanIntroduction;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_Login;
@@ -104,8 +110,6 @@ public class Activity_Dashboard extends AppCompatActivity {
 
     private ShapeableImageView icon_move;
     private MaterialCardView mcv_menu;
-    private ImageButton btn_profile;
-    private ImageButton btn_notif;
 
     private float dX;
     private float dY;
@@ -134,13 +138,16 @@ public class Activity_Dashboard extends AppCompatActivity {
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+
         setSupportActionBar(binding.appBarActivityDashboardId.toolbar);
 
-        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 
         initViews(); //todo: init views
+
+        initToolbarMessage("Hi! I'm Kay, your assistant for today");
 
         initNavigation(); //todo: init navigation
 
@@ -164,29 +171,30 @@ public class Activity_Dashboard extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        /*MenuInflater inflater = getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_mrktplc, menu);
 
-        // Get the SearchView and set the searchable configuration
         mViewModel.getClientInfo().observe(Activity_Dashboard.this, eClientinfo -> {
 
-            //This area of code has been commented to avoid users from accessing
-            // the marketplace cart while the marketplace has not yet fully develop yet.
-            try {
-                if(eClientinfo != null){
-                    menu.findItem(R.id.item_notifications).setVisible(true);
-                } else {
-                    menu.findItem(R.id.item_notifications).setVisible(false);
-                }
-            } catch(Exception e) {
-                e.printStackTrace();
+            if(eClientinfo != null) {
+
+                menu.findItem(R.id.item_profile).setEnabled(true);
+                menu.findItem(R.id.item_notifications).setEnabled(true);
+
+            }else {
+
+                menu.findItem(R.id.item_profile).setEnabled(false);
+                menu.findItem(R.id.item_notifications).setEnabled(false);
             }
-        });*/
+
+        });
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
         Intent loIntent;
 
         if(item.getItemId() == android.R.id.home){
@@ -199,7 +207,18 @@ public class Activity_Dashboard extends AppCompatActivity {
             intent.putExtra("args", "1");
             startActivity(intent);
         } else {
-            startActivity(new Intent(Activity_Dashboard.this, Activity_NotificationList.class));
+
+            if (item.getItemId() == R.id.item_profile){
+
+                Intent intent = new Intent(Activity_Dashboard.this, Activity_AccountDetails.class);
+                startActivity(intent);
+
+            }else if (item.getItemId() == R.id.item_notifications){
+
+                Intent intent = new Intent(Activity_Dashboard.this, Activity_NotificationList.class);
+                startActivity(intent);
+
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -234,7 +253,9 @@ public class Activity_Dashboard extends AppCompatActivity {
     @SuppressLint("NewApi")
     @Override
     protected void onStart() {
+
         super.onStart();
+
         IntentFilter intentFilter = new IntentFilter("android.intent.action.SUCCESS_LOGIN");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -275,9 +296,6 @@ public class Activity_Dashboard extends AppCompatActivity {
 
         icon_move = binding.appBarActivityDashboardId.iconMove;
         mcv_menu = binding.appBarActivityDashboardId.mcvMenu;
-
-        btn_profile = binding.appBarActivityDashboardId.btnProfile;
-        btn_notif = binding.appBarActivityDashboardId.btnNotification;
 
         poDialog.initDialog();
 
@@ -326,19 +344,19 @@ public class Activity_Dashboard extends AppCompatActivity {
     private void initObservables(){
 
         mViewModel.getClientInfo().observe(Activity_Dashboard.this, eClientinfo -> {
+
             try {
+
                 Menu nav_Menu = navigationView.getMenu();
 
                 //todo: display nav menus, if logged account
                 if(eClientinfo != null) {
+
                     String lsFullNme = eClientinfo.getUserName();
 
                     lnAuthxxx.setVisibility(View.GONE);
                     txtFullNm.setVisibility(View.VISIBLE);
                     txtFullNm.setText(Objects.requireNonNull(lsFullNme));
-
-                    btn_profile.setEnabled(true);
-                    btn_notif.setEnabled(true);
 
                     nav_Menu.findItem(R.id.nav_my_gcard).setVisible(true);
                     nav_Menu.findItem(R.id.nav_account_settings).setVisible(true);
@@ -372,7 +390,9 @@ public class Activity_Dashboard extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         });
+
                     }else {
+
                         nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
                         nav_Menu.findItem(R.id.nav_product_inquiry).setVisible(false);
                         nav_Menu.findItem(R.id.nav_product_inquiry_history).setVisible(false);
@@ -385,9 +405,6 @@ public class Activity_Dashboard extends AppCompatActivity {
 
                     lnAuthxxx.setVisibility(View.VISIBLE);
                     txtFullNm.setVisibility(View.GONE);
-
-                    btn_profile.setEnabled(false);
-                    btn_notif.setEnabled(false);
 
                     nav_Menu.findItem(R.id.nav_scan_qrcode).setVisible(false);
                     nav_Menu.findItem(R.id.nav_my_gcard).setVisible(false);
@@ -405,9 +422,12 @@ public class Activity_Dashboard extends AppCompatActivity {
             }
         });
 
+        toolbar = binding.appBarActivityDashboardId.toolbar;
+
         mViewModel.GetUnreadMessagesCount().observe(Activity_Dashboard.this, count -> {
+
             try{
-                toolbar = findViewById(R.id.toolbar);
+
                 if(count > 0) {
                     loBadge = BadgeDrawable.create(Activity_Dashboard.this);
                     loBadge.setNumber(count);
@@ -422,8 +442,8 @@ public class Activity_Dashboard extends AppCompatActivity {
         });
 
         mViewModel.GetCartItemCount().observe(Activity_Dashboard.this, count -> {
+
             try {
-                toolbar = findViewById(R.id.toolbar);
 
                 lblBadge = (TextView) loInflate.inflate(R.layout.nav_action_badge, null, false);
                 navigationView.getMenu().findItem(R.id.nav_item_cart).setActionView(lblBadge);
@@ -610,20 +630,12 @@ public class Activity_Dashboard extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
 
                         initToolbarBounds(event);
-                        initToolbarDisplay();
+                        initToolbarAction();
 
                         break;
                 }
 
                 return true;
-            }
-        });
-
-        binding.appBarActivityDashboardId.btnNotifbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                binding.appBarActivityDashboardId.layoutNotifkay.setVisibility(View.GONE);
             }
         });
 
@@ -645,8 +657,6 @@ public class Activity_Dashboard extends AppCompatActivity {
 
     private void initToolbarBounds(MotionEvent event){
 
-        Log.d("IS BOUND?", String.valueOf(validateCoordinates(event.getRawY(), event.getRawX())));
-
         if (!validateCoordinates(event.getRawY(), event.getRawX())) {
             binding.appBarActivityDashboardId.layoutAppbar.setY(
                     Float.valueOf(binding.appBarActivityDashboardId.getRoot().getBottom()) / 2f
@@ -659,44 +669,23 @@ public class Activity_Dashboard extends AppCompatActivity {
 
     }
 
-    private Boolean validateCoordinates(float Ycoordinate, float Xcoordinate){
+    private void initToolbarMessage(String message){
 
-        float topCoord = binding.appBarActivityDashboardId.getRoot().getTop() + 5f;
-        float bottCoord = binding.appBarActivityDashboardId.getRoot().getBottom() - 5f;
-        float leftCoord = binding.appBarActivityDashboardId.getRoot().getLeft() + 5f;
-        float rightCoord = binding.appBarActivityDashboardId.getRoot().getRight() - 5f;
+        binding.appBarActivityDashboardId.layoutNotifkay.setVisibility(View.VISIBLE);
+        binding.appBarActivityDashboardId.mtvMessage.setText(message);
 
-        Log.d("Bound Top", String.valueOf(topCoord));
-        Log.d("Bound Bottom", String.valueOf(bottCoord));
-
-        Log.d("Bound Left", String.valueOf(leftCoord));
-        Log.d("Bound Right", String.valueOf(rightCoord));
-
-        //todo: validate coordinates, should not be outside the view bounds
-        if(topCoord > Ycoordinate){
-            return false;
-        }else if(bottCoord < Ycoordinate) {
-            return false;
-        } else if (leftCoord > Xcoordinate) {
-            return false;
-        } else if (rightCoord < Xcoordinate) {
-            return false;
-        }else {
-            return true;
-        }
+        mcv_menu.setVisibility(View.GONE);
 
     }
 
-    private void initToolbarDisplay(){
+    private void initToolbarAction(){
 
-        if (binding.appBarActivityDashboardId.layoutNotifkay.getVisibility() == View.GONE ||
-                binding.appBarActivityDashboardId.layoutNotifkay.getVisibility() == View.INVISIBLE){
+        binding.appBarActivityDashboardId.layoutNotifkay.setVisibility(View.GONE);
 
-            if (mcv_menu.getVisibility() == View.GONE || mcv_menu.getVisibility() == View.INVISIBLE){
-                mcv_menu.setVisibility(View.VISIBLE);
-            }else {
-                mcv_menu.setVisibility(View.GONE);
-            }
+        if (mcv_menu.getVisibility() == View.GONE || mcv_menu.getVisibility() == View.INVISIBLE){
+            mcv_menu.setVisibility(View.VISIBLE);
+        }else {
+            mcv_menu.setVisibility(View.GONE);
         }
 
     }
@@ -749,10 +738,13 @@ public class Activity_Dashboard extends AppCompatActivity {
             startActivity(loIntent);
 
         }else{
+
             mViewModel.CheckPromotions(new VMHome.OnCheckPromotions() {
                 @Override
                 public void OnCheckPromos(String args1, String args2) {
+
                     Dialog_Promo loDialog = new Dialog_Promo(Activity_Dashboard.this);
+
                     loDialog.initDialog(args2, (dialog) -> {
                         Intent intent = new Intent(Activity_Dashboard.this, Activity_Browser.class);
                         intent.putExtra("url_link", args1);
@@ -760,19 +752,27 @@ public class Activity_Dashboard extends AppCompatActivity {
                         startActivity(intent);
                         dialog.dismiss();
                     });
+
                     loDialog.show();
                 }
                 @Override
-                public void OnCheckEvents(String args1, String args2) {
-                    Dialog_Promo loDialog = new Dialog_Promo(Activity_Dashboard.this);
-                    loDialog.initDialog(args1, (dialog) -> {
-                        Intent intent = new Intent(Activity_Dashboard.this, Activity_Browser.class);
-                        intent.putExtra("url_link", args2);
-                        intent.putExtra("args", "0");
-                        startActivity(intent);
-                        dialog.dismiss();
-                    });
-                    loDialog.show();
+                public void OnCheckEvents(List<EEvents> laEvents) {
+
+                    for (EEvents loEvent : laEvents){
+
+                        Dialog_Promo loDialog = new Dialog_Promo(Activity_Dashboard.this);
+
+                        loDialog.initDialog(loEvent.getImageURL(), (dialog) -> {
+                            Intent intent = new Intent(Activity_Dashboard.this, Activity_Browser.class);
+                            intent.putExtra("url_link", loEvent.getEventURL());
+                            intent.putExtra("args", "0");
+                            startActivity(intent);
+                            dialog.dismiss();
+                        });
+
+                        loDialog.show();
+
+                    }
                 }
 
                 @Override
@@ -784,7 +784,9 @@ public class Activity_Dashboard extends AppCompatActivity {
     }
 
     private void setupIntentArguments(NavController navController){
+
         if(getIntent().hasExtra("args")){
+
             String lsArgs = getIntent().getStringExtra("args");
             switch (lsArgs){
                 case "gcard":
@@ -973,6 +975,34 @@ public class Activity_Dashboard extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private Boolean validateCoordinates(float Ycoordinate, float Xcoordinate){
+
+        float topCoord = binding.appBarActivityDashboardId.getRoot().getTop() + 5f;
+        float bottCoord = binding.appBarActivityDashboardId.getRoot().getBottom() - 5f;
+        float leftCoord = binding.appBarActivityDashboardId.getRoot().getLeft() + 5f;
+        float rightCoord = binding.appBarActivityDashboardId.getRoot().getRight() - 5f;
+
+        Log.d("Bound Top", String.valueOf(topCoord));
+        Log.d("Bound Bottom", String.valueOf(bottCoord));
+
+        Log.d("Bound Left", String.valueOf(leftCoord));
+        Log.d("Bound Right", String.valueOf(rightCoord));
+
+        //todo: validate coordinates, should not be outside the view bounds
+        if(topCoord > Ycoordinate){
+            return false;
+        }else if(bottCoord < Ycoordinate) {
+            return false;
+        } else if (leftCoord > Xcoordinate) {
+            return false;
+        } else if (rightCoord < Xcoordinate) {
+            return false;
+        }else {
+            return true;
+        }
+
     }
 
     private String GetBadgeValue(int val){

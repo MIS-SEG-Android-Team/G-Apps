@@ -8,19 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import org.json.JSONObject;
-import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
 import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
-import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.g3appdriver.dev.Repositories.RMcBrand;
 import org.rmj.g3appdriver.dev.Repositories.RNotificationInfo;
 import org.rmj.g3appdriver.dev.Repositories.ROrder;
-import org.rmj.g3appdriver.dev.Repositories.RProduct;
 import org.rmj.g3appdriver.etc.ConnectionUtil;
 import org.rmj.g3appdriver.etc.GuanzonAppConfig;
 import org.rmj.g3appdriver.lib.Account.AccountInfo;
@@ -37,7 +33,7 @@ public class VMHome extends AndroidViewModel {
     private static final String TAG = VMHome.class.getSimpleName();
 
     private String lsPromo, lsPmUrl;
-    private String lsEvent, lsEvUrl;
+    private List<EEvents> laEvents;
 
     private final RClientInfo poClient;
     private final ROrder poOrder;
@@ -106,11 +102,6 @@ public class VMHome extends AndroidViewModel {
 
     public LiveData<Integer> GetToPayOrders() {
         return poOrder.GetToPayOrders();
-    }
-
-    public LiveData<List<EPromo>> GetPromoLinkList() {
-        poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
-        return poSystem.GetPromotions();
     }
 
     public String GetBrandID(String sBrandNme){
@@ -306,11 +297,19 @@ public class VMHome extends AndroidViewModel {
         });
     }
 
+    public LiveData<List<EEvents>> getEvents() {
+        poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
+        return poSystem.GetNewsEvents();
+    }
+
     public void CheckPromotions(OnCheckPromotions listener) {
+
         TaskExecutor.Execute(listener, new OnDoBackgroundTaskListener() {
             @Override
             public Object DoInBackground(Object args) {
+
                 poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
+
                 if (poSystem.CheckPromo() != null) {
                     EPromo loPromo = poSystem.CheckPromo();
                     lsPromo = loPromo.getPromoUrl();
@@ -318,9 +317,8 @@ public class VMHome extends AndroidViewModel {
                 }
 
                 if (poSystem.CheckEvents() != null) {
-                    EEvents loEvent = poSystem.CheckEvents();
-                    lsEvent = loEvent.getImageURL();
-                    lsEvUrl = loEvent.getEventURL();
+                    List<EEvents> loEvent = poSystem.CheckEvents();
+                    laEvents = loEvent;
                 }
 
                 return null;
@@ -331,10 +329,10 @@ public class VMHome extends AndroidViewModel {
                 if (lsPromo != null) {
                     listener.OnCheckPromos(lsPromo, lsPmUrl);
                 }
-                if (lsEvent != null) {
-                    listener.OnCheckEvents(lsEvent, lsEvUrl);
+                if (laEvents.size() > 0) {
+                    listener.OnCheckEvents(laEvents);
                 }
-                if (lsEvent == null && lsPromo == null) {
+                if (laEvents.size() <= 0 && lsPromo == null) {
                     listener.NoPromos();
                 }
 
@@ -345,12 +343,12 @@ public class VMHome extends AndroidViewModel {
     public interface OnCheckPromotions {
         void OnCheckPromos(String args1, String args2);
 
-        void OnCheckEvents(String args1, String args2);
+        void OnCheckEvents(List<EEvents> loEvents);
 
         void NoPromos();
     }
 
-    public Boolean ImportOrdersTask() {
+    public void ImportOrdersTask() {
         TaskExecutor.Execute(null, new OnDoBackgroundTaskListener() {
             @Override
             public Object DoInBackground(Object args) {
@@ -372,7 +370,6 @@ public class VMHome extends AndroidViewModel {
             }
         });
 
-        return isSuccess;
     }
 
     public void ValidateUserVerification(OnValidateVerifiedUser listener) {

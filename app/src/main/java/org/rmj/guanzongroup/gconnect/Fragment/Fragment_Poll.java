@@ -62,19 +62,20 @@ public class Fragment_Poll extends Fragment {
         rv_candidates = view.findViewById(R.id.rv_candidates);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void initListener(){
 
         List<Adapter_Candidates.Candidate_Details> candidates1 =
-                List.of(initData("Mitch Cardigan", "University of Luzon", "1", "Mitch Cardigan.jpg"),
-                        initData("Jewel Myers", "University of Pangasinan", "2", "Jewel Myers.jpg"),
-                        initData("Lyndsay Rivera", "Universidad De Dagupan", "3", "Lyndsay Rivera.jpg"),
-                        initData("Sofia Reyes", "Lyceum Northwestern University", "4", "Sofia Reyes.jpg"));
+                List.of(initData("Mitch Cardigan", "University of Luzon", "1", "MitchCardigan.jpg"),
+                        initData("Jewel Myers", "University of Pangasinan", "2", "JewelMyers.jpg"),
+                        initData("Lyndsay Rivera", "Universidad De Dagupan", "3", "LyndsayRivera.jpg"),
+                        initData("Sofia Reyes", "Lyceum Northwestern University", "4", "SofiaReyes.jpg"));
 
         List<Adapter_Candidates.Candidate_Details> candidates2 =
-                List.of(initData("Carmina Dela Cruz", "University of Luzon", "1", "Carmina Dela Cruz.jpg"),
-                        initData("Sharmaine Aquino", "University of Pangasinan", "2", "Sharmaine Aquino.jpg"),
-                        initData("Jenny Rogers", "Universidad De Dagupan", "3", "Jenny Rogers.jpg"),
-                        initData("Ashley De Vera", "Lyceum Northwestern University", "4", "Ashley De Vera.jpg"));
+                List.of(initData("Carmina Dela Cruz", "University of Luzon", "1", "CarminaDelaCruz.jpg"),
+                        initData("Sharmaine Aquino", "University of Pangasinan", "2", "SharmaineAquino.jpg"),
+                        initData("Jenny Rogers", "Universidad De Dagupan", "3", "JennyRogers.jpg"),
+                        initData("Ashley De Vera", "Lyceum Northwestern University", "4", "AshleyDeVera.jpg"));
 
         switch (tab_candidates.getSelectedTabPosition()){
 
@@ -178,19 +179,19 @@ public class Fragment_Poll extends Fragment {
 
                     switch (eventID){
 
-                        case "dreamboy":
+                        case "M00120000001":
                             tab_candidates.selectTab(tab_candidates.getTabAt(0), true);
                             break;
 
-                        case "campusprincess":
+                        case "M00120000002":
                             tab_candidates.selectTab(tab_candidates.getTabAt(1), true);
                             break;
 
-                        case "bikerbabe":
+                        case "M00120000003":
                             tab_candidates.selectTab(tab_candidates.getTabAt(2), true);
                             break;
 
-                        case "guanzonbulilit":
+                        case "M00120000004":
                             tab_candidates.selectTab(tab_candidates.getTabAt(3), true);
                             break;
                     }

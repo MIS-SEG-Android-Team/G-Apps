@@ -71,9 +71,12 @@ public class Fragment_AccountSettings extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_account_settings, container, false);
+
         mViewModel = new ViewModelProvider(requireActivity()).get(VMAccountSettings.class);
         poAccount = new AccountInfo(requireActivity());
+
         // TODO: Use the ViewModel
         setUpViews(v);
         setSettingsAdapter(v);
@@ -81,12 +84,14 @@ public class Fragment_AccountSettings extends Fragment {
     }
 
     private void setUpViews(View v) {
+
         recyclerView = v.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
     }
 
     private void setSettingsAdapter(View view) {
+
         poAdapter = new Adapter_AccountSettings(getMenuList(), position -> {
             switch(position) {
                 case 0:

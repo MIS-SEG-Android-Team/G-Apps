@@ -8,7 +8,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import org.rmj.g3appdriver.dev.Database.Entities.ENotificationMaster;
-import org.rmj.g3appdriver.dev.Repositories.RNotificationInfo;
 import org.rmj.g3appdriver.dev.Repositories.RRawData;
 import org.rmj.g3appdriver.etc.GuanzonAppConfig;
 import org.rmj.g3appdriver.lib.Notifications.NMM;
@@ -34,7 +33,9 @@ public class GMessagingService extends FirebaseMessagingService {
 
         String lsSysMon = new RemoteMessageParser(message).getValueOf("msgmon");
         iNotification loSys = new NMM(GMessagingService.this).getInstance(lsSysMon);
+
         String lsResult = loSys.Save(message);
+
         if(lsResult == null){
             Log.e(TAG, loSys.getMessage());
             return;

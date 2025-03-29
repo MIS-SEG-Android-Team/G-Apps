@@ -3,11 +3,8 @@ package org.rmj.g3appdriver.lib.GCardCore;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-
-import com.google.android.datatransport.cct.StringMerger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,7 +14,6 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPointsRequest;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRedeemItemInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
-import org.rmj.g3appdriver.dev.Database.Entities.EGCardPoints;
 import org.rmj.g3appdriver.dev.Database.Entities.EGCardTransactionLedger;
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
 import org.rmj.g3appdriver.dev.Database.Entities.EMCSerialRegistration;
@@ -26,7 +22,6 @@ import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
 import org.rmj.g3appdriver.dev.Database.Entities.ERedeemablesInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EServiceInfo;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
-import org.rmj.g3appdriver.dev.Repositories.RGCardPoints;
 import org.rmj.g3appdriver.dev.Repositories.RGCardTransactionLedger;
 import org.rmj.g3appdriver.dev.Repositories.RMCSerialRegistration;
 import org.rmj.g3appdriver.dev.Repositories.RServiceInfo;
@@ -40,12 +35,8 @@ import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GCardManager implements iGCardSystem{
     private static final String TAG = GCardManager.class.getSimpleName();
@@ -757,7 +748,7 @@ public class GCardManager implements iGCardSystem{
         throw new NullPointerException();
     }
     @Override
-    public EEvents CheckEvents() {
+    public List<EEvents> CheckEvents() {
         return null;
     }
 

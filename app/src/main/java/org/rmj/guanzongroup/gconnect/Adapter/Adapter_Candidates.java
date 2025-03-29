@@ -51,7 +51,9 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
 
         holder.mtv_name.setText(candidatesFiltered.get(position).getName());
 
-        ImageFileManager.LoadImageToView(candidatesFiltered.get(position).getUrlImg(),
+        String baseUrl = "http://192.165.10.65/candidatesimage/";
+
+        ImageFileManager.LoadImageToView(baseUrl + candidatesFiltered.get(position).getUrlImg(),
                 holder.img_candidate);
 
         //todo: view candidate details

@@ -92,7 +92,9 @@ public class Dialog_Candidate_Details {
 
             try{
 
-                ImageFileManager.LoadImageToView(details.getUrlImg(), loImg);
+                String baseUrl = "http://192.165.10.65/candidatesimage/";
+
+                ImageFileManager.LoadImageToView(baseUrl + details.getUrlImg(), loImg);
 
                 mtv_name.setText(details.getName());
                 mtv_school.setText(details.getSchool());

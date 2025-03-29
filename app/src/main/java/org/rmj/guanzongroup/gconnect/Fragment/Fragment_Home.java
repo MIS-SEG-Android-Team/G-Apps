@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.tabs.TabLayout;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.g3appdriver.etc.ViewPagerProperty;
 import org.rmj.guanzongroup.ganado.Activities.Activity_ProductSelection;
@@ -39,6 +39,7 @@ public class Fragment_Home extends Fragment {
     private VMHome mViewModel;
     private RClientInfo loClient;
 
+    private LinearLayout layout_header;
     private LinearLayout layout_events;
     private ViewPager2 slider_events;
     private Adapter_Events loAdapter;
@@ -67,6 +68,7 @@ public class Fragment_Home extends Fragment {
 
     private void initViews(View v) {
 
+        layout_header = v.findViewById(R.id.layout_header);
         slider_events = v.findViewById(R.id.slider_events);
         layout_events = v.findViewById(R.id.layout_events);
 
@@ -109,122 +111,142 @@ public class Fragment_Home extends Fragment {
         tab_products.addTab(tab_products.newTab().setText("Mobile"));
     }
 
+    private void initAdapterData(int tabIndex){
+
+        List<Adapter_Products.Product_Data> laProducts = new ArrayList<>();
+
+        switch (tabIndex){
+
+            case 0:
+
+                rcv_products.setVisibility(View.VISIBLE);
+                siv_kay.setVisibility(View.GONE);
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Yamaha", R.drawable.yamaha, R.drawable.yamahalogo)
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Honda", R.drawable.honda, R.drawable.hondalogo)
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Suzuki", R.drawable.suzuki, R.drawable.suzukilogo)
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Kawasaki", R.drawable.kay, R.drawable.kay)
+                );
+
+                break;
+
+            case 1:
+
+                rcv_products.setVisibility(View.GONE);
+                siv_kay.setVisibility(View.VISIBLE);
+
+                break;
+        }
+
+        rcv_products.setAdapter(new Adapter_Products(laProducts, new Adapter_Products.onSelectListener() {
+            @Override
+            public void onSelect(String brandName) {
+
+                if (mViewModel.GetBrandID(brandName.toUpperCase()) != null){
+
+                    if (!mViewModel.GetBrandID(brandName.toUpperCase()).isEmpty()){
+
+                        Intent loIntent = new Intent(requireActivity(), Activity_ProductSelection.class);
+                        loIntent.putExtra("lsBrandID", mViewModel.GetBrandID(brandName.toUpperCase()));
+                        loIntent.putExtra("lsBrandNm", brandName.toUpperCase());
+
+                        startActivity(loIntent);
+
+                    }
+                }
+            }
+        }));
+
+        rcv_products.setLayoutManager(
+                new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+        );
+
+    }
+
     private void initAdapter(){
 
-        /** EVENT LIST ADAPTER INITIALIZATION **/
+        /** GET ALL EVENTS IMPORTED**/
 
-        List<Adapter_Events.GuanzonEvents> laEvents = new ArrayList<>();
-
-        laEvents.add(new Adapter_Events.GuanzonEvents("dreamboy", R.drawable.dreamboy));
-        laEvents.add(new Adapter_Events.GuanzonEvents("campusprincess", R.drawable.campusprincess));
-        laEvents.add(new Adapter_Events.GuanzonEvents("bikerbabe", R.drawable.kay));
-        laEvents.add(new Adapter_Events.GuanzonEvents("guanzonbulilit", R.drawable.kay));
-
-        loAdapter = new Adapter_Events(laEvents, slider_events, new Adapter_Events.onSelectListener() {
+        mViewModel.getEvents().observe(getViewLifecycleOwner(), new Observer<List<EEvents>>() {
             @Override
-            public void onSelect(int position, String eventIDxx) {
+            public void onChanged(List<EEvents> eEvents) {
 
-                Fragment_Dashboard loParent = (Fragment_Dashboard) getParentFragment();
+                if (eEvents != null){
 
-                if (loParent != null){
+                    if (eEvents.size() > 0){
 
-                    Bundle loArgs = new Bundle();
-                    loArgs.putString("eventID", String.valueOf(eventIDxx));
+                        loAdapter = new Adapter_Events(eEvents, slider_events, new Adapter_Events.onSelectListener() {
+                            @Override
+                            public void onSelect(int position, String eventIDxx) {
 
-                    loParent.viewPager.setCurrentItem(3);
-                    loParent.loPoll.setArguments(loArgs);
-                    loParent.botNav.setSelectedItemId(R.id.nav_Poll);
+                                Fragment_Dashboard loParent = (Fragment_Dashboard) getParentFragment();
 
+                                if (loParent != null){
+
+                                    Bundle loArgs = new Bundle();
+                                    loArgs.putString("eventID", String.valueOf(eventIDxx));
+
+                                    loParent.viewPager.setCurrentItem(3);
+                                    loParent.loPoll.setArguments(loArgs);
+                                    loParent.botNav.setSelectedItemId(R.id.nav_Poll);
+
+                                }
+
+                            }
+                        });
+
+                        slider_events.setAdapter(loAdapter);
+
+                        /**
+                         * Set viewpager properties and design
+                         * Custom library for designing viewpager.
+                         * Add new designs , for future layout viewpager design
+                         * Guillier 03/28/2025
+                         **/
+                        ViewPagerProperty loViewPagerProperty = new ViewPagerProperty(slider_events);
+
+                        loViewPagerProperty.initSliderPadding(
+                                new ViewPagerProperty.Padding_Property(150, 150,
+                                        0, 0, false, false, 3)
+                        );
+
+                        loViewPagerProperty.initSliderPageTransformer();
+
+                        layout_events.setVisibility(View.VISIBLE);
+
+                    }else {
+                        layout_events.setVisibility(View.GONE);
+                    }
+
+                }else {
+                    layout_events.setVisibility(View.GONE);
                 }
-
             }
         });
 
-        slider_events.setAdapter(loAdapter);
-
-        /**
-         * Set viewpager properties and design
-         * Custom library for designing viewpager.
-         * Add new designs , for future layout viewpager design
-         * Guillier 03/28/2025
-         **/
-        ViewPagerProperty loViewPagerProperty = new ViewPagerProperty(slider_events);
-
-        loViewPagerProperty.initSliderPadding(
-                new ViewPagerProperty.Padding_Property(150, 150,
-                        0, 0, false, false, 3)
-        );
-
-        loViewPagerProperty.initSliderPageTransformer();
-
         /** PRODUCT LIST ADAPTER INITIALIZATION **/
+
+        initAdapterData(tab_products.getSelectedTabPosition()); //triggers on first login
 
         tab_products.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                List<Adapter_Products.Product_Data> laProducts = new ArrayList<>();
-
-                switch (tab.getPosition()){
-
-                    case 0:
-
-                        rcv_products.setVisibility(View.VISIBLE);
-                        siv_kay.setVisibility(View.GONE);
-
-                        laProducts.add(
-                                new Adapter_Products.Product_Data(
-                                        "Yamaha", R.drawable.yamaha, R.drawable.yamahalogo)
-                        );
-
-                        laProducts.add(
-                                new Adapter_Products.Product_Data(
-                                        "Honda", R.drawable.honda, R.drawable.hondalogo)
-                        );
-
-                        laProducts.add(
-                                new Adapter_Products.Product_Data(
-                                        "Suzuki", R.drawable.suzuki, R.drawable.suzukilogo)
-                        );
-
-                        laProducts.add(
-                                new Adapter_Products.Product_Data(
-                                        "Kawasaki", R.drawable.kay, R.drawable.kay)
-                        );
-
-                        break;
-
-                    case 1:
-
-                        rcv_products.setVisibility(View.GONE);
-                        siv_kay.setVisibility(View.VISIBLE);
-
-                        break;
-                }
-
-                rcv_products.setAdapter(new Adapter_Products(laProducts, new Adapter_Products.onSelectListener() {
-                    @Override
-                    public void onSelect(String brandName) {
-
-                        if (mViewModel.GetBrandID(brandName.toUpperCase()) != null){
-
-                            if (!mViewModel.GetBrandID(brandName.toUpperCase()).isEmpty()){
-
-                                Intent loIntent = new Intent(requireActivity(), Activity_ProductSelection.class);
-                                loIntent.putExtra("lsBrandID", mViewModel.GetBrandID(brandName.toUpperCase()));
-                                loIntent.putExtra("lsBrandNm", brandName.toUpperCase());
-
-                                startActivity(loIntent);
-
-                            }
-                        }
-                    }
-                }));
-
-                rcv_products.setLayoutManager(
-                        new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-                );
-
+                initAdapterData(tab.getPosition());
             }
 
             @Override
@@ -240,6 +262,7 @@ public class Fragment_Home extends Fragment {
     }
 
     private void initDisplayonLogin(int isDisplayed){
+        layout_header.setVisibility(isDisplayed);
         layout_events.setVisibility(isDisplayed);
         layout_products.setVisibility(isDisplayed);
     }
@@ -254,16 +277,12 @@ public class Fragment_Home extends Fragment {
 
                     //todo: display after login
                     initDisplayonLogin(View.VISIBLE);
-                    initAdapter();
                     initListener();
                     initTabs();
+                    initAdapter();
 
-                    if (eClientInfo.getVerified() > 0){
-
-                    }else {
-
-                    }
                 }else {
+
                     initDisplayonLogin(View.GONE);
                 }
             }

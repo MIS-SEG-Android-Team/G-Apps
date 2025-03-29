@@ -12,7 +12,6 @@ import org.rmj.g3appdriver.dev.Database.Entities.EGCardTransactionLedger;
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
 import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
-import org.rmj.g3appdriver.dev.Database.Entities.ERedeemItemInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ERedeemablesInfo;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
@@ -99,7 +98,7 @@ public interface iGCardSystem {
 
     void DownloadNewsEvents(GCardSystem.GCardSystemCallback callback) throws Exception;
     void SaveNewsEvents(JSONObject detail) throws Exception;
-    EEvents CheckEvents();
+    List<EEvents> CheckEvents();
 }
 
 
