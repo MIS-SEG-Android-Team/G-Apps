@@ -11,6 +11,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
+import org.json.JSONArray;
+import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.utils.ImageFileManager;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Candidates;
 import org.rmj.guanzongroup.gconnect.R;
@@ -19,31 +21,11 @@ public class Dialog_Candidate_Details {
 
     private Context context;
     private AlertDialog poDialogx;
-    private Adapter_Candidates.Candidate_Details details;
+    private ECandidates details;
 
-    public Dialog_Candidate_Details(Context context, Adapter_Candidates.Candidate_Details details){
+    public Dialog_Candidate_Details(Context context, ECandidates details){
         this.context = context;
         this.details = details;
-    }
-
-    public class Dialog_Preview_Image{
-
-        public void initDialog(){
-
-            View view = LayoutInflater.from(context).inflate(R.layout.dialog_imgpreview, null, false);
-
-            AlertDialog.Builder loBuilder =  new AlertDialog.Builder(context);
-            loBuilder.setCancelable(true)
-                    .setView(view);
-            poDialogx = loBuilder.create();
-
-            ShapeableImageView loImg = view.findViewById(R.id.previewimg);
-            ImageFileManager.LoadImageToView(details.getUrlImg(), loImg);
-
-            poDialogx.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            poDialogx.getWindow().getAttributes().windowAnimations = org.rmj.g3appdriver.R.style.PopupAnimation;
-            poDialogx.show();
-        }
     }
 
     public class Dialog_Details{
@@ -51,9 +33,7 @@ public class Dialog_Candidate_Details {
         private ShapeableImageView loImg;
         private MaterialTextView mtv_name;
         private MaterialTextView mtv_school;
-        private MaterialTextView mtv_number;
         private MaterialButton btn_vote;
-        private MaterialButton btn_cancel;
 
         public void initDialogDetails(){
 
@@ -81,10 +61,8 @@ public class Dialog_Candidate_Details {
 
             mtv_name = view.findViewById(R.id.mtv_name);
             mtv_school = view.findViewById(R.id.mtv_school);
-            mtv_number = view.findViewById(R.id.mtv_number);
 
             btn_vote = view.findViewById(R.id.btn_vote);
-            btn_cancel = view.findViewById(R.id.btn_cancel);
 
         }
 
@@ -92,13 +70,11 @@ public class Dialog_Candidate_Details {
 
             try{
 
-                String baseUrl = "http://192.165.10.65/candidatesimage/";
-
-                ImageFileManager.LoadImageToView(baseUrl + details.getUrlImg(), loImg);
+                JSONArray loArr = new JSONArray(details.getUrlImgs());
+                ImageFileManager.LoadImageToView(loArr.get(0).toString(), loImg);
 
                 mtv_name.setText(details.getName());
                 mtv_school.setText(details.getSchool());
-                mtv_number.setText(details.getNumber());
 
             }catch (Exception e){
                 e.printStackTrace();

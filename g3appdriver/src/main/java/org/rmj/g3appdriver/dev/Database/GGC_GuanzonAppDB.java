@@ -14,6 +14,7 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DAddress;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBarcode;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBingoCard;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBranchInfo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DClientInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DEmployeeInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DEvents;
@@ -50,6 +51,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EBarangayInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarcode;
 import org.rmj.g3appdriver.dev.Database.Entities.EBingoCard;
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ECountryInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEmailInfo;
@@ -134,7 +136,8 @@ import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
         EGCard_Ledger.class,
         EPointsRequest.class,
         EBingoCard.class,
-        EBarcode.class}, version = 5, exportSchema = false)
+        EBarcode.class,
+        ECandidates.class}, version = 6, exportSchema = false)
 public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     private static final String TAG = "GuanzonApp_DB_Manager";
     private static GGC_GuanzonAppDB instance;
@@ -176,6 +179,7 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     public abstract DPointsRequest GPointsRqstDao();
     public abstract DBingoCard BingoCardDao();
     public abstract DBarcode BarcodeDao();
+    public abstract DCandidates CandidatesDao();
 
     public static synchronized GGC_GuanzonAppDB getInstance(Context context){
         if(instance == null){

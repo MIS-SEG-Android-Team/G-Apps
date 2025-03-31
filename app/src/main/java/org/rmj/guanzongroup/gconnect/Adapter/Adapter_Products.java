@@ -61,9 +61,9 @@ public class Adapter_Products  extends RecyclerView.Adapter<Adapter_Products.VHP
 
     public static class VHProducts extends RecyclerView.ViewHolder {
 
-        private ShapeableImageView icon_product;
-        private ShapeableImageView img_logo;
-        private MaterialButton btn_inquire;
+        private final ShapeableImageView icon_product;
+        private final ShapeableImageView img_logo;
+        private final MaterialButton btn_inquire;
 
         public VHProducts(@NonNull View itemView) {
             super(itemView);

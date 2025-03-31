@@ -329,10 +329,12 @@ public class VMHome extends AndroidViewModel {
                 if (lsPromo != null) {
                     listener.OnCheckPromos(lsPromo, lsPmUrl);
                 }
-                if (laEvents.size() > 0) {
+
+                if (laEvents != null) {
                     listener.OnCheckEvents(laEvents);
                 }
-                if (laEvents.size() <= 0 && lsPromo == null) {
+
+                if (laEvents != null && lsPromo == null) {
                     listener.NoPromos();
                 }
 

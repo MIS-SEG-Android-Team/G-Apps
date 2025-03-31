@@ -213,6 +213,7 @@ public class VMAccountDetails extends AndroidViewModel {
     }
 
     public void completeClientInfo(EClientInfo foClientx, OnTransactionCallBack foCallBck) {
+
         TaskExecutor.Execute(foClientx, new OnTaskExecuteListener() {
             @Override
             public void OnPreExecute() {
@@ -221,10 +222,12 @@ public class VMAccountDetails extends AndroidViewModel {
 
             @Override
             public Object DoInBackground(Object args) {
+
                 EClientInfo loInfo = (EClientInfo) args;
 
                 try {
                     if(poConnect.isDeviceConnected()) {
+
                         if(poClientx.CompleteClientInfo(loInfo)) {
 
                             Thread.sleep(1000);

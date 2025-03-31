@@ -14,21 +14,25 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
+import org.json.JSONArray;
+import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.utils.ImageFileManager;
 import org.rmj.guanzongroup.gconnect.Dialog.Dialog_Candidate_Details;
 import org.rmj.guanzongroup.gconnect.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.VH_Candidates>{
 
     private final Context context;
-    private final List<Candidate_Details> candidates;
+    private final List<ECandidates> candidates;
     private final CandidateFilter poFilter;
-    private List<Candidate_Details> candidatesFiltered;
+    private List<ECandidates> candidatesFiltered;
 
-    public Adapter_Candidates(Context context, List<Candidate_Details> candidates){
+    public Adapter_Candidates(Context context, List<ECandidates> candidates){
         this.context = context;
         this.candidates = candidates;
         this.poFilter = new CandidateFilter(this);
@@ -49,69 +53,35 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
     @Override
     public void onBindViewHolder(@NonNull VH_Candidates holder, int position) {
 
-        holder.mtv_name.setText(candidatesFiltered.get(position).getName());
+        try {
 
-        String baseUrl = "http://192.165.10.65/candidatesimage/";
+            JSONArray urlImgs = new JSONArray(candidatesFiltered.get(position).getUrlImgs());
 
-        ImageFileManager.LoadImageToView(baseUrl + candidatesFiltered.get(position).getUrlImg(),
-                holder.img_candidate);
+            ImageFileManager.LoadImageToView(urlImgs.getString(0),
+                    holder.img_candidate);
 
-        //todo: view candidate details
-        holder.btn_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            holder.mtv_votes.setText(candidatesFiltered.get(position).getVotes());
 
-                Dialog_Candidate_Details loDialog = new Dialog_Candidate_Details(context,
-                        candidatesFiltered.get(position));
+            //todo: view candidate details
+            holder.img_candidate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                loDialog.new Dialog_Details().initDialogDetails();
-            }
-        });
+                    Dialog_Candidate_Details loDialog = new Dialog_Candidate_Details(context,
+                            candidatesFiltered.get(position));
+
+                    loDialog.new Dialog_Details().initDialogDetails();
+                }
+            });
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getItemCount() {
         return candidatesFiltered.size();
-    }
-
-    public static class Candidate_Details{
-
-        private String urlImg;
-        private String name;
-        private String school;
-        private String number;
-
-        public String getUrlImg() {
-            return urlImg;
-        }
-
-        public void setUrlImg(String urlImg) {
-            this.urlImg = urlImg;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getSchool() {
-            return school;
-        }
-
-        public void setSchool(String school) {
-            this.school = school;
-        }
-
-        public String getNumber() {
-            return number;
-        }
-
-        public void setNumber(String number) {
-            this.number = number;
-        }
     }
 
     public class CandidateFilter extends Filter{
@@ -128,13 +98,11 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
             FilterResults results = new FilterResults();
             if (constraint.length() > 0){
 
-                List<Candidate_Details> filteredCandidates = new ArrayList<>();
-                for (Candidate_Details values: candidates){
+                List<ECandidates> filteredCandidates = new ArrayList<>();
+                for (ECandidates values: candidates){
                     if (values.getName().toLowerCase().contains(constraint.toString().toLowerCase())){
                         filteredCandidates.add(values);
                     }else if (values.getSchool().toLowerCase().contains(constraint.toString().toLowerCase())){
-                        filteredCandidates.add(values);
-                    }else if (values.getNumber().toLowerCase().contains(constraint.toString().toLowerCase())){
                         filteredCandidates.add(values);
                     }
                 }
@@ -155,23 +123,22 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
 
-            adapter.candidatesFiltered = (List<Candidate_Details>) results.values;
+            adapter.candidatesFiltered = (List<ECandidates>) results.values;
             adapter.notifyDataSetChanged();
         }
     }
 
     public class VH_Candidates extends RecyclerView.ViewHolder {
 
-        public MaterialTextView mtv_name;
         private ShapeableImageView img_candidate;
-        private MaterialButton btn_view;
+        private MaterialTextView mtv_votes;
 
         public VH_Candidates(@NonNull View itemView) {
             super(itemView);
 
-            mtv_name = itemView.findViewById(R.id.mtv_name);
             img_candidate = itemView.findViewById(R.id.img_candidate);
-            btn_view = itemView.findViewById(R.id.btn_view);
+            mtv_votes = itemView.findViewById(R.id.mtv_votes);
+
         }
     }
 }

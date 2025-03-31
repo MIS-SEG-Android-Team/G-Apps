@@ -11,18 +11,24 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Candidates;
 import org.rmj.guanzongroup.gconnect.R;
+import org.rmj.guanzongroup.gconnect.ViewModel.VMPoll;
 
 import java.util.List;
 
 public class Fragment_Poll extends Fragment {
+
+    private VMPoll mViewModel;
 
     private TabLayout tab_candidates;
     private TextInputEditText tv_search;
@@ -38,9 +44,12 @@ public class Fragment_Poll extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_poll, container, false);
 
+        mViewModel = new ViewModelProvider(requireActivity()).get(VMPoll.class);
+
         initViews(view);
         initListener();
         initArguments(); //todo: trigger on first view initialization
+        initObservables();
 
         return view;
 
@@ -65,36 +74,6 @@ public class Fragment_Poll extends Fragment {
     @SuppressLint("NotifyDataSetChanged")
     private void initListener(){
 
-        List<Adapter_Candidates.Candidate_Details> candidates1 =
-                List.of(initData("Mitch Cardigan", "University of Luzon", "1", "MitchCardigan.jpg"),
-                        initData("Jewel Myers", "University of Pangasinan", "2", "JewelMyers.jpg"),
-                        initData("Lyndsay Rivera", "Universidad De Dagupan", "3", "LyndsayRivera.jpg"),
-                        initData("Sofia Reyes", "Lyceum Northwestern University", "4", "SofiaReyes.jpg"));
-
-        List<Adapter_Candidates.Candidate_Details> candidates2 =
-                List.of(initData("Carmina Dela Cruz", "University of Luzon", "1", "CarminaDelaCruz.jpg"),
-                        initData("Sharmaine Aquino", "University of Pangasinan", "2", "SharmaineAquino.jpg"),
-                        initData("Jenny Rogers", "Universidad De Dagupan", "3", "JennyRogers.jpg"),
-                        initData("Ashley De Vera", "Lyceum Northwestern University", "4", "AshleyDeVera.jpg"));
-
-        switch (tab_candidates.getSelectedTabPosition()){
-
-            case 0:
-                adapter_candidates = new Adapter_Candidates(requireContext(), candidates1);
-
-                adapter_candidates.notifyDataSetChanged();
-                rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
-                rv_candidates.setAdapter(adapter_candidates);
-                break;
-            case 1:
-                adapter_candidates = new Adapter_Candidates(requireContext (), candidates2);
-
-                adapter_candidates.notifyDataSetChanged();
-                rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
-                rv_candidates.setAdapter(adapter_candidates);
-                break;
-        }
-
         //TODO: CHANGE TAB INDICATOR ON SELECTION
         tab_candidates.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @SuppressLint("NotifyDataSetChanged")
@@ -104,18 +83,16 @@ public class Fragment_Poll extends Fragment {
                 switch (tab.getPosition()){
 
                     case 0:
-                        adapter_candidates = new Adapter_Candidates(requireContext(), candidates1);
-
-                        adapter_candidates.notifyDataSetChanged();
-                        rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
-                        rv_candidates.setAdapter(adapter_candidates);
+                        initCandidates("M00120000001");
                         break;
                     case 1:
-                        adapter_candidates = new Adapter_Candidates(requireContext(), candidates2);
-
-                        adapter_candidates.notifyDataSetChanged();
-                        rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
-                        rv_candidates.setAdapter(adapter_candidates);
+                        initCandidates("M00120000002");
+                        break;
+                    case 2:
+                        initCandidates("M00120000003");
+                        break;
+                    case 3:
+                        initCandidates("M00120000004");
                         break;
                 }
 
@@ -179,19 +156,19 @@ public class Fragment_Poll extends Fragment {
 
                     switch (eventID){
 
-                        case "M00120000001":
+                        case "M00120000001": //dreamboy
                             tab_candidates.selectTab(tab_candidates.getTabAt(0), true);
                             break;
 
-                        case "M00120000002":
+                        case "M00120000002": //campus princess
                             tab_candidates.selectTab(tab_candidates.getTabAt(1), true);
                             break;
 
-                        case "M00120000003":
+                        case "M00120000003": //biker babe
                             tab_candidates.selectTab(tab_candidates.getTabAt(2), true);
                             break;
 
-                        case "M00120000004":
+                        case "M00120000004": //guanzon bulilit
                             tab_candidates.selectTab(tab_candidates.getTabAt(3), true);
                             break;
                     }
@@ -203,14 +180,33 @@ public class Fragment_Poll extends Fragment {
 
     }
 
-    private Adapter_Candidates.Candidate_Details initData(String name, String school, String number, String urlImg){
+    private void initObservables(){
 
-        Adapter_Candidates.Candidate_Details details = new Adapter_Candidates.Candidate_Details();
-        details.setName(name);
-        details.setSchool(school);
-        details.setNumber(number);
-        details.setUrlImg(urlImg);
-
-        return details;
+        if (argsParams != null){
+            initCandidates(argsParams.getString("eventID"));
+        }
     }
+
+    private void initCandidates(String eventIDxx){
+
+        mViewModel.GetCandidates(eventIDxx).observe(getViewLifecycleOwner(), new Observer<List<ECandidates>>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onChanged(List<ECandidates> eCandidates) {
+
+                if (eCandidates != null){
+
+                    adapter_candidates = new Adapter_Candidates(requireContext(), eCandidates);
+
+                    adapter_candidates.notifyDataSetChanged();
+
+                    rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
+                    rv_candidates.setAdapter(adapter_candidates);
+
+                }
+            }
+        });
+
+    }
+
 }

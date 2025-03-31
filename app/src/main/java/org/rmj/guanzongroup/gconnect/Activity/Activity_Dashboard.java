@@ -210,8 +210,13 @@ public class Activity_Dashboard extends AppCompatActivity {
 
             if (item.getItemId() == R.id.item_profile){
 
-                Intent intent = new Intent(Activity_Dashboard.this, Activity_AccountDetails.class);
-                startActivity(intent);
+                if (loAccount.getVerificationStatus() == 0){
+                    Intent intent = new Intent(Activity_Dashboard.this, Activity_CompleteAccountDetails.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(Activity_Dashboard.this, Activity_AccountDetails.class);
+                    startActivity(intent);
+                }
 
             }else if (item.getItemId() == R.id.item_notifications){
 

@@ -26,6 +26,6 @@ public interface DEvents {
     @Query("SELECT * FROM App_Event_Info ORDER BY sTransNox ASC")
     LiveData<List<EEvents>> getAllEvents();
 
-    @Query("SELECT * FROM App_Event_Info ORDER BY dEvntFrom DESC LIMIT 1")
+    @Query("SELECT * FROM App_Event_Info ORDER BY dEvntFrom")
     List<EEvents> CheckEvent();
 }

@@ -431,9 +431,11 @@ public class Activity_CompleteAccountDetails extends AppCompatActivity {
         txtCivilS.setOnItemClickListener((adapterView, view, i, l) -> poDataMdl.setCivilStat(String.valueOf(i)));
     }
     private void saveAccountDetails() {
+
         setInfoModelValues();
 
         if(poDataMdl.isDataValid()) {
+
             mViewModel.completeClientInfo(poDataMdl.getClientEntityValues(), new VMAccountDetails.OnTransactionCallBack() {
                 @Override
                 public void onLoading() {
