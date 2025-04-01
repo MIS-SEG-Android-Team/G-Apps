@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="?attr/colorPrimary"
     android:layout_margin="3dp"
+
     android:theme="@style/GuanzonMarketplace.Theme"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -13,25 +13,28 @@
         android:id="@+id/mcv_img"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
+        android:layout_margin="10dp"
         app:cardElevation="10dp"
         app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="?attr/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="3:4">
+        app:layout_constraintDimensionRatio="4:5.5">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_margin="1dp"
+            android:background="@color/app_background">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/img_candidate"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:src="@drawable/kay"
-                android:scaleType="centerCrop"
+                android:scaleType="fitXY"
                 android:adjustViewBounds="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -44,18 +47,19 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/mtv_votes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:text="0"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:textColor="?attr/colorOnSecondary"
-        android:layout_margin="10dp"
-        android:padding="15dp"
+        android:textColor="@color/marketplace_orange"
+        android:layout_margin="15dp"
         android:background="@drawable/baseline_heart_vote"
         android:elevation="15dp"
         android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="@+id/mcv_img"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.15"
+        app:layout_constraintWidth_percent="0.2"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

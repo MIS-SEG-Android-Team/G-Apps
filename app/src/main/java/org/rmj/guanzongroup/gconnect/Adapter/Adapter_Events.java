@@ -45,7 +45,7 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
                 .into(holder.btn_event);
 
         if (viewPager2.getCurrentItem() == position){
-            holder.btn_event.setElevation(0.85f);
+            holder.btn_event.setElevation(1f);
             holder.btn_event.setAlpha(1f);
         }else {
             holder.btn_event.setElevation(0.15f);

@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
-@Entity(tableName = "Guanzon_Candidates", primaryKeys = {"categoryID", "name"})
+@Entity(tableName = "Guanzon_Candidates", primaryKeys = {"categoryID", "pageantID"})
 public class ECandidates {
 
     @NonNull
@@ -12,6 +12,9 @@ public class ECandidates {
     private String categoryID;
 
     @NonNull
+    @ColumnInfo(name = "pageantID")
+    private String pageantID;
+
     @ColumnInfo(name = "name")
     private String name;
 
@@ -34,11 +37,20 @@ public class ECandidates {
     }
 
     @NonNull
+    public String getPageantID() {
+        return pageantID;
+    }
+
+    public void setPageantID(@NonNull String pageantID) {
+        this.pageantID = pageantID;
+    }
+
+    @NonNull
     public String getName() {
         return name;
     }
 
-    public void setName(@NonNull String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

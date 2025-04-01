@@ -85,6 +85,7 @@ public class Fragment_Home extends Fragment {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onPageSelected(int position) {
+
                 super.onPageSelected(position);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {

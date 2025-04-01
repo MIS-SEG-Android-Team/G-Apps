@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:layout_margin="15dp"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true"
     app:cardCornerRadius="10dp"
@@ -13,48 +14,50 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/zxing_transparent">
 
         <LinearLayout
             android:id="@+id/layout_details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/img_candidate"
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_margin="10dp"
+                android:layout_height="400dp"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/kay"/>
+                android:scaleType="fitXY"
+                android:src="@drawable/kay"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
-                    style="@style/Title"
                     android:id="@+id/mtv_name"
+                    style="@style/Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Contestant Name"
-                    android:textColor="?attr/colorPrimary"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorPrimary" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/mtv_school"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Campus Name"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center" />
 
             </LinearLayout>
 
@@ -74,22 +77,22 @@
                         android:id="@+id/img_background"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
-                        android:src="@drawable/kay"
-                        android:alpha="0.8"/>
+                        android:alpha="0.8"
+                        android:src="@drawable/kay" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Images not available"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:text="Images not available" />
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
+                <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/list_images"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -97,27 +100,28 @@
                 android:id="@+id/btn_vote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Vote Now"
+                android:layout_margin="10dp"
                 android:padding="15dp"
-                android:layout_margin="10dp"/>
+                android:text="Vote Now" />
 
         </LinearLayout>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/mtv_votes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnSecondary"
-            android:layout_margin="10dp"
-            android:padding="15dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="15dp"
             android:background="@drawable/baseline_heart_vote"
             android:elevation="15dp"
             android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:text="0"
+            android:textColor="@color/marketplace_orange"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/layout_details"
+            app:layout_constraintHeight_percent="0.055"
+            app:layout_constraintWidth_percent="0.12"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

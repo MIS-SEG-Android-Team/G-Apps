@@ -9,18 +9,19 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="match_parent"
+        app:cardElevation="10dp"
         app:cardCornerRadius="10dp"
         app:cardBackgroundColor="@color/zxing_transparent">
 
-        <ImageButton
-            android:id="@+id/btn_event"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_candidate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/kay"
             android:background="@color/zxing_transparent"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"/>
+            android:scaleType="fitXY"/>
 
     </com.google.android.material.card.MaterialCardView>
 

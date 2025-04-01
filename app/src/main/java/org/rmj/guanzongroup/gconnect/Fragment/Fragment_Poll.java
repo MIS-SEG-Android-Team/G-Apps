@@ -184,6 +184,8 @@ public class Fragment_Poll extends Fragment {
 
         if (argsParams != null){
             initCandidates(argsParams.getString("eventID"));
+        }else {
+            initCandidates("M00120000001");
         }
     }
 

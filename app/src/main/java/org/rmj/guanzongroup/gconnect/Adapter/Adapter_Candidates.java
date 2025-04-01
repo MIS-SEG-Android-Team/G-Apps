@@ -10,7 +10,6 @@ import android.widget.Filter;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -21,8 +20,6 @@ import org.rmj.guanzongroup.gconnect.Dialog.Dialog_Candidate_Details;
 import org.rmj.guanzongroup.gconnect.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.VH_Candidates>{
@@ -55,11 +52,12 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
 
         try {
 
+            //todo: load image urls to view
             JSONArray urlImgs = new JSONArray(candidatesFiltered.get(position).getUrlImgs());
-
             ImageFileManager.LoadImageToView(urlImgs.getString(0),
                     holder.img_candidate);
 
+            //todo: display total votes
             holder.mtv_votes.setText(candidatesFiltered.get(position).getVotes());
 
             //todo: view candidate details
@@ -67,6 +65,7 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
                 @Override
                 public void onClick(View v) {
 
+                    //todo: initialize dialog details
                     Dialog_Candidate_Details loDialog = new Dialog_Candidate_Details(context,
                             candidatesFiltered.get(position));
 
