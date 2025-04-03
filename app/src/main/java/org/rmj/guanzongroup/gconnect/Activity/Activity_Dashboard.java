@@ -674,7 +674,7 @@ public class Activity_Dashboard extends AppCompatActivity {
 
     }
 
-    private void initToolbarMessage(String message){
+    public void initToolbarMessage(String message){
 
         binding.appBarActivityDashboardId.layoutNotifkay.setVisibility(View.VISIBLE);
         binding.appBarActivityDashboardId.mtvMessage.setText(message);
@@ -803,7 +803,7 @@ public class Activity_Dashboard extends AppCompatActivity {
         }
     }
 
-    public void ParseQrCode(String fsVal){
+    private void ParseQrCode(String fsVal){
         mViewModel.ParseQrCode(fsVal, new GCardSystem.ParseQrCodeCallback() {
             @Override
             public void ApplicationResult(String src, Object args) {

@@ -1,9 +1,13 @@
 package org.rmj.guanzongroup.gconnect.Fragment;
 
+import static android.view.View.GONE;
+
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +23,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
+import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
+import org.rmj.guanzongroup.gconnect.Activity.Activity_Dashboard;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Candidates;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.guanzongroup.gconnect.ViewModel.VMPoll;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Fragment_Poll extends Fragment {
@@ -50,6 +65,7 @@ public class Fragment_Poll extends Fragment {
         initListener();
         initArguments(); //todo: trigger on first view initialization
         initObservables();
+        initDataArgs();
 
         return view;
 
@@ -180,13 +196,60 @@ public class Fragment_Poll extends Fragment {
 
     }
 
-    private void initObservables(){
+    private void initDataArgs(){
 
         if (argsParams != null){
             initCandidates(argsParams.getString("eventID"));
-        }else {
-            initCandidates("M00120000001");
         }
+
+    }
+
+    private void initObservables(){
+
+        mViewModel.getEvents().observe(getViewLifecycleOwner(), new Observer<List<EEvents>>() {
+            @Override
+            public void onChanged(List<EEvents> eEvents) {
+
+                try {
+
+                    if (eEvents == null) {
+                        return;
+                    }
+
+                    if (eEvents.size() <= 0){
+                        return;
+                    }
+
+                    List<EEvents> laEvents = new ArrayList<>();
+                    for (EEvents loEvent : eEvents){
+
+                        //todo if event is not valid, disable tab display
+                        if (!isEventValid(loEvent.getEvntFrom(), loEvent.getEvntThru())){
+                            disableEventTab(loEvent.getTransNox()); //todo allow event tab
+                        }else {
+                            laEvents.add(loEvent); //todo add to active events
+                        }
+
+                    }
+
+                    if (argsParams != null) { //todo do not reload data if arguments are passed (triggered from event list)
+                        return;
+                    }
+
+                    if (argsParams.containsKey("eventID")) { //todo do not reload data if arguments are passed (triggered from event list)
+                        return;
+                    }
+
+                    //todo initialize candidates for the first event on list
+                    initCandidates(laEvents.get(0).getTransNox());
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
     }
 
     private void initCandidates(String eventIDxx){
@@ -196,18 +259,170 @@ public class Fragment_Poll extends Fragment {
             @Override
             public void onChanged(List<ECandidates> eCandidates) {
 
-                if (eCandidates != null){
+                try {
 
-                    adapter_candidates = new Adapter_Candidates(requireContext(), eCandidates);
+                    if (eCandidates == null){
+
+                        //todo display error message on toolbar, if no candidates found
+                        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+
+                        if (loParent != null){
+                            loParent.initToolbarMessage("Oops! Sorry, No candidates found for this event. \n\nCheck your connection or try refreshing the app");
+                        }
+
+                        return;
+                    }
+
+                    //todo if not empty, initialize adapter
+                    adapter_candidates = new Adapter_Candidates(requireContext(), eCandidates, mViewModel);
 
                     adapter_candidates.notifyDataSetChanged();
 
                     rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
                     rv_candidates.setAdapter(adapter_candidates);
 
+                    if (eCandidates.size() <= 0){
+
+                        //todo display error message on toolbar, if no candidates found
+                        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+
+                        if (loParent != null){
+                            loParent.initToolbarMessage("Oops!\n\n Sorry, no candidates found for this event. \n\nCheck your connection or try refreshing the app");
+                        }
+
+                        return;
+                    }
+
+                    //todo observe vote counts, after loading candidates
+                    mViewModel.ObserveVoteCounts(eventIDxx).observe(getViewLifecycleOwner(), new Observer<DCandidates.LatestVote>() {
+                        @Override
+                        public void onChanged(DCandidates.LatestVote lastVote) {
+
+                            try {
+
+                                if (lastVote != null){
+
+                                    //todo if not empty, initialize toolbar message displaying vote balance
+                                    Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+                                    if (loParent != null){
+
+                                        if (hasVotedToday(lastVote)){ //todo if voted today, notify user to choose another event on toolbar
+                                            loParent.initToolbarMessage("You have consumed your vote(s) on this day.\n\nChoose another event.");
+                                        } else { //todo if not, display vote balance on toolbar
+                                            loParent.initToolbarMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
+                                        }
+
+                                    }
+                                }
+
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         });
+    }
+
+    private Boolean isEventValid(String dtFrom, String dtThru) throws ParseException {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            LocalDate currentDt = LocalDateTime.now().toLocalDate();
+            LocalDate eventFrom = LocalDate.parse(dtFrom);
+            LocalDate eventThru = LocalDate.parse(dtThru);
+
+            //todo: current date is equal to event date
+            if (currentDt.isEqual(eventFrom) || currentDt.isEqual(eventThru)){
+                return true;
+            }else {
+
+                //todo: current date is between event date
+                if (currentDt.isAfter(eventFrom) && currentDt.isBefore(eventThru)){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+
+        }else {
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date loToday = dtFormat.parse(dtFormat.format(Calendar.getInstance().getTime()));
+            Date loEvntFrom = dtFormat.parse(dtFormat.format(dtFormat.parse(dtFrom)));
+            Date loEvntThru = dtFormat.parse(dtFormat.format(dtFormat.parse(dtThru)));
+
+            if (loToday.equals(loEvntFrom) || loToday.equals(loEvntThru)){
+                return true;
+            }else {
+
+                if (loToday.after(loEvntFrom) && loToday.before(loEvntThru)){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+        }
+
+    }
+
+    private void disableEventTab(String eventID){
+
+        switch (eventID){
+
+            case "M00120000001":
+                tab_candidates.getTabAt(0).view.setEnabled(false);
+                break;
+            case "M00120000002":
+                tab_candidates.getTabAt(1).view.setEnabled(false);
+                break;
+            case "M00120000003":
+                tab_candidates.getTabAt(2).view.setEnabled(false);
+                break;
+            case "M00120000004":
+                tab_candidates.getTabAt(3).view.setEnabled(false);
+                break;
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private Boolean hasVotedToday(DCandidates.LatestVote lastVote) throws ParseException {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            if (lastVote.getdTimeStmp() != null){
+
+                LocalDate loLastVote = LocalDateTime.parse(lastVote.getdTimeStmp(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
+                LocalDate loToday = LocalDateTime.now().toLocalDate();
+
+                return loLastVote.isEqual(loToday) && lastVote.getTotal() > 0;
+
+            }else {
+                return false;
+            }
+
+        }else {
+
+            if (lastVote.getdTimeStmp() != null){
+
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                Date loLastVote = dtFormat.parse(dtFormat.format(dtFormat.parse(lastVote.getdTimeStmp())));
+                Date loToday = dtFormat.parse(dtFormat.format(Calendar.getInstance().getTime()));
+
+                return loLastVote.equals(loToday) && lastVote.getTotal() > 0;
+
+            }else {
+                return false;
+            }
+
+        }
 
     }
 

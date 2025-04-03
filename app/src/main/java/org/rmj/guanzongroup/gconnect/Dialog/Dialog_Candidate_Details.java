@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -22,23 +23,36 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.etc.ViewPagerProperty;
 import org.rmj.g3appdriver.utils.ImageFileManager;
 import org.rmj.guanzongroup.gconnect.R;
+import org.rmj.guanzongroup.gconnect.ViewModel.VMPoll;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Dialog_Candidate_Details {
 
-    private Context context;
-    private AlertDialog poDialogx;
-    private ECandidates details;
+    private final Context context;
+    private final ECandidates details;
+    private final VMPoll mviewModel;
 
-    public Dialog_Candidate_Details(Context context, ECandidates details){
+    private AlertDialog poDialogx;
+
+    public Dialog_Candidate_Details(Context context, ECandidates details, VMPoll mviewModel){
         this.context = context;
         this.details = details;
+        this.mviewModel = mviewModel;
     }
 
     public class Dialog_Details{
@@ -53,7 +67,7 @@ public class Dialog_Candidate_Details {
 
         private Adapter_ImageDetails loAdapter;
 
-        public void initDialogDetails(){
+        public void initDialogDetails() throws ParseException {
 
             View view = LayoutInflater.from(context).inflate(R.layout.dialog_candidate_details, null, false);
 
@@ -67,6 +81,7 @@ public class Dialog_Candidate_Details {
             initViews(view);
             initDetails();
             initListener();
+            allowVoting();
 
             poDialogx.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             poDialogx.getWindow().getAttributes().windowAnimations = org.rmj.g3appdriver.R.style.PopupAnimation;
@@ -93,8 +108,11 @@ public class Dialog_Candidate_Details {
             try{
 
                 //todo: get url from list, and load to object
-                JSONArray loArr = new JSONArray(details.getUrlImgs());
-                ImageFileManager.LoadImageToView(loArr.get(0).toString(), loImg);
+                JSONObject loArr = new JSONObject(details.getUrlImgs());
+                JSONArray laUrls = loArr.getJSONArray("detail");
+
+                //todo: display first loaded image
+                ImageFileManager.LoadImageToView(laUrls.get(0).toString(), loImg);
 
                 //todo: set details
                 mtv_name.setText(details.getName());
@@ -102,7 +120,7 @@ public class Dialog_Candidate_Details {
                 mtv_votes.setText(details.getVotes());
 
                 //todo: if image urls not empty
-                if (loArr.length() > 0){
+                if (laUrls.length() > 0){
 
                     //todo: display viewpager and hide no record layout
                     layout_norecord.setVisibility(View.GONE);
@@ -110,9 +128,9 @@ public class Dialog_Candidate_Details {
 
                     //todo: initialize list of url string for images
                     List<String> urlImgs = new ArrayList<>();
-                    for (int i = 0; i < loArr.length(); i++){
+                    for (int i = 0; i < laUrls.length(); i++){
 
-                        urlImgs.add(loArr.getString(i));
+                        urlImgs.add(laUrls.getString(i));
 
                     }
 
@@ -138,7 +156,7 @@ public class Dialog_Candidate_Details {
                     ViewPagerProperty loViewPagerProperty = new ViewPagerProperty(list_images);
 
                     loViewPagerProperty.initSliderPadding(
-                            new ViewPagerProperty.Padding_Property(195, 195,
+                            new ViewPagerProperty.Padding_Property(200, 200,
                                     0, 0, false, false, 3)
                     );
 
@@ -182,10 +200,76 @@ public class Dialog_Candidate_Details {
                 }
             });
 
+            btn_vote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    v.setEnabled(false);
+                    btn_vote.setText("VOTED");
+
+                    mviewModel.SubmitVote(details.getPageantID(), details.getCategoryID());
+                }
+            });
         }
+
+        private void allowVoting() throws ParseException {
+
+            if (mviewModel.CountCategoryVotesOfTheDay(details.getCategoryID()) != null){
+
+                if (hasVotedToday(mviewModel.CountCategoryVotesOfTheDay(details.getCategoryID()))){
+
+                    btn_vote.setEnabled(false);
+
+                } else {
+                    btn_vote.setEnabled(true);
+                }
+
+            }else {
+
+                btn_vote.setEnabled(true);
+
+            }
+        }
+
+        @SuppressLint("SimpleDateFormat")
+        private Boolean hasVotedToday(DCandidates.LatestVote lastVote) throws ParseException {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                if (lastVote.getdTimeStmp() != null){
+
+                    LocalDate loLastVote = LocalDateTime.parse(lastVote.getdTimeStmp(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
+                    LocalDate loToday = LocalDateTime.now().toLocalDate();
+
+                    return loLastVote.isEqual(loToday) && lastVote.getTotal() > 0;
+
+                }else {
+                    return false;
+                }
+
+            }else {
+
+                if (lastVote.getdTimeStmp() != null){
+
+                    @SuppressLint("SimpleDateFormat")
+                    SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                    Date loLastVote = dtFormat.parse(dtFormat.format(dtFormat.parse(lastVote.getdTimeStmp())));
+                    Date loToday = dtFormat.parse(dtFormat.format(Calendar.getInstance().getTime()));
+
+                    return loLastVote.equals(loToday) && lastVote.getTotal() > 0;
+
+                }else {
+                    return false;
+                }
+
+            }
+
+        }
+
     }
 
-    public class Adapter_ImageDetails extends RecyclerView.Adapter<Adapter_ImageDetails.VH_ImageList>{
+    public static class Adapter_ImageDetails extends RecyclerView.Adapter<Adapter_ImageDetails.VH_ImageList>{
 
         private final List<String> laImgs;
         private final ViewPager2 viewPager2;

@@ -15,7 +15,39 @@ public interface DCandidates {
     @Insert
     void insert(ECandidates candidates);
 
-    @Query("SELECT * FROM Guanzon_Candidates WHERE categoryID = :categoryID")
+    @Query("SELECT * FROM Guanzon_Candidates WHERE categoryID = :categoryID ORDER BY pageantID ASC")
     LiveData<List<ECandidates>> GetAllCandidates(String categoryID);
+
+    @Query("SELECT COUNT(*) as total, dVoted as dTimeStmp FROM Guanzon_Candidates " +
+            "WHERE categoryID = :categoryID AND votes > 0 AND userID = :userIDxx " +
+            "ORDER BY dVoted DESC LIMIT 1")
+    LiveData<LatestVote> ObserveVoteCounts(String categoryID, String userIDxx);
+
+    @Query("SELECT COUNT(*) as total, dVoted as dTimeStmp FROM Guanzon_Candidates " +
+            "WHERE categoryID = :categoryID AND votes > 0 AND userID = :userIDxx")
+    LatestVote GetVoteCount(String categoryID, String userIDxx);
+
+    @Query("UPDATE Guanzon_Candidates SET votes = votes + 1, dVoted = :dTimeStmp " +
+            "WHERE pageantID = :pageantID AND categoryID = :categoryID")
+    void SubmitVote(String dTimeStmp, String pageantID, String categoryID);
+
+    class LatestVote{
+        int total;
+        String dTimeStmp;
+
+        public LatestVote(int total, String dTimeStmp) {
+            this.total = total;
+            this.dTimeStmp = dTimeStmp;
+        }
+
+        public int getTotal() {
+            return total;
+        }
+
+        public String getdTimeStmp() {
+            return dTimeStmp;
+        }
+
+    }
 
 }

@@ -137,7 +137,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
         EPointsRequest.class,
         EBingoCard.class,
         EBarcode.class,
-        ECandidates.class}, version = 6, exportSchema = false)
+        ECandidates.class}, version = 7, exportSchema = false)
 public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     private static final String TAG = "GuanzonApp_DB_Manager";
     private static GGC_GuanzonAppDB instance;

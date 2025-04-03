@@ -14,10 +14,12 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.utils.ImageFileManager;
 import org.rmj.guanzongroup.gconnect.Dialog.Dialog_Candidate_Details;
 import org.rmj.guanzongroup.gconnect.R;
+import org.rmj.guanzongroup.gconnect.ViewModel.VMPoll;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +29,16 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
     private final Context context;
     private final List<ECandidates> candidates;
     private final CandidateFilter poFilter;
+    private final VMPoll mviewModel;
+
     private List<ECandidates> candidatesFiltered;
 
-    public Adapter_Candidates(Context context, List<ECandidates> candidates){
+    public Adapter_Candidates(Context context, List<ECandidates> candidates, VMPoll mviewModel){
         this.context = context;
         this.candidates = candidates;
         this.poFilter = new CandidateFilter(this);
         this.candidatesFiltered = candidates;
+        this.mviewModel = mviewModel;
     }
 
     public CandidateFilter getFilter(){
@@ -53,8 +58,10 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
         try {
 
             //todo: load image urls to view
-            JSONArray urlImgs = new JSONArray(candidatesFiltered.get(position).getUrlImgs());
-            ImageFileManager.LoadImageToView(urlImgs.getString(0),
+            JSONObject urlImgs = new JSONObject(candidatesFiltered.get(position).getUrlImgs());
+            String urlPrimary = urlImgs.getString("primary");
+
+            ImageFileManager.LoadImageToView(urlPrimary,
                     holder.img_candidate);
 
             //todo: display total votes
@@ -65,11 +72,17 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
                 @Override
                 public void onClick(View v) {
 
-                    //todo: initialize dialog details
-                    Dialog_Candidate_Details loDialog = new Dialog_Candidate_Details(context,
-                            candidatesFiltered.get(position));
+                    try {
 
-                    loDialog.new Dialog_Details().initDialogDetails();
+                        //todo: initialize dialog details
+                        Dialog_Candidate_Details loDialog = new Dialog_Candidate_Details(context,
+                                candidatesFiltered.get(position), mviewModel);
+
+                        loDialog.new Dialog_Details().initDialogDetails();
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             });
 

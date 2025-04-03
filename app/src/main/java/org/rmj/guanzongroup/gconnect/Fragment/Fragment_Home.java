@@ -2,6 +2,7 @@ package org.rmj.guanzongroup.gconnect.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -32,7 +33,14 @@ import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Products;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.guanzongroup.marketplace.ViewModel.VMHome;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Fragment_Home extends Fragment {
@@ -187,17 +195,42 @@ public class Fragment_Home extends Fragment {
             @Override
             public void onChanged(List<EEvents> eEvents) {
 
-                if (eEvents != null){
+                try {
 
-                    if (eEvents.size() > 0){
+                    //todo: get parent fragment, validate if empty
+                    Fragment_Dashboard loParent = (Fragment_Dashboard) getParentFragment();
+                    if (loParent == null){
+                        return;
+                    }
 
-                        loAdapter = new Adapter_Events(eEvents, slider_events, new Adapter_Events.onSelectListener() {
-                            @Override
-                            public void onSelect(int position, String eventIDxx) {
+                    if (eEvents != null){
 
-                                Fragment_Dashboard loParent = (Fragment_Dashboard) getParentFragment();
+                        if (eEvents.size() > 0){
 
-                                if (loParent != null){
+                            //todo: initiate list of active events
+                            List<EEvents> laActiveEvents = new ArrayList<>();
+                            for (EEvents loEvent : eEvents){
+
+                                //todo if event is valid, add to active events
+                                if (isEventValid(loEvent.getEvntFrom(), loEvent.getEvntThru())){
+
+                                    laActiveEvents.add(loEvent);
+                                }
+                            }
+
+                            //todo if no active events, hide adapter and navigations
+                            if (laActiveEvents.size() <= 0){
+
+                                loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
+                                loParent.botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(false);
+                                layout_events.setVisibility(View.GONE);
+
+                                return;
+                            }
+
+                            loAdapter = new Adapter_Events(laActiveEvents, slider_events, new Adapter_Events.onSelectListener() {
+                                @Override
+                                public void onSelect(int position, String eventIDxx) {
 
                                     Bundle loArgs = new Bundle();
                                     loArgs.putString("eventID", String.valueOf(eventIDxx));
@@ -207,35 +240,44 @@ public class Fragment_Home extends Fragment {
                                     loParent.botNav.setSelectedItemId(R.id.nav_Poll);
 
                                 }
+                            });
 
-                            }
-                        });
+                            slider_events.setAdapter(loAdapter);
 
-                        slider_events.setAdapter(loAdapter);
+                            /**
+                             * Set viewpager properties and design
+                             * Custom library for designing viewpager.
+                             * Add new designs , for future layout viewpager design
+                             * Guillier 03/28/2025
+                             **/
+                            ViewPagerProperty loViewPagerProperty = new ViewPagerProperty(slider_events);
 
-                        /**
-                         * Set viewpager properties and design
-                         * Custom library for designing viewpager.
-                         * Add new designs , for future layout viewpager design
-                         * Guillier 03/28/2025
-                         **/
-                        ViewPagerProperty loViewPagerProperty = new ViewPagerProperty(slider_events);
+                            loViewPagerProperty.initSliderPadding(
+                                    new ViewPagerProperty.Padding_Property(150, 150,
+                                            0, 0, false, false, 3)
+                            );
 
-                        loViewPagerProperty.initSliderPadding(
-                                new ViewPagerProperty.Padding_Property(150, 150,
-                                        0, 0, false, false, 3)
-                        );
+                            loViewPagerProperty.initSliderPageTransformer();
 
-                        loViewPagerProperty.initSliderPageTransformer();
+                            loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(true);
+                            loParent.botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(true);
+                            layout_events.setVisibility(View.VISIBLE);
 
-                        layout_events.setVisibility(View.VISIBLE);
+                        }else {
+
+                            loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
+                            loParent.botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(false);
+                            layout_events.setVisibility(View.GONE);
+                        }
 
                     }else {
+                        loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
+                        loParent.botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(false);
                         layout_events.setVisibility(View.GONE);
                     }
 
-                }else {
-                    layout_events.setVisibility(View.GONE);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         });
@@ -289,6 +331,49 @@ public class Fragment_Home extends Fragment {
                 }
             }
         });
+
+    }
+
+    private Boolean isEventValid(String dtFrom, String dtThru) throws ParseException {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            LocalDate currentDt = LocalDateTime.now().toLocalDate();
+            LocalDate eventFrom = LocalDate.parse(dtFrom);
+            LocalDate eventThru = LocalDate.parse(dtThru);
+
+            //todo: current date is equal to event date
+            if (currentDt.isEqual(eventFrom) || currentDt.isEqual(eventThru)){
+                return true;
+            }else {
+
+                //todo: current date is between event date
+                if (currentDt.isAfter(eventFrom) && currentDt.isBefore(eventThru)){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+
+        }else {
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date loToday = dtFormat.parse(dtFormat.format(Calendar.getInstance().getTime()));
+            Date loEvntFrom = dtFormat.parse(dtFormat.format(dtFormat.parse(dtFrom)));
+            Date loEvntThru = dtFormat.parse(dtFormat.format(dtFormat.parse(dtThru)));
+
+            if (loToday.equals(dtFrom) || loToday.equals(dtFrom)){
+                return true;
+            }else {
+
+                if (loToday.after(loEvntFrom) && loToday.before(loEvntThru)){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+        }
 
     }
 
