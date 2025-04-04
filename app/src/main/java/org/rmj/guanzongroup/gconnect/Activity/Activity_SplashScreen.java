@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.facebook.FacebookSdk;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.rmj.guanzongroup.ganado.Dialog.DialogDisclosure;

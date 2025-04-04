@@ -1,13 +1,10 @@
 package org.rmj.guanzongroup.gconnect.Fragment;
 
-import static android.view.View.GONE;
-
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,24 +167,7 @@ public class Fragment_Poll extends Fragment {
 
                     String eventID = argsParams.getString("eventID");
 
-                    switch (eventID){
-
-                        case "M00120000001": //dreamboy
-                            tab_candidates.selectTab(tab_candidates.getTabAt(0), true);
-                            break;
-
-                        case "M00120000002": //campus princess
-                            tab_candidates.selectTab(tab_candidates.getTabAt(1), true);
-                            break;
-
-                        case "M00120000003": //biker babe
-                            tab_candidates.selectTab(tab_candidates.getTabAt(2), true);
-                            break;
-
-                        case "M00120000004": //guanzon bulilit
-                            tab_candidates.selectTab(tab_candidates.getTabAt(3), true);
-                            break;
-                    }
+                    selectEventTab(eventID);
                 }
 
             }
@@ -223,10 +203,10 @@ public class Fragment_Poll extends Fragment {
                     List<EEvents> laEvents = new ArrayList<>();
                     for (EEvents loEvent : eEvents){
 
-                        //todo if event is not valid, disable tab display
-                        if (!isEventValid(loEvent.getEvntFrom(), loEvent.getEvntThru())){
+                        if (!isEventValid(loEvent.getEvntFrom(), loEvent.getEvntThru())){ //todo if event is not valid, disable tab display
                             disableEventTab(loEvent.getTransNox()); //todo allow event tab
                         }else {
+                            selectEventTab(loEvent.getTransNox());
                             laEvents.add(loEvent); //todo add to active events
                         }
 
@@ -274,7 +254,7 @@ public class Fragment_Poll extends Fragment {
                     }
 
                     //todo if not empty, initialize adapter
-                    adapter_candidates = new Adapter_Candidates(requireContext(), eCandidates, mViewModel);
+                    adapter_candidates = new Adapter_Candidates(requireContext(), getParentFragment(), eCandidates, mViewModel);
 
                     adapter_candidates.notifyDataSetChanged();
 
@@ -367,6 +347,29 @@ public class Fragment_Poll extends Fragment {
                     return false;
                 }
             }
+        }
+
+    }
+
+    private void selectEventTab(String eventID){
+
+        switch (eventID){
+
+            case "M00120000001": //dreamboy
+                tab_candidates.selectTab(tab_candidates.getTabAt(0), true);
+                break;
+
+            case "M00120000002": //campus princess
+                tab_candidates.selectTab(tab_candidates.getTabAt(1), true);
+                break;
+
+            case "M00120000003": //biker babe
+                tab_candidates.selectTab(tab_candidates.getTabAt(2), true);
+                break;
+
+            case "M00120000004": //guanzon bulilit
+                tab_candidates.selectTab(tab_candidates.getTabAt(3), true);
+                break;
         }
 
     }

@@ -1,19 +1,26 @@
 package org.rmj.guanzongroup.gconnect.Dialog;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -26,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
+import org.rmj.g3appdriver.etc.FacebookShare;
 import org.rmj.g3appdriver.etc.ViewPagerProperty;
 import org.rmj.g3appdriver.utils.ImageFileManager;
 import org.rmj.guanzongroup.gconnect.R;
@@ -46,13 +54,15 @@ public class Dialog_Candidate_Details {
     private final Context context;
     private final ECandidates details;
     private final VMPoll mviewModel;
+    private final Fragment fragment;
 
     private AlertDialog poDialogx;
 
-    public Dialog_Candidate_Details(Context context, ECandidates details, VMPoll mviewModel){
+    public Dialog_Candidate_Details(Context context, Fragment fragment, ECandidates details, VMPoll mviewModel){
         this.context = context;
         this.details = details;
         this.mviewModel = mviewModel;
+        this.fragment = fragment;
     }
 
     public class Dialog_Details{
@@ -64,6 +74,7 @@ public class Dialog_Candidate_Details {
         private LinearLayout layout_norecord;
         private ViewPager2 list_images;
         private MaterialButton btn_vote;
+        private ImageButton img_btnShare;
 
         private Adapter_ImageDetails loAdapter;
 
@@ -99,6 +110,7 @@ public class Dialog_Candidate_Details {
             layout_norecord = view.findViewById(R.id.layout_norecord);
             list_images = view.findViewById(R.id.list_images);
 
+            img_btnShare = view.findViewById(R.id.img_btnShare);
             btn_vote = view.findViewById(R.id.btn_vote);
 
         }
@@ -118,6 +130,15 @@ public class Dialog_Candidate_Details {
                 mtv_name.setText(details.getName());
                 mtv_school.setText(details.getSchool());
                 mtv_votes.setText(details.getVotes());
+
+                img_btnShare.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        FacebookShare loShareApp = new FacebookShare(context);
+                        loShareApp.OpenShareFeed("https://www.facebook.com/share/p/18FnjVvV9N/");
+                    }
+                });
 
                 //todo: if image urls not empty
                 if (laUrls.length() > 0){

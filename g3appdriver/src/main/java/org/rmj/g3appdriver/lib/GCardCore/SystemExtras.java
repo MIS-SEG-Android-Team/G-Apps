@@ -393,6 +393,8 @@ public class SystemExtras implements iGCardSystem{
     public void SaveNewsEvents(JSONObject detail) throws Exception {
         JSONArray laDetail = detail.getJSONArray("detail");
 
+        poEvents.deleteAll();
+
         for(int x = 0; x < laDetail.length(); x++){
             JSONObject loJson = laDetail.getJSONObject(x);
 

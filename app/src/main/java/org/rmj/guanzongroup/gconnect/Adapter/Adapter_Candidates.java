@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.imageview.ShapeableImageView;
@@ -30,15 +31,17 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
     private final List<ECandidates> candidates;
     private final CandidateFilter poFilter;
     private final VMPoll mviewModel;
+    private final Fragment fragment;
 
     private List<ECandidates> candidatesFiltered;
 
-    public Adapter_Candidates(Context context, List<ECandidates> candidates, VMPoll mviewModel){
+    public Adapter_Candidates(Context context, Fragment fragment, List<ECandidates> candidates, VMPoll mviewModel){
         this.context = context;
         this.candidates = candidates;
         this.poFilter = new CandidateFilter(this);
         this.candidatesFiltered = candidates;
         this.mviewModel = mviewModel;
+        this.fragment = fragment;
     }
 
     public CandidateFilter getFilter(){
@@ -76,7 +79,7 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
 
                         //todo: initialize dialog details
                         Dialog_Candidate_Details loDialog = new Dialog_Candidate_Details(context,
-                                candidatesFiltered.get(position), mviewModel);
+                                fragment, candidatesFiltered.get(position), mviewModel);
 
                         loDialog.new Dialog_Details().initDialogDetails();
 

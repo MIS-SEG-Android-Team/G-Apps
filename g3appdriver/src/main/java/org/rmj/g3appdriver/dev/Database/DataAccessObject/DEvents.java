@@ -23,6 +23,9 @@ public interface DEvents {
     @Update
     void update(EEvents events);
 
+    @Query("DELETE FROM App_Event_Info")
+    void deleteAll();
+
     @Query("SELECT * FROM App_Event_Info ORDER BY sTransNox ASC")
     LiveData<List<EEvents>> getAllEvents();
 
