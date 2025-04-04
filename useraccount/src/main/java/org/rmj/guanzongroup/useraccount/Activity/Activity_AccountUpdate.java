@@ -43,13 +43,17 @@ public class Activity_AccountUpdate extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_account_update);
+
         mViewModel = new ViewModelProvider(Activity_AccountUpdate.this).get(VMAccountDetails.class);
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Account Update");
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         lblUpdate = findViewById(R.id.lblAccountUpdate);
         tieUpdate = findViewById(R.id.tie_accountUpdate);
