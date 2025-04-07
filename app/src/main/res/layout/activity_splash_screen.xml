@@ -12,15 +12,15 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:src="@drawable/ic_guanzon_logo"
-        android:layout_marginHorizontal="50dp"
-        android:layout_marginVertical="300dp"
         android:background="@color/zxing_transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintWidth_percent="0.2"
         app:layout_constraintBottom_toTopOf="@+id/txt_Status"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         style="@style/Title"
         android:id="@+id/txt_Title"
         android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_view"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         style="@style/SubTitle"
         android:id="@+id/txt_Status"
         android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/txt_Version"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         style="@style/SubTitle"
         android:id="@+id/txt_Version"
         android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/txt_Company"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         style="@style/SubText"
         android:id="@+id/txt_Company"
         android:layout_width="wrap_content"

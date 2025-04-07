@@ -142,7 +142,7 @@ public class DashboardActionReceiver extends BroadcastReceiver {
                     Log.d(TAG, "Promotions imported successfully...");
 
                     Thread.sleep(500);
-                    loGcardExtra.DownloadNewsEvents(callback);
+                    loGcardExtra.DownloadNewsEvents(true, callback); //todo import guanzon fest pageant
                     Log.d(TAG, "News events imported successfully...");
 
                     //TODO: IMPORT MC DATA. SECOND PRIORITY

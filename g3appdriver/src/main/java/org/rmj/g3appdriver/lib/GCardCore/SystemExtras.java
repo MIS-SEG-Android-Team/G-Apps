@@ -370,17 +370,20 @@ public class SystemExtras implements iGCardSystem{
     }
 
     @Override
-    public void DownloadNewsEvents(GCardSystem.GCardSystemCallback callback) throws Exception {
+    public void DownloadNewsEvents(Boolean isPageant, GCardSystem.GCardSystemCallback callback) throws Exception {
+
         JSONObject params = new JSONObject();
-        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportEventsAPI(), params.toString(), poHeaders.getHeaders());
+        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportEventsAPI(isPageant), params.toString(), poHeaders.getHeaders());
+
         if(lsResponse == null){
             callback.OnFailed("Server no response.");
         } else {
             JSONObject loResponse = new JSONObject(lsResponse);
             String lsResult = loResponse.getString("result");
+
             if(lsResult.equalsIgnoreCase("success")){
                 callback.OnSuccess(loResponse.toString());
-                SaveNewsEvents(loResponse);
+                SaveNewsEvents(isPageant, loResponse);
             } else {
                 JSONObject loError = loResponse.getJSONObject("error");
                 String lsMessage = loError.getString("message");
@@ -390,28 +393,50 @@ public class SystemExtras implements iGCardSystem{
     }
 
     @Override
-    public void SaveNewsEvents(JSONObject detail) throws Exception {
-        JSONArray laDetail = detail.getJSONArray("detail");
+    public void SaveNewsEvents(Boolean isPageant, JSONObject detail) throws Exception {
 
-        poEvents.deleteAll();
+        if (!isPageant){
 
-        for(int x = 0; x < laDetail.length(); x++){
-            JSONObject loJson = laDetail.getJSONObject(x);
+            JSONArray laDetail = detail.getJSONArray("detail");
 
-            EEvents info = new EEvents();
-            info.setTransNox(loJson.getString("sTransNox"));
-            info.setBranchNm(loJson.getString("sBranchNm"));
-            info.setEvntFrom(loJson.getString("dEvntFrom"));
-            info.setEvntThru(loJson.getString("dEvntThru"));
-            info.setEventTle(loJson.getString("sEventTle"));
-            info.setAddressx(loJson.getString("sAddressx"));
-            info.setEventURL(loJson.getString("sEventURL"));
-            info.setImageURL(loJson.getString("sImageURL"));
-            info.setNotified("0");
-            info.setModified(new AppConstants().DATE_MODIFIED);
-            info.setDirectoryFolder("Events");
+            poEvents.deleteAll();
 
-            poEvents.insert(info);
+            for(int x = 0; x < laDetail.length(); x++){
+                JSONObject loJson = laDetail.getJSONObject(x);
+
+                EEvents info = new EEvents();
+                info.setTransNox(loJson.getString("sTransNox"));
+                info.setBranchNm(loJson.getString("sBranchNm"));
+                info.setEvntFrom(loJson.getString("dEvntFrom"));
+                info.setEvntThru(loJson.getString("dEvntThru"));
+                info.setEventTle(loJson.getString("sEventTle"));
+                info.setAddressx(loJson.getString("sAddressx"));
+                info.setEventURL(loJson.getString("sEventURL"));
+                info.setImageURL(loJson.getString("sImageURL"));
+                info.setNotified("0");
+                info.setModified(new AppConstants().DATE_MODIFIED);
+                info.setDirectoryFolder("Events");
+
+                poEvents.insert(info);
+            }
+
+        }else {
+
+            JSONArray laDetail = detail.getJSONArray("payload");
+
+            for (int i = 0; i < laDetail.length(); i++){
+
+                JSONObject loJson = laDetail.getJSONObject(i);
+                EEvents info = new EEvents();
+
+                info.setTransNox(loJson.getString("sEventIDx"));
+                info.setEventTle(loJson.getString("sEventNme"));
+                info.setEvntFrom(loJson.getString("dVoteStrt"));
+                info.setEvntThru(loJson.getString("dVoteEndx"));
+                info.setImageURL(loJson.getString("imgPath"));
+
+            }
+
         }
     }
 

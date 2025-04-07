@@ -45,13 +45,35 @@ public class Activity_NotificationList extends AppCompatActivity {
 
         setContentView(R.layout.activity_notification_list);
 
-        initViews();
-
         mViewModel = new ViewModelProvider(Activity_NotificationList.this).get(VMNotifications.class);
+
+        initViews();
+        initObservables();
+        initAdapter();
+        setTabListener();
+
         toolbar.setTitle("Notifications");
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initViews() {
+        toolbar = findViewById(R.id.toolbar_notification);
+        noNotif = findViewById(R.id.lbl_no_notifications);
+        recyclerView = findViewById(R.id.recycler_view_notifications);
+        tabLayout_NotifList = findViewById(R.id.tablayout_notifList);
+        viewPager = findViewById(R.id.Notif_viewPager);
+    }
+    private void initAdapter(){
 
         mAdapter = new Adapter_Fragment(getSupportFragmentManager(), getLifecycle());
 
@@ -59,12 +81,15 @@ public class Activity_NotificationList extends AppCompatActivity {
         mAdapter.addFragment(new Fragment_Promotion());
         mAdapter.addFragment(new Fragment_Panalo());
 
-        tabLayout_NotifList.addTab(tabLayout_NotifList.newTab().setText("Notification"));
-        tabLayout_NotifList.addTab(tabLayout_NotifList.newTab().setText("Promotions"));
-        tabLayout_NotifList.addTab(tabLayout_NotifList.newTab().setText("Guanzon Panalo"));
-
         viewPager.setAdapter(mAdapter);
-        setTabListener();
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(Activity_NotificationList.this);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(Activity_NotificationList.this, DividerItemDecoration.VERTICAL));
+
+    }
+    private void initObservables(){
 
         mViewModel.getUnreadNotificationsCounts().observe(Activity_NotificationList.this, count -> {
             try {
@@ -79,6 +104,7 @@ public class Activity_NotificationList extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+
         mViewModel.getUnreadPromotionsNotifications().observe(Activity_NotificationList.this, count -> {
             try {
                 if(count > 0) {
@@ -92,6 +118,7 @@ public class Activity_NotificationList extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+
         mViewModel.getUnreadMessagesPanaloCount().observe(Activity_NotificationList.this, count -> {
             try {
                 if(count > 0) {
@@ -105,10 +132,6 @@ public class Activity_NotificationList extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(Activity_NotificationList.this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(Activity_NotificationList.this, DividerItemDecoration.VERTICAL));
 
         mViewModel.GetClientNotificationList().observe(Activity_NotificationList.this, notif -> {
             if (notif.size() > 0) {
@@ -133,21 +156,6 @@ public class Activity_NotificationList extends AppCompatActivity {
             }
         });
     }
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void initViews() {
-        toolbar = findViewById(R.id.toolbar_notification);
-        noNotif = findViewById(R.id.lbl_no_notifications);
-        recyclerView = findViewById(R.id.recycler_view_notifications);
-        tabLayout_NotifList = findViewById(R.id.tablayout_notifList);
-        viewPager = findViewById(R.id.Notif_viewPager);
-    }
     private void setTabListener(){
         tabLayout_NotifList.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -164,6 +172,4 @@ public class Activity_NotificationList extends AppCompatActivity {
             }
         });
     }
-
-
 }

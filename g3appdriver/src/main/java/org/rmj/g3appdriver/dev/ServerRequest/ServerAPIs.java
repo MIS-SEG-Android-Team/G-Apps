@@ -34,6 +34,7 @@ public class ServerAPIs {
     private static final String URL_PLACE_ODER = GCARD + "place_order.php";
     private static final String URL_CANCEL_ORDER = GCARD + "cancel_order_item.php";
     private static final String URL_IMPORT_EVENTS = GCARD + "import_events.php";
+    private static final String URL_IMPORT_EVENTS_PAGEANT = "gfest/getEvents.php";
     private static final String URL_CHANGE_PASSWORD = SECURITY + "acctupdate.php";
     private static final String URL_REQUEST_DEVICES = SECURITY + "acctdevice.php";
     private static final String URL_CLIENT_LOGIN = SECURITY + "signin.php";
@@ -257,11 +258,23 @@ public class ServerAPIs {
         return LIVE + URL_CANCEL_ORDER;
     }
 
-    public String getImportEventsAPI() {
+    public String getImportEventsAPI(Boolean isPageant) {
+
+        //todo same table to import, different api urls for different events
         if(isTestUnit){
-            return LOCAL + URL_IMPORT_EVENTS;
+            if (!isPageant){
+                return LOCAL + URL_IMPORT_EVENTS;
+            }else {
+                return LOCAL + URL_IMPORT_EVENTS_PAGEANT;
+            }
         }
-        return LIVE + URL_IMPORT_EVENTS;
+
+        //todo same table to import, different api urls for different events
+        if (!isPageant){
+            return LIVE + URL_IMPORT_EVENTS;
+        }else {
+            return LIVE + URL_IMPORT_EVENTS_PAGEANT;
+        }
     }
 
     public String getChangePasswordAPI() {
