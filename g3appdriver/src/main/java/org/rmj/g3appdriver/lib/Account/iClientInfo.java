@@ -84,8 +84,8 @@ public interface iClientInfo {
     LiveData<List<EPromo>> GetPromotions();
     EPromo CheckPromo();
 
-    void DownloadNewsEvents(Boolean isPageant, GCardSystem.GCardSystemCallback callback) throws Exception;
-    void SaveNewsEvents(Boolean isPageant, JSONObject detail) throws Exception;
+    void DownloadNewsEvents(GCardSystem.GCardSystemCallback callback) throws Exception;
+    void SaveNewsEvents(JSONObject detail) throws Exception;
     LiveData<List<EEvents>> GetNewsEvents();
     EEvents CheckEvents();
 }

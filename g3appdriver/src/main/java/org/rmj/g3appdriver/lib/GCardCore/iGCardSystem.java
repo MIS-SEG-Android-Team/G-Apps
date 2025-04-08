@@ -96,8 +96,10 @@ public interface iGCardSystem {
     void SavePromotions(JSONObject detail) throws Exception;
     EPromo CheckPromo();
 
-    void DownloadNewsEvents(Boolean isPageant, GCardSystem.GCardSystemCallback callback) throws Exception;
-    void SaveNewsEvents(Boolean isPageant, JSONObject detail) throws Exception;
+    void DownloadNewsEvents(GCardSystem.GCardSystemCallback callback) throws Exception;
+    void SaveNewsEvents(JSONObject detail) throws Exception;
+    void ImportSubEvents() throws Exception;
+    void ImportCandidates() throws Exception;
     List<EEvents> CheckEvents();
 }
 

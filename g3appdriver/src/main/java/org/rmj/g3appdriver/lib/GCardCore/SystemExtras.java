@@ -12,13 +12,16 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBranchInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DEvents;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPromo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRedeemItemInfo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DSubEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.EGCardTransactionLedger;
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
 import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
 import org.rmj.g3appdriver.dev.Database.Entities.ERedeemablesInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 import org.rmj.g3appdriver.dev.ServerRequest.ServerAPIs;
 import org.rmj.g3appdriver.dev.ServerRequest.HttpHeaders;
@@ -39,6 +42,7 @@ public class SystemExtras implements iGCardSystem{
     private final DBranchInfo poBranch;
     private final DPromo poPromo;
     private final DEvents poEvents;
+    private final DSubEvents poSubEvnts;
     private final HttpHeaders poHeaders;
     private final GuanzonAppConfig poConfig;
     private final ServerAPIs poAPI;
@@ -48,6 +52,8 @@ public class SystemExtras implements iGCardSystem{
         this.poBranch = GGC_GuanzonAppDB.getInstance(mContext).EBranchDao();
         this.poPromo = GGC_GuanzonAppDB.getInstance(mContext).EPromoDao();
         this.poEvents = GGC_GuanzonAppDB.getInstance(mContext).EventDao();
+        this.poSubEvnts = GGC_GuanzonAppDB.getInstance(mContext).SubEvntsDao();
+
         this.poHeaders = new HttpHeaders(mContext);
         this.poConfig = new GuanzonAppConfig(mContext);
         this.poAPI = new ServerAPIs(poConfig.getTestCase());
@@ -370,70 +376,156 @@ public class SystemExtras implements iGCardSystem{
     }
 
     @Override
-    public void DownloadNewsEvents(Boolean isPageant, GCardSystem.GCardSystemCallback callback) throws Exception {
+    public void DownloadNewsEvents(GCardSystem.GCardSystemCallback callback) throws Exception {
 
-        JSONObject params = new JSONObject();
-        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportEventsAPI(isPageant), params.toString(), poHeaders.getHeaders());
+        try {
 
-        if(lsResponse == null){
-            callback.OnFailed("Server no response.");
-        } else {
-            JSONObject loResponse = new JSONObject(lsResponse);
-            String lsResult = loResponse.getString("result");
+            JSONObject params = new JSONObject();
+            List<String> laResponse = List.of(
+                    poAPI.getImportEventsAPI(),
+                    poAPI.getImportSubEvents()
+            );
 
-            if(lsResult.equalsIgnoreCase("success")){
-                callback.OnSuccess(loResponse.toString());
-                SaveNewsEvents(isPageant, loResponse);
-            } else {
-                JSONObject loError = loResponse.getJSONObject("error");
-                String lsMessage = loError.getString("message");
-                callback.OnFailed(lsMessage);
+            for (String url: laResponse){
+
+                String lsResponse = WebClient.httpsPostJSon(url, params.toString(), poHeaders.getHeaders());
+
+                if(lsResponse == null){
+                    callback.OnFailed("Server no response.");
+                } else {
+
+                    JSONObject loResponse = new JSONObject(lsResponse);
+                    String lsResult = loResponse.getString("result");
+
+                    if(lsResult.equalsIgnoreCase("success")){
+                        callback.OnSuccess(loResponse.toString());
+                        SaveNewsEvents(loResponse);
+                    } else {
+                        JSONObject loError = loResponse.getJSONObject("error");
+                        String lsMessage = loError.getString("message");
+                        callback.OnFailed(lsMessage);
+                    }
+                }
+
+                Thread.sleep(1000);
+
             }
+
+            ImportSubEvents();
+
+            Thread.sleep(1000);
+
+            ImportCandidates();
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void SaveNewsEvents(Boolean isPageant, JSONObject detail) throws Exception {
+    public void SaveNewsEvents(JSONObject detail) throws Exception {
 
-        if (!isPageant){
+        JSONArray laDetail = detail.getJSONArray("detail");
 
-            JSONArray laDetail = detail.getJSONArray("detail");
+        poEvents.deleteAll();
 
-            poEvents.deleteAll();
+        for(int x = 0; x < laDetail.length(); x++){
 
-            for(int x = 0; x < laDetail.length(); x++){
-                JSONObject loJson = laDetail.getJSONObject(x);
+            JSONObject loJson = laDetail.getJSONObject(x);
 
-                EEvents info = new EEvents();
-                info.setTransNox(loJson.getString("sTransNox"));
-                info.setBranchNm(loJson.getString("sBranchNm"));
-                info.setEvntFrom(loJson.getString("dEvntFrom"));
-                info.setEvntThru(loJson.getString("dEvntThru"));
-                info.setEventTle(loJson.getString("sEventTle"));
-                info.setAddressx(loJson.getString("sAddressx"));
-                info.setEventURL(loJson.getString("sEventURL"));
-                info.setImageURL(loJson.getString("sImageURL"));
-                info.setNotified("0");
-                info.setModified(new AppConstants().DATE_MODIFIED);
-                info.setDirectoryFolder("Events");
+            EEvents info = new EEvents();
+            info.setTransNox(loJson.getString("sTransNox"));
+            info.setEventTle(loJson.getString("sEventTle"));
+            info.setEvntFrom(loJson.getString("dEvntFrom"));
+            info.setEvntThru(loJson.getString("dEvntThru"));
+            info.setBranchNm(loJson.getString("sBranchNm"));
+            info.setAddressx(loJson.getString("sAddressx"));
+            info.setEventURL(loJson.getString("sEventURL"));
+            info.setImageURL(loJson.getString("sImageURL"));
+            info.setNotified("0");
+            info.setModified(new AppConstants().DATE_MODIFIED);
+            info.setDirectoryFolder("Events");
 
-                poEvents.insert(info);
+            poEvents.insert(info);
+        }
+    }
+
+    @Override
+    public void ImportSubEvents() throws Exception {
+
+        JSONObject params = new JSONObject();
+
+        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportTabulationEventsAPI(), params.toString(), poHeaders.getHeaders());
+
+        if (lsResponse != null){
+
+            JSONObject loResponse = new JSONObject(lsResponse);
+            String lsResult = loResponse.getString("result");
+
+            if(lsResult.equalsIgnoreCase("success")){
+
+                JSONArray laArr = loResponse.getJSONArray("payload");
+
+                poSubEvnts.deleteall();
+
+                for (int i = 0; i < laArr.length(); i++){
+
+                    JSONObject loJson = laArr.getJSONObject(i);
+
+                    ESub_Events loData = new ESub_Events();
+                    loData.setsSubEventIDxx(loJson.getString("sContstID"));
+                    loData.setsDescript(loJson.getString("sDescript"));
+                    loData.setsImageURL(loJson.getString("sImageURL"));
+                    loData.setsEventIDx(loJson.getString("sEventIDx"));
+                    loData.setnEntryNox(loJson.getString("nEntryNox"));
+                    loData.setcOnlineVt(loJson.getString("cOnlineVt"));
+
+                    poSubEvnts.save(loData);
+                }
+
+            } else {
+                JSONObject loError = loResponse.getJSONObject("error");
+                String lsMessage = loError.getString("message");
+
+                Log.d(TAG, lsMessage);
             }
 
-        }else {
+        }
+    }
 
-            JSONArray laDetail = detail.getJSONArray("payload");
+    @Override
+    public void ImportCandidates() throws Exception {
 
-            for (int i = 0; i < laDetail.length(); i++){
+        JSONObject params = new JSONObject();
 
-                JSONObject loJson = laDetail.getJSONObject(i);
-                EEvents info = new EEvents();
+        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportTabulationEventsAPI(), params.toString(), poHeaders.getHeaders());
 
-                info.setTransNox(loJson.getString("sEventIDx"));
-                info.setEventTle(loJson.getString("sEventNme"));
-                info.setEvntFrom(loJson.getString("dVoteStrt"));
-                info.setEvntThru(loJson.getString("dVoteEndx"));
-                info.setImageURL(loJson.getString("imgPath"));
+        if (lsResponse != null){
+
+            JSONObject loResponse = new JSONObject(lsResponse);
+            String lsResult = loResponse.getString("result");
+
+            if(lsResult.equalsIgnoreCase("success")){
+
+                JSONArray laArr = loResponse.getJSONArray("payload");
+
+                for (int i = 0; i < laArr.length()){
+
+                    JSONObject loJson = laArr.getJSONObject(i);
+
+                    ECandidates candidates = new ECandidates();
+                    candidates.setsGroupIDx(loJson.getString("sGroupIDx"));
+                    candidates.setsEvntIDxx(loJson.getString("sContstID"));
+                    candidates.setsEntryNme(loJson.getString("sEntryNme"));
+                    candidates.setsSchoolNm(loJson.getString("sEntryNme"));
+                }
+
+            }else {
+
+                JSONObject loError = loResponse.getJSONObject("error");
+                String lsMessage = loError.getString("message");
+
+                Log.d(TAG, lsMessage);
 
             }
 

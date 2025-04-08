@@ -68,7 +68,7 @@ public class VMEventsPromos extends AndroidViewModel {
             public Object DoInBackground(Object args) {
                 try {
                     iGCardSystem loGcard = new GCardSystem(instance).getInstance(GCardSystem.CoreFunctions.EXTRAS);
-                    loGcard.DownloadNewsEvents(true, new GCardSystem.GCardSystemCallback() {
+                    loGcard.DownloadNewsEvents(new GCardSystem.GCardSystemCallback() {
                         @Override
                         public void OnSuccess(String args) {
                             lomessage = args;

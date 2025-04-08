@@ -44,6 +44,7 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRedeemablesInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRelation;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DSearchLog;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DServiceInfo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DSubEvents;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DTownInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DUserInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EAddressInfo;
@@ -88,6 +89,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.ERedeemablesInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ERelation;
 import org.rmj.g3appdriver.dev.Database.Entities.ESearchLog;
 import org.rmj.g3appdriver.dev.Database.Entities.EServiceInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Database.Entities.ETokenInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ETownInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
@@ -137,7 +139,8 @@ import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
         EPointsRequest.class,
         EBingoCard.class,
         EBarcode.class,
-        ECandidates.class}, version = 7, exportSchema = false)
+        ESub_Events.class,
+        ECandidates.class}, version = 8, exportSchema = false)
 public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     private static final String TAG = "GuanzonApp_DB_Manager";
     private static GGC_GuanzonAppDB instance;
@@ -179,6 +182,7 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     public abstract DPointsRequest GPointsRqstDao();
     public abstract DBingoCard BingoCardDao();
     public abstract DBarcode BarcodeDao();
+    public abstract DSubEvents SubEvntsDao();
     public abstract DCandidates CandidatesDao();
 
     public static synchronized GGC_GuanzonAppDB getInstance(Context context){

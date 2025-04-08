@@ -111,7 +111,7 @@ public class SystemExtrasTest {
 
     @Test
     public void test08DownloadNewsEvents() throws Exception{
-        poSystem.DownloadNewsEvents(true, new GCardSystem.GCardSystemCallback() {
+        poSystem.DownloadNewsEvents(new GCardSystem.GCardSystemCallback() {
             @Override
             public void OnSuccess(String args) {
                 try {
@@ -133,7 +133,7 @@ public class SystemExtrasTest {
 
     @Test
     public void test09SaveNewsEvents() throws Exception{
-        poSystem.SaveNewsEvents(true, loJson);
+        poSystem.SaveNewsEvents(loJson);
     }
 
     @Test @UiThread

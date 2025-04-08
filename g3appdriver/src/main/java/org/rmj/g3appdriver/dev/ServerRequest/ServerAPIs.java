@@ -34,7 +34,9 @@ public class ServerAPIs {
     private static final String URL_PLACE_ODER = GCARD + "place_order.php";
     private static final String URL_CANCEL_ORDER = GCARD + "cancel_order_item.php";
     private static final String URL_IMPORT_EVENTS = GCARD + "import_events.php";
-    private static final String URL_IMPORT_EVENTS_PAGEANT = "gfest/getEvents.php";
+    private static final String URL_IMPORT_SUB_EVENTS = "gfest/getEvents.php";
+    private static final String URL_IMPORT_EVENTS_PAGEANT = "gfest/getContests.php";
+    private static final String URL_IMPORT_EVENTS_CANDIDATES = "gfest/getContestParticipants.php";
     private static final String URL_CHANGE_PASSWORD = SECURITY + "acctupdate.php";
     private static final String URL_REQUEST_DEVICES = SECURITY + "acctdevice.php";
     private static final String URL_CLIENT_LOGIN = SECURITY + "signin.php";
@@ -258,23 +260,32 @@ public class ServerAPIs {
         return LIVE + URL_CANCEL_ORDER;
     }
 
-    public String getImportEventsAPI(Boolean isPageant) {
-
-        //todo same table to import, different api urls for different events
+    public String getImportEventsAPI() {
         if(isTestUnit){
-            if (!isPageant){
-                return LOCAL + URL_IMPORT_EVENTS;
-            }else {
-                return LOCAL + URL_IMPORT_EVENTS_PAGEANT;
-            }
+            return LOCAL + URL_IMPORT_EVENTS;
         }
+        return LIVE + URL_IMPORT_EVENTS;
+    }
 
-        //todo same table to import, different api urls for different events
-        if (!isPageant){
-            return LIVE + URL_IMPORT_EVENTS;
-        }else {
-            return LIVE + URL_IMPORT_EVENTS_PAGEANT;
+    public String getImportSubEvents() {
+        if(isTestUnit){
+            return LOCAL + URL_IMPORT_SUB_EVENTS;
         }
+        return LIVE + URL_IMPORT_SUB_EVENTS;
+    }
+
+    public String getImportTabulationEventsAPI() {
+        if(isTestUnit){
+            return LOCAL + URL_IMPORT_EVENTS_PAGEANT;
+        }
+        return LIVE + URL_IMPORT_EVENTS_PAGEANT;
+    }
+
+    public String getImportCandidatesAPI() {
+        if(isTestUnit){
+            return LOCAL + URL_IMPORT_EVENTS_CANDIDATES;
+        }
+        return LIVE + URL_IMPORT_EVENTS_CANDIDATES;
     }
 
     public String getChangePasswordAPI() {

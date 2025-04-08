@@ -418,12 +418,12 @@ public class RedemptionManager implements iGCardSystem{
     }
 
     @Override
-    public void DownloadNewsEvents(Boolean isPageant, GCardSystem.GCardSystemCallback callback) throws Exception {
+    public void DownloadNewsEvents(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
 
     @Override
-    public void SaveNewsEvents(Boolean isPageant, JSONObject detail) throws Exception {
+    public void SaveNewsEvents(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
 
