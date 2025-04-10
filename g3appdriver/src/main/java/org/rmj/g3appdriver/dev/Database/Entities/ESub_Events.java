@@ -9,22 +9,22 @@ public class ESub_Events {
 
     @NonNull
     @ColumnInfo(name = "sSubEventIDxx")
-    private String sSubEventIDxx;
+    public String sSubEventIDxx;
 
     @ColumnInfo(name = "sDescript")
-    private String sDescript;
+    public String sDescript;
 
     @ColumnInfo(name = "sImageURL")
-    private String sImageURL;
+    public String sImageURL;
 
     @ColumnInfo(name = "sEventIDx")
-    private String sEventIDx;
+    public String sEventIDx;
 
     @ColumnInfo(name = "nEntryNox")
-    private String nEntryNox;
+    public String nEntryNox;
 
     @ColumnInfo(name = "cOnlineVt")
-    private String cOnlineVt;
+    public String cOnlineVt;
 
     @NonNull
     public String getsSubEventIDxx() {

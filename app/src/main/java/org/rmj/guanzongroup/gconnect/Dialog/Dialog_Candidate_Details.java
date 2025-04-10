@@ -127,8 +127,8 @@ public class Dialog_Candidate_Details {
                 ImageFileManager.LoadImageToView(laUrls.get(0).toString(), loImg);
 
                 //todo: set details
-                mtv_name.setText(details.getName());
-                mtv_school.setText(details.getSchool());
+                mtv_name.setText(details.getsEntryNme());
+                mtv_school.setText(details.getsSchoolNm());
                 mtv_votes.setText(details.getVotes());
 
                 img_btnShare.setOnClickListener(new View.OnClickListener() {
@@ -228,16 +228,16 @@ public class Dialog_Candidate_Details {
                     v.setEnabled(false);
                     btn_vote.setText("VOTED");
 
-                    mviewModel.SubmitVote(details.getPageantID(), details.getCategoryID());
+                    mviewModel.SubmitVote(details.getsGroupIDx(), details.getsEvntIDxx());
                 }
             });
         }
 
         private void allowVoting() throws ParseException {
 
-            if (mviewModel.CountCategoryVotesOfTheDay(details.getCategoryID()) != null){
+            if (mviewModel.CountCategoryVotesOfTheDay(details.getsEvntIDxx()) != null){
 
-                if (hasVotedToday(mviewModel.CountCategoryVotesOfTheDay(details.getCategoryID()))){
+                if (hasVotedToday(mviewModel.CountCategoryVotesOfTheDay(details.getsEvntIDxx()))){
 
                     btn_vote.setEnabled(false);
 

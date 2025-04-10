@@ -747,6 +747,17 @@ public class GCardManager implements iGCardSystem{
     public void SaveNewsEvents(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
+
+    @Override
+    public void ImportSubEvents() throws Exception {
+
+    }
+
+    @Override
+    public void ImportCandidates() throws Exception {
+
+    }
+
     @Override
     public List<EEvents> CheckEvents() {
         return null;

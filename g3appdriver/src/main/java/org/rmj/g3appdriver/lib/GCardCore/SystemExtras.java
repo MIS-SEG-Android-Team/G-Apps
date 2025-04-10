@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBranchInfo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DEvents;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPromo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRedeemItemInfo;
@@ -31,6 +32,7 @@ import org.rmj.g3appdriver.etc.GuanzonAppConfig;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class SystemExtras implements iGCardSystem{
     private final DPromo poPromo;
     private final DEvents poEvents;
     private final DSubEvents poSubEvnts;
+    private final DCandidates poCandidates;
     private final HttpHeaders poHeaders;
     private final GuanzonAppConfig poConfig;
     private final ServerAPIs poAPI;
@@ -53,6 +56,7 @@ public class SystemExtras implements iGCardSystem{
         this.poPromo = GGC_GuanzonAppDB.getInstance(mContext).EPromoDao();
         this.poEvents = GGC_GuanzonAppDB.getInstance(mContext).EventDao();
         this.poSubEvnts = GGC_GuanzonAppDB.getInstance(mContext).SubEvntsDao();
+        this.poCandidates = GGC_GuanzonAppDB.getInstance(mContext).CandidatesDao();
 
         this.poHeaders = new HttpHeaders(mContext);
         this.poConfig = new GuanzonAppConfig(mContext);
@@ -509,15 +513,38 @@ public class SystemExtras implements iGCardSystem{
 
                 JSONArray laArr = loResponse.getJSONArray("payload");
 
-                for (int i = 0; i < laArr.length()){
+                for (int i = 0; i < laArr.length(); i++){
 
                     JSONObject loJson = laArr.getJSONObject(i);
 
                     ECandidates candidates = new ECandidates();
                     candidates.setsGroupIDx(loJson.getString("sGroupIDx"));
-                    candidates.setsEvntIDxx(loJson.getString("sContstID"));
-                    candidates.setsEntryNme(loJson.getString("sEntryNme"));
-                    candidates.setsSchoolNm(loJson.getString("sEntryNme"));
+                    candidates.setsEvntIDxx(loJson.getString("contstIDxx"));
+
+                    JSONObject loDetails = laArr.getJSONObject(i).getJSONObject("sDetails");
+
+                    candidates.setsEntryNme(loDetails.getString("00001"));
+                    candidates.setsSchoolNm(loDetails.getString("00002"));
+
+                    //todo convert to list of string the urls for image details
+                    List<String> laDetails = new ArrayList<>();
+
+                    //todo iterate based on retrieved size of api result
+                    for (int x = 0; x < loDetails.length() - 3; x++) {
+                        String imgKey = "0000" + String.valueOf(3 + x);
+                        laDetails.add('"'+loDetails.get(imgKey).toString()+'"');
+                    }
+
+                    //todo put all urls to json object
+                    JSONObject loImg = new JSONObject();
+                    loImg.put("master", loDetails.get("00003"));
+                    loImg.put("details", laDetails);
+
+                    candidates.setUrlImgs(loImg.toString());
+                    candidates.setVotes(0);
+
+                    //todo save to local
+                    poCandidates.insert(candidates);
                 }
 
             }else {

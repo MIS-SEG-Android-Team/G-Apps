@@ -455,18 +455,9 @@ public class Dialog_BarcodeDetails {
                 if (tie_terms.getText().toString().isEmpty()){
                     message = "Terms is required";
                     return false;
-                } else if (tie_sc.getText().toString().isEmpty()) {
-                    message = "SC Amount is required";
-                    return false;
-                }else {
-
-                    if (Integer.parseInt(tie_sc.getText().toString()) <= 0.00){
-                        message = "Invalid SC Amount";
-                        return false;
-                    }else {
-                        return true;
-                    }
                 }
+
+                return true;
             }
 
         }

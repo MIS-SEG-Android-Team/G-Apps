@@ -9,26 +9,26 @@ public class ECandidates {
 
     @NonNull
     @ColumnInfo(name = "sEvntIDxx")
-    private String sEvntIDxx;
+    public String sEvntIDxx;
 
     @NonNull
     @ColumnInfo(name = "sGroupIDx")
-    private String sGroupIDx;
+    public String sGroupIDx;
 
     @ColumnInfo(name = "sEntryNme")
-    private String sEntryNme;
+    public String sEntryNme;
 
     @ColumnInfo(name = "sSchoolNm")
-    private String sSchoolNm;
+    public String sSchoolNm;
 
     @ColumnInfo(name = "sUserIDxx")
-    private String sUserIDxx;
+    public String sUserIDxx;
 
     @ColumnInfo(name = "urlImgs")
-    private String urlImgs;
+    public String urlImgs;
 
     @ColumnInfo(name = "nVotes")
-    private int nVotes = 0;
+    public int nVotes = 0;
 
     @ColumnInfo(name = "dVoted")
     public String dVoted;

@@ -115,9 +115,9 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
 
                 List<ECandidates> filteredCandidates = new ArrayList<>();
                 for (ECandidates values: candidates){
-                    if (values.getName().toLowerCase().contains(constraint.toString().toLowerCase())){
+                    if (values.getsEntryNme().toLowerCase().contains(constraint.toString().toLowerCase())){
                         filteredCandidates.add(values);
-                    }else if (values.getSchool().toLowerCase().contains(constraint.toString().toLowerCase())){
+                    }else if (values.getsSchoolNm().toLowerCase().contains(constraint.toString().toLowerCase())){
                         filteredCandidates.add(values);
                     }
                 }

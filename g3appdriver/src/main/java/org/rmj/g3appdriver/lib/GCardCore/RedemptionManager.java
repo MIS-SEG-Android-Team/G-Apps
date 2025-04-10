@@ -428,6 +428,16 @@ public class RedemptionManager implements iGCardSystem{
     }
 
     @Override
+    public void ImportSubEvents() throws Exception {
+
+    }
+
+    @Override
+    public void ImportCandidates() throws Exception {
+
+    }
+
+    @Override
     public LiveData<List<EEvents>> GetNewsEvents() {
         return null;
     }
