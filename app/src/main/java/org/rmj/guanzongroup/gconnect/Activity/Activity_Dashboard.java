@@ -50,6 +50,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.guanzongroup.com.creditapp.Activities.Activity_LoanProductList;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.etc.ConnectionUtil;
 import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.Account.AccountInfo;
@@ -765,17 +766,17 @@ public class Activity_Dashboard extends AppCompatActivity {
 
                     for (EEvents loEvent : laEvents){
 
-                        Dialog_Promo loDialog = new Dialog_Promo(Activity_Dashboard.this);
-
-                        loDialog.initDialog(loEvent.getImageURL(), (dialog) -> {
-                            Intent intent = new Intent(Activity_Dashboard.this, Activity_Browser.class);
-                            intent.putExtra("url_link", loEvent.getEventURL());
-                            intent.putExtra("args", "0");
-                            startActivity(intent);
-                            dialog.dismiss();
-                        });
-
-                        loDialog.show();
+//                        Dialog_Promo loDialog = new Dialog_Promo(Activity_Dashboard.this);
+//
+//                        loDialog.initDialog(loEvent.getImageURL(), (dialog) -> {
+//                            Intent intent = new Intent(Activity_Dashboard.this, Activity_Browser.class);
+//                            intent.putExtra("url_link", loEvent.getEventURL());
+//                            intent.putExtra("args", "0");
+//                            startActivity(intent);
+//                            dialog.dismiss();
+//                        });
+//
+//                        loDialog.show();
 
                     }
                 }

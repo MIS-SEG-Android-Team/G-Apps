@@ -12,17 +12,18 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.guanzongroup.gconnect.R;
 
 import java.util.List;
 
 public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider_Events> {
 
-    private final List<EEvents> laEvents;
+    private final List<ESub_Events> laEvents;
     private final ViewPager2 viewPager2;
     private final onSelectListener callback;
 
-    public Adapter_Events(List<EEvents> laEvents, ViewPager2 viewPager2, onSelectListener callback) {
+    public Adapter_Events(List<ESub_Events> laEvents, ViewPager2 viewPager2, onSelectListener callback) {
         this.laEvents = laEvents;
         this.viewPager2 = viewPager2;
         this.callback = callback;
@@ -40,7 +41,7 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
     public void onBindViewHolder(@NonNull VHSlider_Events holder, int position) {
 
         Glide.with(holder.itemView)
-                .load(laEvents.get(position).getImageURL())
+                .load(laEvents.get(position).getsImageURL())
                 .fitCenter()
                 .into(holder.btn_event);
 
@@ -56,7 +57,7 @@ public class Adapter_Events extends RecyclerView.Adapter<Adapter_Events.VHSlider
             @Override
             public void onClick(View v) {
 
-                callback.onSelect(position, laEvents.get(position).getTransNox());
+                callback.onSelect(position, laEvents.get(position).getsSubEventIDxx());
 
             }
         });

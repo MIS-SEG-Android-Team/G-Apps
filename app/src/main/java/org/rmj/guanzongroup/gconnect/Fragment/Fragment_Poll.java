@@ -23,6 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.guanzongroup.gconnect.Activity.Activity_Dashboard;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Candidates;
 import org.rmj.guanzongroup.gconnect.R;
@@ -41,7 +42,6 @@ import java.util.List;
 public class Fragment_Poll extends Fragment {
 
     private VMPoll mViewModel;
-
     private TabLayout tab_candidates;
     private TextInputEditText tv_search;
     private RecyclerView rv_candidates;
@@ -59,10 +59,9 @@ public class Fragment_Poll extends Fragment {
         mViewModel = new ViewModelProvider(requireActivity()).get(VMPoll.class);
 
         initViews(view);
+        initObservables();
         initListener();
         initArguments(); //todo: trigger on first view initialization
-        initObservables();
-        initDataArgs();
 
         return view;
 
@@ -92,34 +91,14 @@ public class Fragment_Poll extends Fragment {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
-                switch (tab.getPosition()){
-
-                    case 0:
-                        initCandidates("M00120000001");
-                        break;
-                    case 1:
-                        initCandidates("M00120000002");
-                        break;
-                    case 2:
-                        initCandidates("M00120000003");
-                        break;
-                    case 3:
-                        initCandidates("M00120000004");
-                        break;
-                }
-
+                initCandidates(tab.getTag().toString());
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
 
         tv_search.addTextChangedListener(new TextWatcher() {
@@ -159,74 +138,65 @@ public class Fragment_Poll extends Fragment {
 
     private void initArguments(){
 
-        if (tab_candidates != null){
+        if (argsParams != null){
 
-            if (argsParams != null){
-
-                if (argsParams.containsKey("eventID")){
-
-                    String eventID = argsParams.getString("eventID");
-
-                    selectEventTab(eventID);
-                }
-
+            if (argsParams.containsKey("eventID")){
+                String eventID = argsParams.getString("eventID");
+                initCandidates(eventID);
             }
 
         }
 
     }
 
-    private void initDataArgs(){
-
-        if (argsParams != null){
-            initCandidates(argsParams.getString("eventID"));
-        }
-
-    }
-
     private void initObservables(){
 
-        mViewModel.getEvents().observe(getViewLifecycleOwner(), new Observer<List<EEvents>>() {
+        mViewModel.GetCategories().observe(getViewLifecycleOwner(), new Observer<List<ESub_Events>>() {
             @Override
-            public void onChanged(List<EEvents> eEvents) {
+            public void onChanged(List<ESub_Events> eSubEvents) {
 
                 try {
 
-                    if (eEvents == null) {
-                        return;
-                    }
+                    if (eSubEvents != null){
 
-                    if (eEvents.size() <= 0){
-                        return;
-                    }
+                        List<ESub_Events> laActiveCategories = new ArrayList<>();
+                        for (int x = 0; x < eSubEvents.size(); x++){
 
-                    List<EEvents> laEvents = new ArrayList<>();
-                    for (EEvents loEvent : eEvents){
+                            tab_candidates.addTab(
+                                    tab_candidates
+                                            .newTab()
+                                            .setTag(eSubEvents.get(x).getsSubEventIDxx())
+                                            .setText(eSubEvents.get(x).getsDescript()));
 
-                        if (!isEventValid(loEvent.getEvntFrom(), loEvent.getEvntThru())){ //todo if event is not valid, disable tab display
-                            disableEventTab(loEvent.getTransNox()); //todo allow event tab
-                        }else {
-                            selectEventTab(loEvent.getTransNox());
-                            laEvents.add(loEvent); //todo add to active events
+                            EEvents loEvent = mViewModel.getEventByID(eSubEvents.get(x).getsEventIDx());
+
+                            if (!isEventValid(loEvent.getEvntFrom(), loEvent.getEvntThru())){
+                                tab_candidates.getTabAt(x).view.setEnabled(false); //todo disable tab if event date is not valid
+                            }else {
+                                tab_candidates.getTabAt(x).view.setEnabled(true); //todo enable tab if event date is valid
+
+                                laActiveCategories.add(eSubEvents.get(x));
+                            }
+
                         }
 
-                    }
+                        //todo do not reload data if arguments are passed (triggered from event list)
+                        if (argsParams != null) {
+                            return;
+                        }
 
-                    if (argsParams != null) { //todo do not reload data if arguments are passed (triggered from event list)
-                        return;
-                    }
+                        if (argsParams.containsKey("eventID")) {
+                            return;
+                        }
 
-                    if (argsParams.containsKey("eventID")) { //todo do not reload data if arguments are passed (triggered from event list)
-                        return;
-                    }
+                        //todo initialize candidates for the first event on list, if no arguments are passed
+                        initCandidates(laActiveCategories.get(0).getsSubEventIDxx());
 
-                    //todo initialize candidates for the first event on list
-                    initCandidates(laEvents.get(0).getTransNox());
+                    }
 
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-
             }
         });
 
@@ -234,78 +204,96 @@ public class Fragment_Poll extends Fragment {
 
     private void initCandidates(String eventIDxx){
 
-        mViewModel.GetCandidates(eventIDxx).observe(getViewLifecycleOwner(), new Observer<List<ECandidates>>() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onChanged(List<ECandidates> eCandidates) {
+        if (tab_candidates != null){
 
-                try {
+            for (int ctr = 0; ctr < tab_candidates.getTabCount(); ctr++){
 
-                    if (eCandidates == null){
+                if (tab_candidates.getTabAt(ctr).getTag() == null){
+                    break;
+                }
 
-                        //todo display error message on toolbar, if no candidates found
-                        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+                String loTabID = (String) tab_candidates.getTabAt(ctr).getTag();
+                if (loTabID.equalsIgnoreCase(eventIDxx)) {
 
-                        if (loParent != null){
-                            loParent.initToolbarMessage("Oops! Sorry, No candidates found for this event. \n\nCheck your connection or try refreshing the app");
-                        }
-
-                        return;
-                    }
-
-                    //todo if not empty, initialize adapter
-                    adapter_candidates = new Adapter_Candidates(requireContext(), getParentFragment(), eCandidates, mViewModel);
-
-                    adapter_candidates.notifyDataSetChanged();
-
-                    rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
-                    rv_candidates.setAdapter(adapter_candidates);
-
-                    if (eCandidates.size() <= 0){
-
-                        //todo display error message on toolbar, if no candidates found
-                        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
-
-                        if (loParent != null){
-                            loParent.initToolbarMessage("Oops!\n\n Sorry, no candidates found for this event. \n\nCheck your connection or try refreshing the app");
-                        }
-
-                        return;
-                    }
-
-                    //todo observe vote counts, after loading candidates
-                    mViewModel.ObserveVoteCounts(eventIDxx).observe(getViewLifecycleOwner(), new Observer<DCandidates.LatestVote>() {
-                        @Override
-                        public void onChanged(DCandidates.LatestVote lastVote) {
-
-                            try {
-
-                                if (lastVote != null){
-
-                                    //todo if not empty, initialize toolbar message displaying vote balance
-                                    Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
-                                    if (loParent != null){
-
-                                        if (hasVotedToday(lastVote)){ //todo if voted today, notify user to choose another event on toolbar
-                                            loParent.initToolbarMessage("You have consumed your vote(s) on this day.\n\nChoose another event.");
-                                        } else { //todo if not, display vote balance on toolbar
-                                            loParent.initToolbarMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
-                                        }
-
-                                    }
-                                }
-
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-                }catch (Exception e){
-                    e.printStackTrace();
+                    tab_candidates.selectTab(tab_candidates.getTabAt(ctr), true);
+                    break;
                 }
             }
-        });
+
+            mViewModel.GetCandidates(eventIDxx).observe(getViewLifecycleOwner(), new Observer<List<ECandidates>>() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void onChanged(List<ECandidates> eCandidates) {
+
+                    try {
+
+                        if (eCandidates == null){
+
+                            //todo display error message on toolbar, if no candidates found
+                            Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+
+                            if (loParent != null){
+                                loParent.initToolbarMessage("Oops! Sorry, No candidates found for this event. \n\nCheck your connection or try refreshing the app");
+                            }
+
+                            return;
+                        }
+
+                        //todo if not empty, initialize adapter
+                        adapter_candidates = new Adapter_Candidates(requireContext(), getParentFragment(), eCandidates, mViewModel);
+
+                        adapter_candidates.notifyDataSetChanged();
+
+                        rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
+                        rv_candidates.setAdapter(adapter_candidates);
+
+                        if (eCandidates.size() <= 0){
+
+                            //todo display error message on toolbar, if no candidates found
+                            Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+
+                            if (loParent != null){
+                                loParent.initToolbarMessage("Oops!\n\n Sorry, no candidates found for this event. \n\nCheck your connection or try refreshing the app");
+                            }
+
+                            return;
+                        }
+
+                        //todo observe vote counts, after loading candidates
+                        mViewModel.ObserveVoteCounts(eventIDxx).observe(getViewLifecycleOwner(), new Observer<DCandidates.LatestVote>() {
+                            @Override
+                            public void onChanged(DCandidates.LatestVote lastVote) {
+
+                                try {
+
+                                    if (lastVote != null){
+
+                                        //todo if not empty, initialize toolbar message displaying vote balance
+                                        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+                                        if (loParent != null){
+
+                                            if (hasVotedToday(lastVote)){ //todo if voted today, notify user to choose another event on toolbar
+                                                loParent.initToolbarMessage("You have consumed your vote(s) on this day.\n\nChoose another event.");
+                                            } else { //todo if not, display vote balance on toolbar
+                                                loParent.initToolbarMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
+                                            }
+
+                                        }
+                                    }
+
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+        }
     }
 
     private Boolean isEventValid(String dtFrom, String dtThru) throws ParseException {
@@ -313,8 +301,8 @@ public class Fragment_Poll extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             LocalDate currentDt = LocalDateTime.now().toLocalDate();
-            LocalDate eventFrom = LocalDate.parse(dtFrom);
-            LocalDate eventThru = LocalDate.parse(dtThru);
+            LocalDate eventFrom = LocalDateTime.parse(dtFrom, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
+            LocalDate eventThru = LocalDateTime.parse(dtThru, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
 
             //todo: current date is equal to event date
             if (currentDt.isEqual(eventFrom) || currentDt.isEqual(eventThru)){
@@ -349,48 +337,6 @@ public class Fragment_Poll extends Fragment {
             }
         }
 
-    }
-
-    private void selectEventTab(String eventID){
-
-        switch (eventID){
-
-            case "M00120000001": //dreamboy
-                tab_candidates.selectTab(tab_candidates.getTabAt(0), true);
-                break;
-
-            case "M00120000002": //campus princess
-                tab_candidates.selectTab(tab_candidates.getTabAt(1), true);
-                break;
-
-            case "M00120000003": //biker babe
-                tab_candidates.selectTab(tab_candidates.getTabAt(2), true);
-                break;
-
-            case "M00120000004": //guanzon bulilit
-                tab_candidates.selectTab(tab_candidates.getTabAt(3), true);
-                break;
-        }
-
-    }
-
-    private void disableEventTab(String eventID){
-
-        switch (eventID){
-
-            case "M00120000001":
-                tab_candidates.getTabAt(0).view.setEnabled(false);
-                break;
-            case "M00120000002":
-                tab_candidates.getTabAt(1).view.setEnabled(false);
-                break;
-            case "M00120000003":
-                tab_candidates.getTabAt(2).view.setEnabled(false);
-                break;
-            case "M00120000004":
-                tab_candidates.getTabAt(3).view.setEnabled(false);
-                break;
-        }
     }
 
     @SuppressLint("SimpleDateFormat")

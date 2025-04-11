@@ -2,6 +2,7 @@ package org.rmj.guanzongroup.gconnect.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,13 +63,13 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
 
             //todo: load image urls to view
             JSONObject urlImgs = new JSONObject(candidatesFiltered.get(position).getUrlImgs());
-            String urlPrimary = urlImgs.getString("primary");
+            String urlPrimary = urlImgs.getString("master");
 
             ImageFileManager.LoadImageToView(urlPrimary,
                     holder.img_candidate);
 
             //todo: display total votes
-            holder.mtv_votes.setText(candidatesFiltered.get(position).getVotes());
+            holder.mtv_votes.setText(String.valueOf(candidatesFiltered.get(position).getVotes()));
 
             //todo: view candidate details
             holder.img_candidate.setOnClickListener(new View.OnClickListener() {
@@ -143,10 +144,10 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
         }
     }
 
-    public class VH_Candidates extends RecyclerView.ViewHolder {
+    public static class VH_Candidates extends RecyclerView.ViewHolder {
 
-        private ShapeableImageView img_candidate;
-        private MaterialTextView mtv_votes;
+        private final ShapeableImageView img_candidate;
+        private final MaterialTextView mtv_votes;
 
         public VH_Candidates(@NonNull View itemView) {
             super(itemView);

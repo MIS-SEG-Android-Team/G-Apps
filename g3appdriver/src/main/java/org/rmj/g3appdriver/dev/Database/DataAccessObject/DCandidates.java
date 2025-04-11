@@ -15,6 +15,9 @@ public interface DCandidates {
     @Insert
     void insert(ECandidates candidates);
 
+    @Query("DELETE FROM Guanzon_Candidates")
+    void deleteAll();
+
     @Query("SELECT * FROM Guanzon_Candidates WHERE sEvntIDxx = :categoryID ORDER BY sGroupIDx ASC")
     LiveData<List<ECandidates>> GetAllCandidates(String categoryID);
 

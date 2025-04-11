@@ -13,6 +13,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
 import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.g3appdriver.dev.Repositories.RMcBrand;
 import org.rmj.g3appdriver.dev.Repositories.RNotificationInfo;
@@ -300,6 +301,16 @@ public class VMHome extends AndroidViewModel {
     public LiveData<List<EEvents>> getEvents() {
         poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
         return poSystem.GetNewsEvents();
+    }
+
+    public EEvents getEventBYID(String sEventID){
+        poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
+        return poSystem.GetEventByID(sEventID);
+    }
+
+    public LiveData<List<ESub_Events>> getEventCategories(){
+        poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
+        return poSystem.GetEventCategories();
     }
 
     public void CheckPromotions(OnCheckPromotions listener) {

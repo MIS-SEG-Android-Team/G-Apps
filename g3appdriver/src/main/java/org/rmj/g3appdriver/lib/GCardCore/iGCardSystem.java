@@ -13,6 +13,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
 import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
 import org.rmj.g3appdriver.dev.Database.Entities.ERedeemablesInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
 
@@ -46,6 +47,7 @@ public interface iGCardSystem {
     LiveData<List<EPromo>> GetPromotions();
 
     LiveData<List<EEvents>> GetNewsEvents();
+    LiveData<List<ESub_Events>> GetEventCategories();
 
     String GetMessage();
 
@@ -100,6 +102,8 @@ public interface iGCardSystem {
     void SaveNewsEvents(JSONObject detail) throws Exception;
     void ImportSubEvents() throws Exception;
     void ImportCandidates() throws Exception;
+
+    EEvents GetEventByID(String sEventIDxx);
     List<EEvents> CheckEvents();
 }
 

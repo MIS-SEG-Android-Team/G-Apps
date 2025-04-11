@@ -1,10 +1,13 @@
 package org.rmj.g3appdriver.dev.Database.DataAccessObject;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Query;
 import androidx.room.Upsert;
 
 import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
+
+import java.util.List;
 
 @Dao
 public interface DSubEvents {
@@ -14,4 +17,7 @@ public interface DSubEvents {
 
     @Query("DELETE FROM Sub_Events")
     void deleteall();
+
+    @Query("SELECT * FROM Sub_Events")
+    LiveData<List<ESub_Events>> getEventCategories();
 }

@@ -25,6 +25,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.g3appdriver.etc.ViewPagerProperty;
 import org.rmj.guanzongroup.ganado.Activities.Activity_ProductSelection;
@@ -191,9 +192,9 @@ public class Fragment_Home extends Fragment {
 
         /** GET ALL EVENTS IMPORTED**/
 
-        mViewModel.getEvents().observe(getViewLifecycleOwner(), new Observer<List<EEvents>>() {
+        mViewModel.getEventCategories().observe(getViewLifecycleOwner(), new Observer<List<ESub_Events>>() {
             @Override
-            public void onChanged(List<EEvents> eEvents) {
+            public void onChanged(List<ESub_Events> eSubEvents) {
 
                 try {
 
@@ -203,18 +204,25 @@ public class Fragment_Home extends Fragment {
                         return;
                     }
 
-                    if (eEvents != null){
+                    if (eSubEvents != null){
 
-                        if (eEvents.size() > 0){
+                        if (eSubEvents.size() > 0){
 
                             //todo: initiate list of active events
-                            List<EEvents> laActiveEvents = new ArrayList<>();
-                            for (EEvents loEvent : eEvents){
+                            List<ESub_Events> laActiveEvents = new ArrayList<>();
+                            for (ESub_Events loEvent : eSubEvents){
 
-                                //todo if event is valid, add to active events
-                                if (isEventValid(loEvent.getEvntFrom(), loEvent.getEvntThru())){
+                                //todo get main event if from category
+                                if (mViewModel.getEventBYID(loEvent.getsEventIDx()) != null){
 
-                                    laActiveEvents.add(loEvent);
+                                    EEvents loMainEvent = mViewModel.getEventBYID(loEvent.getsEventIDx());
+
+                                    //todo if event is valid, add to active events
+                                    if (isEventValid(loMainEvent.getEvntFrom(), loMainEvent.getEvntThru())){
+
+                                        laActiveEvents.add(loEvent);
+                                    }
+
                                 }
                             }
 
@@ -279,6 +287,7 @@ public class Fragment_Home extends Fragment {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
+
             }
         });
 
@@ -338,9 +347,9 @@ public class Fragment_Home extends Fragment {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            LocalDate currentDt = LocalDateTime.now().toLocalDate();
-            LocalDate eventFrom = LocalDate.parse(dtFrom);
-            LocalDate eventThru = LocalDate.parse(dtThru);
+            LocalDate currentDt = LocalDate.now();
+            LocalDate eventFrom = LocalDateTime.parse(dtFrom, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
+            LocalDate eventThru = LocalDateTime.parse(dtThru, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
 
             //todo: current date is equal to event date
             if (currentDt.isEqual(eventFrom) || currentDt.isEqual(eventThru)){

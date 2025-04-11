@@ -36,7 +36,7 @@ public class ServerAPIs {
     private static final String URL_IMPORT_EVENTS = GCARD + "import_events.php";
     private static final String URL_IMPORT_SUB_EVENTS = "gfest/getEvents.php";
     private static final String URL_IMPORT_EVENTS_PAGEANT = "gfest/getContests.php";
-    private static final String URL_IMPORT_EVENTS_CANDIDATES = "gfest/getContestParticipants.php";
+    private static final String URL_IMPORT_EVENTS_CANDIDATES = "gfest/getContestParticipantsMeta.php";
     private static final String URL_CHANGE_PASSWORD = SECURITY + "acctupdate.php";
     private static final String URL_REQUEST_DEVICES = SECURITY + "acctdevice.php";
     private static final String URL_CLIENT_LOGIN = SECURITY + "signin.php";

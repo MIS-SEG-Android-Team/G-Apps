@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGcardApp;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRedeemItemInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 import org.rmj.g3appdriver.dev.Repositories.RRedeemablesInfo;
 import org.rmj.g3appdriver.dev.ServerRequest.ServerAPIs;
@@ -453,14 +454,18 @@ public class RedemptionManager implements iGCardSystem{
     }
 
     @Override
-    public Boolean ValidateGCardInfo(String sFrstnm, String sLstnm, String sMdnm, String sSuffix, String dBirthdt, String sGCardNox) {
-        return null;
-    }
+    public Boolean ValidateGCardInfo(String sFrstnm, String sLstnm, String sMdnm, String sSuffix, String dBirthdt, String sGCardNox) {return null;}
 
     @Override
     public List<EEvents> CheckEvents() {
         return null;
     }
+
+    @Override
+    public LiveData<List<ESub_Events>> GetEventCategories() {return null;}
+
+    @Override
+    public EEvents GetEventByID(String sEventIDxx) {return null;}
 
     public boolean isPointsValid(double fnItemPts){
         String lsCrdNmbr = poGcard.getCardNo();

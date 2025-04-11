@@ -502,7 +502,7 @@ public class SystemExtras implements iGCardSystem{
 
         JSONObject params = new JSONObject();
 
-        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportTabulationEventsAPI(), params.toString(), poHeaders.getHeaders());
+        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportCandidatesAPI(), params.toString(), poHeaders.getHeaders());
 
         if (lsResponse != null){
 
@@ -513,6 +513,11 @@ public class SystemExtras implements iGCardSystem{
 
                 JSONArray laArr = loResponse.getJSONArray("payload");
 
+                Log.d("PAYLOAD", loResponse.toString());
+
+                //todo reset data to local
+                poCandidates.deleteAll();
+
                 for (int i = 0; i < laArr.length(); i++){
 
                     JSONObject loJson = laArr.getJSONObject(i);
@@ -521,7 +526,7 @@ public class SystemExtras implements iGCardSystem{
                     candidates.setsGroupIDx(loJson.getString("sGroupIDx"));
                     candidates.setsEvntIDxx(loJson.getString("contstIDxx"));
 
-                    JSONObject loDetails = laArr.getJSONObject(i).getJSONObject("sDetails");
+                    JSONObject loDetails = new JSONObject(laArr.getJSONObject(i).getString("sDetails"));
 
                     candidates.setsEntryNme(loDetails.getString("00001"));
                     candidates.setsSchoolNm(loDetails.getString("00002"));
@@ -530,9 +535,12 @@ public class SystemExtras implements iGCardSystem{
                     List<String> laDetails = new ArrayList<>();
 
                     //todo iterate based on retrieved size of api result
-                    for (int x = 0; x < loDetails.length() - 3; x++) {
-                        String imgKey = "0000" + String.valueOf(3 + x);
-                        laDetails.add('"'+loDetails.get(imgKey).toString()+'"');
+                    for (int x = 0; x < loDetails.length(); x++) {
+
+                        if (x > 2){
+                            String imgKey = "0000" + String.valueOf(x + 1);
+                            laDetails.add('"'+loDetails.get(imgKey).toString()+'"');
+                        }
                     }
 
                     //todo put all urls to json object
@@ -543,7 +551,6 @@ public class SystemExtras implements iGCardSystem{
                     candidates.setUrlImgs(loImg.toString());
                     candidates.setVotes(0);
 
-                    //todo save to local
                     poCandidates.insert(candidates);
                 }
 
@@ -584,4 +591,13 @@ public class SystemExtras implements iGCardSystem{
         return poEvents.CheckEvent();
     }
 
+    @Override
+    public EEvents GetEventByID(String sEventIDxx) {
+        return poEvents.getEventByIDxx(sEventIDxx);
+    }
+
+    @Override
+    public LiveData<List<ESub_Events>> GetEventCategories() {
+        return poSubEvnts.getEventCategories();
+    }
 }

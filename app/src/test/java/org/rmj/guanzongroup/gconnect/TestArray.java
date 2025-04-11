@@ -10,13 +10,9 @@ public class TestArray {
     @Test
     public void TestArrayString() throws JSONException {
 
-        JSONObject loObj =  new JSONObject("{'primary': 'http://192.165.10.65/candidatesimage/dreamboy/akio/1.jpg'" +
-                ", 'detail': ['http://192.165.10.65/candidatesimage/dreamboy/akio/1.jpg'] }");
+        JSONObject loVal = new JSONObject("{\"master\":\"https:\\/\\/restgk.guanzongroup.com.ph\\/img\\/GF2025\\/campus\\/1\\/1.jpg\",\"details\":\"[\\\"https:\\/\\/restgk.guanzongroup.com.ph\\/img\\/GF2025\\/campus\\/1\\/1.jpg\\\", \\\"https:\\/\\/restgk.guanzongroup.com.ph\\/img\\/GF2025\\/campus\\/1\\/2.jpg\\\", \\\"https:\\/\\/restgk.guanzongroup.com.ph\\/img\\/GF2025\\/campus\\/1\\/3.jpg\\\", \\\"https:\\/\\/restgk.guanzongroup.com.ph\\/img\\/GF2025\\/campus\\/1\\/4.jpg\\\", \\\"https:\\/\\/restgk.guanzongroup.com.ph\\/img\\/GF2025\\/campus\\/1\\/5.jpg\\\"]\"}");
 
-        System.out.println(loObj.get("primary"));
-
-        JSONArray loArray = loObj.getJSONArray("detail");
-
-        System.out.println(loArray.get(0));
+        String lsDetails = loVal.getString("details");
+        JSONArray laDetails = new JSONArray(lsDetails);
     }
 }

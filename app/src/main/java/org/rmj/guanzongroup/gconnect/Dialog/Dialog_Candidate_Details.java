@@ -54,7 +54,6 @@ public class Dialog_Candidate_Details {
     private final Context context;
     private final ECandidates details;
     private final VMPoll mviewModel;
-    private final Fragment fragment;
 
     private AlertDialog poDialogx;
 
@@ -62,7 +61,6 @@ public class Dialog_Candidate_Details {
         this.context = context;
         this.details = details;
         this.mviewModel = mviewModel;
-        this.fragment = fragment;
     }
 
     public class Dialog_Details{
@@ -121,7 +119,7 @@ public class Dialog_Candidate_Details {
 
                 //todo: get url from list, and load to object
                 JSONObject loArr = new JSONObject(details.getUrlImgs());
-                JSONArray laUrls = loArr.getJSONArray("detail");
+                JSONArray laUrls = new JSONArray(loArr.getString("details"));
 
                 //todo: display first loaded image
                 ImageFileManager.LoadImageToView(laUrls.get(0).toString(), loImg);
@@ -129,7 +127,7 @@ public class Dialog_Candidate_Details {
                 //todo: set details
                 mtv_name.setText(details.getsEntryNme());
                 mtv_school.setText(details.getsSchoolNm());
-                mtv_votes.setText(details.getVotes());
+                mtv_votes.setText(String.valueOf(details.getVotes()));
 
                 img_btnShare.setOnClickListener(new View.OnClickListener() {
                     @Override

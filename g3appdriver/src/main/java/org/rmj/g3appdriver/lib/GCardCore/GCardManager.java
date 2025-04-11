@@ -21,6 +21,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
 import org.rmj.g3appdriver.dev.Database.Entities.ERedeemablesInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EServiceInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 import org.rmj.g3appdriver.dev.Repositories.RGCardTransactionLedger;
 import org.rmj.g3appdriver.dev.Repositories.RMCSerialRegistration;
@@ -749,14 +750,10 @@ public class GCardManager implements iGCardSystem{
     }
 
     @Override
-    public void ImportSubEvents() throws Exception {
-
-    }
+    public void ImportSubEvents() throws Exception {}
 
     @Override
-    public void ImportCandidates() throws Exception {
-
-    }
+    public void ImportCandidates() throws Exception {}
 
     @Override
     public List<EEvents> CheckEvents() {
@@ -764,6 +761,11 @@ public class GCardManager implements iGCardSystem{
     }
 
     @Override
-    public void ActivateGcard(String GcardNo) throws Exception {
-    }
+    public LiveData<List<ESub_Events>> GetEventCategories() {return null;}
+
+    @Override
+    public EEvents GetEventByID(String sEventIDxx) {return null;}
+
+    @Override
+    public void ActivateGcard(String GcardNo) throws Exception {}
 }

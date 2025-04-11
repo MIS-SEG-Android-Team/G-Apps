@@ -31,4 +31,7 @@ public interface DEvents {
 
     @Query("SELECT * FROM App_Event_Info ORDER BY dEvntFrom")
     List<EEvents> CheckEvent();
+
+    @Query("SELECT * FROM App_Event_Info WHERE sTransNox = :sTransNox")
+    EEvents getEventByIDxx(String sTransNox);
 }

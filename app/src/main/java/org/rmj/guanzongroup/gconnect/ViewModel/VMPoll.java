@@ -11,6 +11,7 @@ import androidx.lifecycle.LiveData;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Repositories.RCandidates;
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
 import org.rmj.g3appdriver.lib.GCardCore.iGCardSystem;
@@ -34,6 +35,16 @@ public class VMPoll extends AndroidViewModel {
     public LiveData<List<EEvents>> getEvents() {
         poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
         return poSystem.GetNewsEvents();
+    }
+
+    public EEvents getEventByID(String eventID) {
+        poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
+        return poSystem.GetEventByID(eventID);
+    }
+
+    public LiveData<List<ESub_Events>> GetCategories(){
+        poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
+        return poSystem.GetEventCategories();
     }
 
     public LiveData<List<ECandidates>> GetCandidates(String categoryID){
