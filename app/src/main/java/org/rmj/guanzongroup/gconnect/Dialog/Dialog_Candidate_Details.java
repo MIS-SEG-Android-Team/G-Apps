@@ -236,16 +236,10 @@ public class Dialog_Candidate_Details {
             if (mviewModel.CountCategoryVotesOfTheDay(details.getsEvntIDxx()) != null){
 
                 if (hasVotedToday(mviewModel.CountCategoryVotesOfTheDay(details.getsEvntIDxx()))){
-
                     btn_vote.setEnabled(false);
-
                 } else {
                     btn_vote.setEnabled(true);
                 }
-
-            }else {
-
-                btn_vote.setEnabled(true);
 
             }
         }

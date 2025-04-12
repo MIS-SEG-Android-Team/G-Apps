@@ -327,121 +327,36 @@ public class Fragment_PhoneBarcode extends Fragment {
     private void initDialogDetails(){
 
         //todo: initialize sub classes, for personal and payment info
-        Dialog_BarcodeDetails.Dialog_PersonalInfo dialogPersonalInfo =
-                new Dialog_BarcodeDetails(requireActivity()).new Dialog_PersonalInfo();
+        Dialog_BarcodeDetails dialogBarcodeInfo = new Dialog_BarcodeDetails(requireActivity(), townProvinceInfoList);
 
-        //todo: collect personal info result, initialize to QR data
-        dialogPersonalInfo.initDialogPersonalInfo(townProvinceInfoList, new Dialog_BarcodeDetails.Dialog_PersonalInfo.onDialogButton() {
+        dialogBarcodeInfo.initDialog(new Dialog_BarcodeDetails.onDialogButton() {
             @Override
-            public void onContinue(Dialog_BarcodeDetails.Personal_Info foVal) {
+            public void onGenerateQR(Dialog_BarcodeDetails.Barcode_Details foVal) {
 
                 try {
 
                     //todo: check parsed data, if not empty then initialize QR data and proceed to payment
                     if (ParsePersonalInfo(foVal) != null){
-
                         initQRData("sCustInfo", ParsePersonalInfo(foVal));
-
-                        Dialog_BarcodeDetails.Dialog_PaymentDetails dialogPaymentDetails =
-                                new Dialog_BarcodeDetails(requireActivity()).new Dialog_PaymentDetails();
-
-                        //todo: collect payment info result, initialize to QR data
-                        dialogPaymentDetails.initDialogPayment(new Dialog_BarcodeDetails.Dialog_PaymentDetails.onSubmit() {
-
-                            @Override
-                            public void onGenerateQR(Dialog_BarcodeDetails.Payment_Info foVal) {
-
-                                //todo: check parsed data, if not empty then collect result and initialize QR data
-                                if (ParsePaymentInfo(foVal) != null){
-
-                                    //todo: collect payment info result, initialize to QR data
-                                    initQRData("sPaymInfo", ParsePaymentInfo(foVal));
-
-                                    //todo: observe and collect scanned barcodes, if not empty then proceed to generating qr image
-                                    mviewModel.getBarcodeList().observe(getViewLifecycleOwner(), new Observer<List<EBarcode>>() {
-                                        @Override
-                                        public void onChanged(List<EBarcode> eBarcodes) {
-
-                                            if (eBarcodes != null){
-
-                                                if (eBarcodes.size() > 0){ //todo: if barcode list is not empty
-
-                                                    try {
-
-                                                        JSONArray loIEMI = new JSONArray(); //todo: initialize array
-
-                                                        for (EBarcode eBarcode: eBarcodes){
-
-                                                            loIEMI.put(eBarcode.getBarcode()); //todo: insert to json array
-                                                        }
-
-                                                        loQRData.put("sSerialNo", loIEMI); //todo: insert serial list to QR data
-
-                                                        //todo: generate qr image
-                                                        mviewModel.generateQR(loQRData, new VMBarcode.onGenerateQR() {
-                                                            @Override
-                                                            public void onGenerating() {
-                                                                dialogLoad.initDialog("Guanzon Connect", "Generating QR Image...");
-                                                                dialogLoad.show();
-                                                            }
-
-                                                            @Override
-                                                            public void onQRGenerated(Bitmap bitmap) {
-                                                                dialogLoad.dismiss();
-
-                                                                Dialog_BarcodeDetails.Dialog_QRImage  qrPreview =
-                                                                        new Dialog_BarcodeDetails(requireActivity()).new Dialog_QRImage();
-
-                                                                qrPreview.initDialogQRImage(bitmap);
-                                                            }
-
-                                                            @Override
-                                                            public void onQRGenerationFailed(String message) {
-                                                                dialogLoad.dismiss();
-
-                                                                initMessage(message, "Okay", "", 2, false, new onMessage() {
-                                                                    @Override
-                                                                    public void onPosBtnListener() {
-
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onNegBtnListener() {
-
-                                                                    }
-                                                                });
-                                                            }
-                                                        });
-
-                                                    }catch (Exception e){
-                                                        e.printStackTrace();
-                                                    }
-
-                                                }
-                                            }
-                                        }
-                                    });
-
-                                }else {
-
-                                    initMessage("Payment info qr data is empty", "Okay", "",
-                                            2, false, new onMessage() {
-                                                @Override
-                                                public void onPosBtnListener() {
-                                                }
-
-                                                @Override
-                                                public void onNegBtnListener() {
-                                                }
-                                            });
-                                }
-                            }
-
-                        });
-
                     }else {
-
                         initMessage("Personal info qr data is empty", "Okay", "",
+                                2, false, new onMessage() {
+                                    @Override
+                                    public void onPosBtnListener() {
+                                    }
+
+                                    @Override
+                                    public void onNegBtnListener() {
+                                    }
+                                });
+                        return;
+                    }
+
+                    //todo: check parsed data, if not empty then collect result and initialize QR data
+                    if (ParsePaymentInfo(foVal) != null){
+                        initQRData("sPaymInfo", ParsePaymentInfo(foVal));
+                    }else {
+                        initMessage("Payment info qr data is empty", "Okay", "",
                                 2, false, new onMessage() {
                                     @Override
                                     public void onPosBtnListener() {
@@ -453,13 +368,77 @@ public class Fragment_PhoneBarcode extends Fragment {
                                 });
                     }
 
+                    //todo: observe and collect scanned barcodes, if not empty then proceed to generating qr image
+                    mviewModel.getBarcodeList().observe(getViewLifecycleOwner(), new Observer<List<EBarcode>>() {
+                        @Override
+                        public void onChanged(List<EBarcode> eBarcodes) {
+
+                            if (eBarcodes != null){
+
+                                if (eBarcodes.size() > 0){ //todo: if barcode list is not empty
+
+                                    try {
+
+                                        JSONArray loIEMI = new JSONArray(); //todo: initialize array
+
+                                        for (EBarcode eBarcode: eBarcodes){
+
+                                            loIEMI.put(eBarcode.getBarcode()); //todo: insert to json array
+                                        }
+
+                                        loQRData.put("sSerialNo", loIEMI); //todo: insert serial list to QR data
+
+                                        //todo: generate qr image
+                                        mviewModel.generateQR(loQRData, new VMBarcode.onGenerateQR() {
+                                            @Override
+                                            public void onGenerating() {
+                                                dialogLoad.initDialog("Guanzon Connect", "Generating QR Image...");
+                                                dialogLoad.show();
+                                            }
+
+                                            @Override
+                                            public void onQRGenerated(Bitmap bitmap) {
+                                                dialogLoad.dismiss();
+
+                                                Dialog_BarcodeDetails.Dialog_QRImage  qrPreview =
+                                                        dialogBarcodeInfo.new Dialog_QRImage();
+
+                                                qrPreview.initDialogQRImage(bitmap);
+                                            }
+
+                                            @Override
+                                            public void onQRGenerationFailed(String message) {
+                                                dialogLoad.dismiss();
+
+                                                initMessage(message, "Okay", "", 2, false, new onMessage() {
+                                                    @Override
+                                                    public void onPosBtnListener() {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onNegBtnListener() {
+
+                                                    }
+                                                });
+                                            }
+                                        });
+
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            }
+                        }
+                    });
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
 
             }
         });
-
     }
 
     private void initQRData(String key, JSONObject data){
@@ -470,7 +449,7 @@ public class Fragment_PhoneBarcode extends Fragment {
         }
     }
 
-    private JSONObject ParsePersonalInfo(Dialog_BarcodeDetails.Personal_Info loVal){
+    private JSONObject ParsePersonalInfo(Dialog_BarcodeDetails.Barcode_Details loVal){
 
         try {
 
@@ -490,8 +469,7 @@ public class Fragment_PhoneBarcode extends Fragment {
             return null;
         }
     }
-
-    private JSONObject ParsePaymentInfo(Dialog_BarcodeDetails.Payment_Info loVal){
+    private JSONObject ParsePaymentInfo(Dialog_BarcodeDetails.Barcode_Details loVal){
 
         try {
 
@@ -508,10 +486,10 @@ public class Fragment_PhoneBarcode extends Fragment {
                     loObj.put("paymentForm", "0");
                     loObj.put("term", loVal.getTerms());
                     break;
-                case "northpoint":
+                case "financing":
                     loObj.put("paymentForm", "0");
                     loObj.put("term", loVal.getTerms());
-                    loObj.put("serviceCharge", loVal.getScAmt());
+                    loObj.put("financer", loVal.getFinancer());
                     break;
                 default:
                     loObj.put("paymentForm", "0");
@@ -525,7 +503,6 @@ public class Fragment_PhoneBarcode extends Fragment {
             return null;
         }
     }
-
     private void initMessage(String message, String btnPos, String btnNeg,
                                 int type, Boolean forConfirm, onMessage callback){
 
@@ -570,7 +547,6 @@ public class Fragment_PhoneBarcode extends Fragment {
         messageBox.show();
 
     }
-
     private interface onMessage{
         void onPosBtnListener();
         void onNegBtnListener();
