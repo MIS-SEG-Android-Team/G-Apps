@@ -298,11 +298,6 @@ public class VMHome extends AndroidViewModel {
         });
     }
 
-    public LiveData<List<EEvents>> getEvents() {
-        poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
-        return poSystem.GetNewsEvents();
-    }
-
     public EEvents getEventBYID(String sEventID){
         poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
         return poSystem.GetEventByID(sEventID);
@@ -328,8 +323,7 @@ public class VMHome extends AndroidViewModel {
                 }
 
                 if (poSystem.CheckEvents() != null) {
-                    List<EEvents> loEvent = poSystem.CheckEvents();
-                    laEvents = loEvent;
+                    laEvents = poSystem.CheckEvents();
                 }
 
                 return null;

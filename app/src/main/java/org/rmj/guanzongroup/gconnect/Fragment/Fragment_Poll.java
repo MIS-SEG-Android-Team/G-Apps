@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DVoteLogs;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
@@ -260,9 +261,9 @@ public class Fragment_Poll extends Fragment {
                         }
 
                         //todo observe vote counts, after loading candidates
-                        mViewModel.ObserveVoteCounts(eventIDxx).observe(getViewLifecycleOwner(), new Observer<DCandidates.LatestVote>() {
+                        mViewModel.ObserveVoteCounts(eventIDxx).observe(getViewLifecycleOwner(), new Observer<DVoteLogs.LatestVote>() {
                             @Override
-                            public void onChanged(DCandidates.LatestVote lastVote) {
+                            public void onChanged(DVoteLogs.LatestVote lastVote) {
 
                                 try {
 
@@ -340,7 +341,7 @@ public class Fragment_Poll extends Fragment {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private Boolean hasVotedToday(DCandidates.LatestVote lastVote) throws ParseException {
+    private Boolean hasVotedToday(DVoteLogs.LatestVote lastVote) throws ParseException {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 

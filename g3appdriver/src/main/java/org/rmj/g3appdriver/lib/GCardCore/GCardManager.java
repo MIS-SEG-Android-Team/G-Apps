@@ -767,5 +767,15 @@ public class GCardManager implements iGCardSystem{
     public EEvents GetEventByID(String sEventIDxx) {return null;}
 
     @Override
+    public void ImportVoteLogs() throws Exception {
+
+    }
+
+    @Override
+    public String SubmitVote(String sGroupIDxx) throws Exception {
+        return "";
+    }
+
+    @Override
     public void ActivateGcard(String GcardNo) throws Exception {}
 }

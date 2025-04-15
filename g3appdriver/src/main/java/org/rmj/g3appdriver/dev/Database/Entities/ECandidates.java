@@ -27,12 +27,6 @@ public class ECandidates {
     @ColumnInfo(name = "urlImgs")
     public String urlImgs;
 
-    @ColumnInfo(name = "nVotes")
-    public int nVotes = 0;
-
-    @ColumnInfo(name = "dVoted")
-    public String dVoted;
-
     @NonNull
     public String getsEvntIDxx() {
         return sEvntIDxx;
@@ -83,19 +77,4 @@ public class ECandidates {
         this.urlImgs = urlImgs;
     }
 
-    public int getVotes() {
-        return nVotes;
-    }
-
-    public void setVotes(int nVotes) {
-        this.nVotes = nVotes;
-    }
-
-    public String getdVoted() {
-        return dVoted;
-    }
-
-    public void setdVoted(String dVoted) {
-        this.dVoted = dVoted;
-    }
 }

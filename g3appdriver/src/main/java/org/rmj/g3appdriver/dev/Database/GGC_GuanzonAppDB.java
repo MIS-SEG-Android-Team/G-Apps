@@ -47,6 +47,7 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DServiceInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DSubEvents;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DTownInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DUserInfo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DVoteLogs;
 import org.rmj.g3appdriver.dev.Database.Entities.EAddressInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarangayInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarcode;
@@ -93,6 +94,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Database.Entities.ETokenInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ETownInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.EVoteLogs;
 
 @Database(entities = {
         EEvents.class,
@@ -140,7 +142,8 @@ import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
         EBingoCard.class,
         EBarcode.class,
         ESub_Events.class,
-        ECandidates.class}, version = 12, exportSchema = false)
+        ECandidates.class,
+        EVoteLogs.class}, version = 13, exportSchema = false)
 public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     private static final String TAG = "GuanzonApp_DB_Manager";
     private static GGC_GuanzonAppDB instance;
@@ -184,6 +187,7 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     public abstract DBarcode BarcodeDao();
     public abstract DSubEvents SubEvntsDao();
     public abstract DCandidates CandidatesDao();
+    public abstract DVoteLogs VoteLogsDao();
 
     public static synchronized GGC_GuanzonAppDB getInstance(Context context){
         if(instance == null){

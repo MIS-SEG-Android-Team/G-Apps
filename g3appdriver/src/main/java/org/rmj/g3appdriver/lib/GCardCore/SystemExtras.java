@@ -14,6 +14,7 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DEvents;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPromo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRedeemItemInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DSubEvents;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DVoteLogs;
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
@@ -23,6 +24,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
 import org.rmj.g3appdriver.dev.Database.Entities.ERedeemablesInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
+import org.rmj.g3appdriver.dev.Database.Entities.EVoteLogs;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 import org.rmj.g3appdriver.dev.ServerRequest.ServerAPIs;
 import org.rmj.g3appdriver.dev.ServerRequest.HttpHeaders;
@@ -33,6 +35,8 @@ import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,6 +50,7 @@ public class SystemExtras implements iGCardSystem{
     private final DEvents poEvents;
     private final DSubEvents poSubEvnts;
     private final DCandidates poCandidates;
+    private final DVoteLogs poVoteLogs;
     private final HttpHeaders poHeaders;
     private final GuanzonAppConfig poConfig;
     private final ServerAPIs poAPI;
@@ -57,6 +62,7 @@ public class SystemExtras implements iGCardSystem{
         this.poEvents = GGC_GuanzonAppDB.getInstance(mContext).EventDao();
         this.poSubEvnts = GGC_GuanzonAppDB.getInstance(mContext).SubEvntsDao();
         this.poCandidates = GGC_GuanzonAppDB.getInstance(mContext).CandidatesDao();
+        this.poVoteLogs = GGC_GuanzonAppDB.getInstance(mContext).VoteLogsDao();
 
         this.poHeaders = new HttpHeaders(mContext);
         this.poConfig = new GuanzonAppConfig(mContext);
@@ -402,8 +408,8 @@ public class SystemExtras implements iGCardSystem{
                     String lsResult = loResponse.getString("result");
 
                     if(lsResult.equalsIgnoreCase("success")){
-                        callback.OnSuccess(loResponse.toString());
                         SaveNewsEvents(loResponse);
+                        callback.OnSuccess(loResponse.toString());
                     } else {
                         JSONObject loError = loResponse.getJSONObject("error");
                         String lsMessage = loError.getString("message");
@@ -421,6 +427,11 @@ public class SystemExtras implements iGCardSystem{
 
             ImportCandidates();
 
+            Thread.sleep(1000);
+
+            ImportVoteLogs();
+
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -430,8 +441,6 @@ public class SystemExtras implements iGCardSystem{
     public void SaveNewsEvents(JSONObject detail) throws Exception {
 
         JSONArray laDetail = detail.getJSONArray("detail");
-
-        poEvents.deleteAll();
 
         for(int x = 0; x < laDetail.length(); x++){
 
@@ -513,8 +522,6 @@ public class SystemExtras implements iGCardSystem{
 
                 JSONArray laArr = loResponse.getJSONArray("payload");
 
-                Log.d("PAYLOAD", loResponse.toString());
-
                 //todo reset data to local
                 poCandidates.deleteAll();
 
@@ -564,6 +571,86 @@ public class SystemExtras implements iGCardSystem{
             }
 
         }
+    }
+
+    @Override
+    public void ImportVoteLogs() throws Exception {
+
+        JSONObject params = new JSONObject();
+
+        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportVoteLogsAPI(), params.toString(), poHeaders.getHeaders());
+
+        if (lsResponse != null) {
+
+            JSONObject loResponse = new JSONObject(lsResponse);
+            String lsResult = loResponse.getString("result");
+
+            if (lsResult.equalsIgnoreCase("success")) {
+
+                String lsDetails = loResponse.getString("payload");
+                JSONArray laVotes = new JSONArray(lsDetails);
+
+                poVoteLogs.deleteAll();
+
+                for (int i = 0; i < laVotes.length(); i++){
+
+                    JSONObject loJson = laVotes.getJSONObject(i);
+
+                    EVoteLogs loVote = new EVoteLogs();
+                    loVote.setsTransNoxx(loJson.getString("sTransNox"));
+                    loVote.setsSubEventIDxx(loJson.getString("sContstID"));
+                    loVote.setsGroupIDx(loJson.getString("sGroupIDx"));
+                    loVote.setnNoVotesx(loJson.getString("nNoVotesx"));
+                    loVote.setdVoted(loJson.getString("dLastVoted"));
+
+                    poVoteLogs.save(loVote);
+                }
+
+            }else {
+
+                JSONObject loError = loResponse.getJSONObject("error");
+                String lsMessage = loError.getString("message");
+
+                Log.d(TAG, lsMessage);
+
+            }
+
+        }
+    }
+
+    @Override
+    public String SubmitVote(String sGroupIDxx) throws Exception {
+
+        JSONObject params = new JSONObject();
+        params.put("sGroupIDxx", sGroupIDxx);
+
+        String lsResponse = WebClient.httpsPostJSon(poAPI.getSubmitVotesAPI(), params.toString(), poHeaders.getHeaders());
+
+        if (lsResponse != null) {
+
+            JSONObject loResponse = new JSONObject(lsResponse);
+            String lsResult = loResponse.getString("result");
+
+            if (lsResult.equalsIgnoreCase("error")) {
+
+                JSONObject loError = loResponse.getJSONObject("error");
+
+                return loError.getString("message");
+
+            }
+
+            poVoteLogs.updateVote(
+                    loResponse.getString("dTransact"),
+                    loResponse.getString("sGroupIDx"),
+                    loResponse.getString("sContstID"),
+                    loResponse.getString("sUserIDxx"));
+
+            return "Vote submitted successfully";
+
+        }
+
+        return "Server no response";
+
     }
 
     @Override

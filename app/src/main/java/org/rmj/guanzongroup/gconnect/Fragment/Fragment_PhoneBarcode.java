@@ -483,12 +483,11 @@ public class Fragment_PhoneBarcode extends Fragment {
                     loObj.put("paymentForm", "0");
                     break;
                 case "credit card":
-                    loObj.put("paymentForm", "0");
+                    loObj.put("paymentForm", "1");
                     loObj.put("term", loVal.getTerms());
                     break;
                 case "financing":
-                    loObj.put("paymentForm", "0");
-                    loObj.put("term", loVal.getTerms());
+                    loObj.put("paymentForm", "2");
                     loObj.put("financer", loVal.getFinancer());
                     break;
                 default:

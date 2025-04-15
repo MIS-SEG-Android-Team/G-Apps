@@ -9,12 +9,15 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DVoteLogs;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Repositories.RCandidates;
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
 import org.rmj.g3appdriver.lib.GCardCore.iGCardSystem;
+import org.rmj.g3appdriver.utils.Task.OnTaskExecuteListener;
+import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 
 import java.util.List;
 
@@ -32,11 +35,6 @@ public class VMPoll extends AndroidViewModel {
         poCandidates = new RCandidates(application);
     }
 
-    public LiveData<List<EEvents>> getEvents() {
-        poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
-        return poSystem.GetNewsEvents();
-    }
-
     public EEvents getEventByID(String eventID) {
         poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
         return poSystem.GetEventByID(eventID);
@@ -51,15 +49,49 @@ public class VMPoll extends AndroidViewModel {
         return poCandidates.GetCandidates(categoryID);
     }
 
-    public LiveData<DCandidates.LatestVote> ObserveVoteCounts(String categoryID){
+    public LiveData<DVoteLogs.LatestVote> ObserveVoteCounts(String categoryID){
         return poCandidates.ObserveVoteCounts(categoryID);
     }
 
-    public DCandidates.LatestVote CountCategoryVotesOfTheDay(String categoryID){
+    public DVoteLogs.LatestVote CountCategoryVotes(String categoryID){
         return poCandidates.GetVoteCount(categoryID);
     }
-
-    public void SubmitVote(String pageantID, String categoryID){
-        poCandidates.SubmitVote(pageantID, categoryID);
+    public int GetCandidateVotes(String sGroupIDx, String categoryID){
+        return poCandidates.GetCandidateVotes(sGroupIDx, categoryID);
     }
+
+    public void SubmitVote(String sGroupIDxx, onSubmitVote callback){
+        TaskExecutor.Execute(sGroupIDxx, new OnTaskExecuteListener() {
+            @Override
+            public void OnPreExecute() {
+                callback.onLoad();
+            }
+
+            @Override
+            public Object DoInBackground(Object args) {
+
+                try{
+
+                    poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
+                    return poSystem.SubmitVote((String) args);
+
+                }catch (Exception e){
+                    return e.getMessage();
+                }
+
+            }
+
+            @Override
+            public void OnPostExecute(Object object) {
+
+                callback.onResult((String) object);
+            }
+        });
+    }
+
+    public interface onSubmitVote{
+        void onLoad();
+        void onResult(String message);
+    }
+
 }

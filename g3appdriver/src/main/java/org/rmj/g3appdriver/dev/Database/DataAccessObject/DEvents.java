@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
+import androidx.room.Upsert;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Dao
 public interface DEvents {
 
-    @Insert
+    @Upsert
     void insert(EEvents events);
 
     @Insert

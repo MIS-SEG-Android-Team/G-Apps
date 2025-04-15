@@ -467,6 +467,16 @@ public class RedemptionManager implements iGCardSystem{
     @Override
     public EEvents GetEventByID(String sEventIDxx) {return null;}
 
+    @Override
+    public void ImportVoteLogs() throws Exception {
+
+    }
+
+    @Override
+    public String SubmitVote(String sGroupIDxx) throws Exception {
+        return "";
+    }
+
     public boolean isPointsValid(double fnItemPts){
         String lsCrdNmbr = poGcard.getCardNo();
         double lnTotalPt = poGcard.getGCardTotPoints(lsCrdNmbr);

@@ -37,6 +37,8 @@ public class ServerAPIs {
     private static final String URL_IMPORT_SUB_EVENTS = "gfest/getEvents.php";
     private static final String URL_IMPORT_EVENTS_PAGEANT = "gfest/getContests.php";
     private static final String URL_IMPORT_EVENTS_CANDIDATES = "gfest/getContestParticipantsMeta.php";
+    private static final String URL_IMPORT_VOTE_LOGS = "gfest/getVotes.php";
+    private static final String URL_IMPORT_SUBMIT_VOTES = "gfest/postSubmitVote.php";
     private static final String URL_CHANGE_PASSWORD = SECURITY + "acctupdate.php";
     private static final String URL_REQUEST_DEVICES = SECURITY + "acctdevice.php";
     private static final String URL_CLIENT_LOGIN = SECURITY + "signin.php";
@@ -286,6 +288,20 @@ public class ServerAPIs {
             return LOCAL + URL_IMPORT_EVENTS_CANDIDATES;
         }
         return LIVE + URL_IMPORT_EVENTS_CANDIDATES;
+    }
+
+    public String getImportVoteLogsAPI() {
+        if(isTestUnit){
+            return LOCAL + URL_IMPORT_VOTE_LOGS;
+        }
+        return LIVE + URL_IMPORT_VOTE_LOGS;
+    }
+
+    public String getSubmitVotesAPI() {
+        if(isTestUnit){
+            return LOCAL + URL_IMPORT_SUBMIT_VOTES;
+        }
+        return LIVE + URL_IMPORT_SUBMIT_VOTES;
     }
 
     public String getChangePasswordAPI() {

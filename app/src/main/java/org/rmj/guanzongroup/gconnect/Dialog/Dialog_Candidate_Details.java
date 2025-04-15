@@ -32,6 +32,7 @@ import com.google.android.material.textview.MaterialTextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DVoteLogs;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.etc.FacebookShare;
 import org.rmj.g3appdriver.etc.ViewPagerProperty;
@@ -127,7 +128,7 @@ public class Dialog_Candidate_Details {
                 //todo: set details
                 mtv_name.setText(details.getsEntryNme());
                 mtv_school.setText(details.getsSchoolNm());
-                mtv_votes.setText(String.valueOf(details.getVotes()));
+                mtv_votes.setText(String.valueOf(mviewModel.GetCandidateVotes(details.getsGroupIDx(), details.getsEvntIDxx())));
 
                 img_btnShare.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -226,16 +227,26 @@ public class Dialog_Candidate_Details {
                     v.setEnabled(false);
                     btn_vote.setText("VOTED");
 
-                    mviewModel.SubmitVote(details.getsGroupIDx(), details.getsEvntIDxx());
+                    mviewModel.SubmitVote(details.getsGroupIDx(), new VMPoll.onSubmitVote() {
+                        @Override
+                        public void onLoad() {
+
+                        }
+
+                        @Override
+                        public void onResult(String message) {
+
+                        }
+                    });
                 }
             });
         }
 
         private void allowVoting() throws ParseException {
 
-            if (mviewModel.CountCategoryVotesOfTheDay(details.getsEvntIDxx()) != null){
+            if (mviewModel.CountCategoryVotes(details.getsEvntIDxx()) != null){
 
-                if (hasVotedToday(mviewModel.CountCategoryVotesOfTheDay(details.getsEvntIDxx()))){
+                if (hasVotedToday(mviewModel.CountCategoryVotes(details.getsEvntIDxx()))){
                     btn_vote.setEnabled(false);
                 } else {
                     btn_vote.setEnabled(true);
@@ -245,7 +256,7 @@ public class Dialog_Candidate_Details {
         }
 
         @SuppressLint("SimpleDateFormat")
-        private Boolean hasVotedToday(DCandidates.LatestVote lastVote) throws ParseException {
+        private Boolean hasVotedToday(DVoteLogs.LatestVote lastVote) throws ParseException {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 

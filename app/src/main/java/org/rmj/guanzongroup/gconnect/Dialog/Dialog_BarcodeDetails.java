@@ -276,9 +276,7 @@ public class Dialog_BarcodeDetails {
                                 layout_personaldetails.setVisibility(View.VISIBLE);
 
                                 btn_continue.setText("Generate QR");
-                            }
-
-                            if (layout_personaldetails.getVisibility() == View.VISIBLE){
+                            }else if (layout_personaldetails.getVisibility() == View.VISIBLE){
                                 poDialogx.dismiss();
                                 callback.onGenerateQR(collectInfo()); //todo: return on submit
                             }
@@ -301,6 +299,21 @@ public class Dialog_BarcodeDetails {
                         }
                     }
                 });
+
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (layout_payment.getVisibility() == View.VISIBLE){
+                    poDialogx.dismiss();
+                }else if (layout_personaldetails.getVisibility() == View.VISIBLE){
+                    layout_personaldetails.setVisibility(View.GONE);
+                    layout_payment.setVisibility(View.VISIBLE);
+                    btn_continue.setText("CONTINUE");
+                }
 
             }
         });

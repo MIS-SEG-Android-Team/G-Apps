@@ -69,7 +69,11 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
                     holder.img_candidate);
 
             //todo: display total votes
-            holder.mtv_votes.setText(String.valueOf(candidatesFiltered.get(position).getVotes()));
+            int nVotes = mviewModel.GetCandidateVotes(
+                    candidatesFiltered.get(position).getsGroupIDx(),
+                    candidatesFiltered.get(position).getsEvntIDxx());
+
+            holder.mtv_votes.setText(String.valueOf(nVotes));
 
             //todo: view candidate details
             holder.img_candidate.setOnClickListener(new View.OnClickListener() {
