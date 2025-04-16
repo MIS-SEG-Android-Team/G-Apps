@@ -124,7 +124,7 @@ public class Fragment_Home extends Fragment {
     private void initAdapterData(int tabIndex){
 
         List<Adapter_Products.Product_Data> laProducts = new ArrayList<>();
-        String baseURL = "http://192.165.10.65/productimages/";
+        String baseURL = "https://restgk.guanzongroup.com.ph/img/prodinquire/";
 
         switch (tabIndex){
 

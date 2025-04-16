@@ -192,6 +192,7 @@ public class Fragment_Poll extends Fragment {
                                 initCandidates(argsParams.getString("eventID"));
                                 return;
                             }
+
                         }
 
                         initCandidates(laActiveCategories.get(0).getsSubEventIDxx());
@@ -222,7 +223,6 @@ public class Fragment_Poll extends Fragment {
                     //todo select tab index if tagged value match event id
                     String loTabID = (String) tab_candidates.getTabAt(ctr).getTag();
                     if (loTabID.equalsIgnoreCase(eventIDxx)) {
-
                         tab_candidates.selectTab(tab_candidates.getTabAt(ctr), true);
                         break;
                     }
@@ -230,6 +230,7 @@ public class Fragment_Poll extends Fragment {
                 }
             }
 
+            //todo load candidates
             mViewModel.GetCandidates(eventIDxx).observe(getViewLifecycleOwner(), new Observer<List<ECandidates>>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
@@ -266,41 +267,36 @@ public class Fragment_Poll extends Fragment {
                                 loParent.initToolbarMessage("Oops!\n\n Sorry, no candidates found for this event. \n\nCheck your connection or try refreshing the app");
                             }
 
-                            return;
                         }
 
-                        Thread.sleep(1000);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
 
-                        //todo observe vote counts, after loading candidates
-                        mViewModel.ObserveVoteCounts(eventIDxx).observe(getViewLifecycleOwner(), new Observer<DVoteLogs.LatestVote>() {
-                            @Override
-                            public void onChanged(DVoteLogs.LatestVote lastVote) {
+            //todo observe vote counts
+            mViewModel.ObserveVoteCounts(eventIDxx).observe(getViewLifecycleOwner(), new Observer<DVoteLogs.LatestVote>() {
+                @Override
+                public void onChanged(DVoteLogs.LatestVote lastVote) {
 
-                                try {
+                    try {
 
-                                    //todo if not empty, initialize toolbar message displaying vote balance
-                                    Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
-                                    if (loParent != null){
+                        //todo if not empty, initialize toolbar message displaying vote balance
+                        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+                        if (loParent != null){
 
-                                        if (lastVote != null){
+                            if (lastVote != null){
 
-                                            if (hasVotedToday(lastVote)){ //todo if voted today, notify user to choose another event on toolbar
-                                                loParent.initToolbarMessage("You have consumed your vote(s) on this day.\n\nChoose another event.");
-                                            } else { //todo if not, display vote balance on toolbar
-                                                loParent.initToolbarMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
-                                            }
-
-                                        }else { //todo if not, display vote balance on toolbar
-                                            loParent.initToolbarMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
-                                        }
-
-                                    }
-
-                                }catch (Exception e){
-                                    e.printStackTrace();
+                                if (hasVotedToday(lastVote)){ //todo if voted today, notify user to choose another event on toolbar
+                                    loParent.initToolbarMessage("You have consumed your vote(s) on this day.\n\nChoose another event.");
+                                } else { //todo if not, display vote balance on toolbar
+                                    loParent.initToolbarMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
                                 }
+
                             }
-                        });
+
+                        }
 
                     }catch (Exception e){
                         e.printStackTrace();
