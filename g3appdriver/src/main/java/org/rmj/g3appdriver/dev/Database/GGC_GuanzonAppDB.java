@@ -143,7 +143,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EVoteLogs;
         EBarcode.class,
         ESub_Events.class,
         ECandidates.class,
-        EVoteLogs.class}, version = 13, exportSchema = false)
+        EVoteLogs.class}, version = 14, exportSchema = false)
 public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     private static final String TAG = "GuanzonApp_DB_Manager";
     private static GGC_GuanzonAppDB instance;

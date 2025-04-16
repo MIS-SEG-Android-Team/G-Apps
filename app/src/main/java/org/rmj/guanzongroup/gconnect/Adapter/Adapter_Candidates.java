@@ -83,8 +83,7 @@ public class Adapter_Candidates extends RecyclerView.Adapter<Adapter_Candidates.
                     try {
 
                         //todo: initialize dialog details
-                        Dialog_Candidate_Details loDialog = new Dialog_Candidate_Details(context,
-                                fragment, candidatesFiltered.get(position), mviewModel);
+                        Dialog_Candidate_Details loDialog = new Dialog_Candidate_Details(context, candidatesFiltered.get(position), mviewModel);
 
                         loDialog.new Dialog_Details().initDialogDetails();
 

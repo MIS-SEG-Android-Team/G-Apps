@@ -23,4 +23,7 @@ public interface DCandidates {
             "WHERE sEvntIDxx = :categoryID ORDER BY sGroupIDx ASC")
     LiveData<List<ECandidates>> GetAllCandidates(String categoryID);
 
+    @Query("UPDATE Guanzon_Candidates SET dTimeStmp = :dTimeStmp WHERE sGroupIDx = :sGroupIDx AND sEvntIDxx = :sEvntIDxx")
+    void UpdateTimeStmp(String sGroupIDx, String sEvntIDxx, String dTimeStmp);
+
 }

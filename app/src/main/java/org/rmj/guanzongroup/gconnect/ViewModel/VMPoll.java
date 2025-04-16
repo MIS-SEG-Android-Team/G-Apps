@@ -60,7 +60,12 @@ public class VMPoll extends AndroidViewModel {
         return poCandidates.GetCandidateVotes(sGroupIDx, categoryID);
     }
 
+    public void UpdateTimeStmp(String sGroupIDx, String sEvntIDxx, String dTimeStmp){
+        poCandidates.UpdateTimeStmp(sGroupIDx, sEvntIDxx, dTimeStmp);
+    }
+
     public void SubmitVote(String sGroupIDxx, onSubmitVote callback){
+
         TaskExecutor.Execute(sGroupIDxx, new OnTaskExecuteListener() {
             @Override
             public void OnPreExecute() {
@@ -76,7 +81,8 @@ public class VMPoll extends AndroidViewModel {
                     return poSystem.SubmitVote((String) args);
 
                 }catch (Exception e){
-                    return e.getMessage();
+                    e.printStackTrace();
+                    return false;
                 }
 
             }
@@ -84,14 +90,14 @@ public class VMPoll extends AndroidViewModel {
             @Override
             public void OnPostExecute(Object object) {
 
-                callback.onResult((String) object);
+                callback.onResult((Boolean) object);
             }
         });
     }
 
     public interface onSubmitVote{
         void onLoad();
-        void onResult(String message);
+        void onResult(Boolean result);
     }
 
 }

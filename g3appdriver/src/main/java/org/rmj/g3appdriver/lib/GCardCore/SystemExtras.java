@@ -3,9 +3,7 @@ package org.rmj.g3appdriver.lib.GCardCore;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
-
 import androidx.lifecycle.LiveData;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBranchInfo;
@@ -35,8 +33,6 @@ import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -556,7 +552,6 @@ public class SystemExtras implements iGCardSystem{
                     loImg.put("details", laDetails);
 
                     candidates.setUrlImgs(loImg.toString());
-                    candidates.setVotes(0);
 
                     poCandidates.insert(candidates);
                 }
@@ -600,6 +595,7 @@ public class SystemExtras implements iGCardSystem{
                     loVote.setsTransNoxx(loJson.getString("sTransNox"));
                     loVote.setsSubEventIDxx(loJson.getString("sContstID"));
                     loVote.setsGroupIDx(loJson.getString("sGroupIDx"));
+                    loVote.setsUserIDxx(loJson.getString("sUserIDxx"));
                     loVote.setnNoVotesx(loJson.getString("nNoVotesx"));
                     loVote.setdVoted(loJson.getString("dLastVoted"));
 
@@ -619,10 +615,10 @@ public class SystemExtras implements iGCardSystem{
     }
 
     @Override
-    public String SubmitVote(String sGroupIDxx) throws Exception {
+    public Boolean SubmitVote(String sGroupIDxx) throws Exception {
 
         JSONObject params = new JSONObject();
-        params.put("sGroupIDxx", sGroupIDxx);
+        params.put("sGroupIDx", sGroupIDxx);
 
         String lsResponse = WebClient.httpsPostJSon(poAPI.getSubmitVotesAPI(), params.toString(), poHeaders.getHeaders());
 
@@ -634,22 +630,20 @@ public class SystemExtras implements iGCardSystem{
             if (lsResult.equalsIgnoreCase("error")) {
 
                 JSONObject loError = loResponse.getJSONObject("error");
+                Log.d(TAG, loError.getString("message"));
 
-                return loError.getString("message");
+                return false;
 
             }
 
-            poVoteLogs.updateVote(
-                    loResponse.getString("dTransact"),
-                    loResponse.getString("sGroupIDx"),
-                    loResponse.getString("sContstID"),
-                    loResponse.getString("sUserIDxx"));
+            Thread.sleep(1000);
+            ImportVoteLogs();
 
-            return "Vote submitted successfully";
+            return true;
 
         }
 
-        return "Server no response";
+        return false;
 
     }
 

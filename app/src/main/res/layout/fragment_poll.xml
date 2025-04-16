@@ -72,6 +72,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/zxing_transparent"
+                    android:textAlignment="center"
+                    app:tabTextAppearance="@style/SubText"
                     app:tabSelectedTextColor="?attr/colorPrimary"
                     app:tabIndicatorColor="@android:color/white"
                     app:tabIndicatorGravity="stretch">

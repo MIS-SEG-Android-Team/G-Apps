@@ -772,8 +772,8 @@ public class GCardManager implements iGCardSystem{
     }
 
     @Override
-    public String SubmitVote(String sGroupIDxx) throws Exception {
-        return "";
+    public Boolean SubmitVote(String sGroupIDxx) throws Exception {
+        return false;
     }
 
     @Override

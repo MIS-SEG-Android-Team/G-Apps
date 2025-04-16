@@ -21,11 +21,11 @@ public class ECandidates {
     @ColumnInfo(name = "sSchoolNm")
     public String sSchoolNm;
 
-    @ColumnInfo(name = "sUserIDxx")
-    public String sUserIDxx;
-
     @ColumnInfo(name = "urlImgs")
     public String urlImgs;
+
+    @ColumnInfo(name = "dTimeStmp")
+    public String dTimeStmp;
 
     @NonNull
     public String getsEvntIDxx() {
@@ -61,14 +61,6 @@ public class ECandidates {
         this.sSchoolNm = sSchoolNm;
     }
 
-    public String getsUserIDxx() {
-        return sUserIDxx;
-    }
-
-    public void setsUserIDxx(String sUserIDxx) {
-        this.sUserIDxx = sUserIDxx;
-    }
-
     public String getUrlImgs() {
         return urlImgs;
     }
@@ -77,4 +69,11 @@ public class ECandidates {
         this.urlImgs = urlImgs;
     }
 
+    public String getdTimeStmp() {
+        return dTimeStmp;
+    }
+
+    public void setdTimeStmp(String dTimeStmp) {
+        this.dTimeStmp = dTimeStmp;
+    }
 }

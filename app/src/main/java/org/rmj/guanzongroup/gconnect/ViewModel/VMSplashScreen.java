@@ -42,7 +42,7 @@ public class VMSplashScreen extends AndroidViewModel {
         loConfig.setClientID(AppConstants.APP_CLIENT);
         loConfig.setIfPermissionsGranted(true);
 
-        loConfig.setTestCase(true);
+        loConfig.setTestCase(false);
     }
     public void setsAppVrsnCd(String sAppVrsnCd){
         loConfig.setAppversionCode(sAppVrsnCd);

@@ -35,7 +35,9 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DVoteLogs;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.etc.FacebookShare;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.etc.ViewPagerProperty;
+import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
 import org.rmj.g3appdriver.utils.ImageFileManager;
 import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.guanzongroup.gconnect.ViewModel.VMPoll;
@@ -55,13 +57,15 @@ public class Dialog_Candidate_Details {
     private final Context context;
     private final ECandidates details;
     private final VMPoll mviewModel;
+    private final Dialog_Loading poLoad;
 
     private AlertDialog poDialogx;
 
-    public Dialog_Candidate_Details(Context context, Fragment fragment, ECandidates details, VMPoll mviewModel){
+    public Dialog_Candidate_Details(Context context, ECandidates details, VMPoll mviewModel){
         this.context = context;
         this.details = details;
         this.mviewModel = mviewModel;
+        this.poLoad = new Dialog_Loading(context);
     }
 
     public class Dialog_Details{
@@ -224,17 +228,54 @@ public class Dialog_Candidate_Details {
                 @Override
                 public void onClick(View v) {
 
-                    v.setEnabled(false);
-                    btn_vote.setText("VOTED");
-
                     mviewModel.SubmitVote(details.getsGroupIDx(), new VMPoll.onSubmitVote() {
                         @Override
                         public void onLoad() {
 
+                            poLoad.initDialog("Guanzon Connect", "Sending Vote");
+                            poLoad.show();
                         }
 
+                        @SuppressLint("SimpleDateFormat")
                         @Override
-                        public void onResult(String message) {
+                        public void onResult(Boolean result) {
+
+                            poLoad.dismiss();
+
+                            if (result){
+
+                                poDialogx.dismiss();
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                                    mviewModel.UpdateTimeStmp(details.getsGroupIDx(), details.getsEvntIDxx(),
+                                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
+
+                                }else {
+                                    mviewModel.UpdateTimeStmp(details.getsGroupIDx(), details.getsEvntIDxx(),
+                                            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
+                                }
+
+                            }else {
+
+                                MessageBox poMessage = new MessageBox(context);
+                                poMessage.initDialog();
+                                poMessage.setTitle("Guanzon Connect");
+
+                                poMessage.setIcon(org.rmj.g3appdriver.R.drawable.baseline_error_24);
+                                poMessage.setMessage("Failed to submit vote");
+
+                                poMessage.show();
+
+                                poMessage.setPositiveButton("Okay", new MessageBox.DialogButton() {
+                                    @Override
+                                    public void OnButtonClick(View view, AlertDialog dialog) {
+
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                            }
 
                         }
                     });
@@ -262,7 +303,7 @@ public class Dialog_Candidate_Details {
 
                 if (lastVote.getdTimeStmp() != null){
 
-                    LocalDate loLastVote = LocalDateTime.parse(lastVote.getdTimeStmp(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
+                    LocalDate loLastVote = LocalDate.parse(lastVote.getdTimeStmp(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     LocalDate loToday = LocalDateTime.now().toLocalDate();
 
                     return loLastVote.isEqual(loToday) && lastVote.getTotal() > 0;

@@ -1,5 +1,6 @@
 package org.rmj.guanzongroup.gconnect.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -88,10 +89,13 @@ public class Fragment_Dashboard extends Fragment {
                     //botNav.getMenu().findItem(R.id.nav_Bingo).setVisible(false); todo: for future use, postponed
                     botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(false);
                     botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
+
+                    viewPager.setCurrentItem(0);
                 }
             }
         });
     }
+    @SuppressLint("NotifyDataSetChanged")
     private void setupPages(){
         Fragment[] loFragments = new Fragment[]{
                 new Fragment_Home(),
@@ -101,6 +105,8 @@ public class Fragment_Dashboard extends Fragment {
 
         FragmentAdapter loAdapter = new FragmentAdapter(getChildFragmentManager(), getLifecycle());
         loAdapter.initFragments(loFragments);
+
+        loAdapter.notifyDataSetChanged();
 
         viewPager.setAdapter(loAdapter);
         viewPager.setUserInputEnabled(false);

@@ -70,4 +70,8 @@ public class RCandidates {
         return daoVoteLogs.GetCandidateVotes(sGroupIDx, categoryID, loAccount.getUserID());
     }
 
+    public void UpdateTimeStmp(String sGroupIDx, String sEvntIDxx, String dTimeStmp){
+        daoCandidates.UpdateTimeStmp(sGroupIDx, sEvntIDxx, dTimeStmp);
+    }
+
 }

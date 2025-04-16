@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,14 +161,17 @@ public class Fragment_Poll extends Fragment {
 
                     if (eSubEvents != null){
 
+                        tab_candidates.removeAllTabs();
+
                         List<ESub_Events> laActiveCategories = new ArrayList<>();
                         for (int x = 0; x < eSubEvents.size(); x++){
 
                             tab_candidates.addTab(
                                     tab_candidates
-                                            .newTab()
-                                            .setTag(eSubEvents.get(x).getsSubEventIDxx())
-                                            .setText(eSubEvents.get(x).getsDescript()));
+                                            .newTab() //todo add tab
+                                            .setTag(eSubEvents.get(x).getsSubEventIDxx()) //todo set tag event id
+                                            .setText(eSubEvents.get(x).getsDescript()) //todo set tab display
+                            );
 
                             EEvents loEvent = mViewModel.getEventByID(eSubEvents.get(x).getsEventIDx());
 
@@ -176,21 +180,20 @@ public class Fragment_Poll extends Fragment {
                             }else {
                                 tab_candidates.getTabAt(x).view.setEnabled(true); //todo enable tab if event date is valid
 
-                                laActiveCategories.add(eSubEvents.get(x));
+                                laActiveCategories.add(eSubEvents.get(x)); //todo add to active events on list
                             }
 
                         }
 
-                        //todo do not reload data if arguments are passed (triggered from event list)
+                        //todo initialize candidates, if no arguments passed. load first event
                         if (argsParams != null) {
-                            return;
+
+                            if (argsParams.containsKey("eventID")) {
+                                initCandidates(argsParams.getString("eventID"));
+                                return;
+                            }
                         }
 
-                        if (argsParams.containsKey("eventID")) {
-                            return;
-                        }
-
-                        //todo initialize candidates for the first event on list, if no arguments are passed
                         initCandidates(laActiveCategories.get(0).getsSubEventIDxx());
 
                     }
@@ -205,19 +208,25 @@ public class Fragment_Poll extends Fragment {
 
     private void initCandidates(String eventIDxx){
 
+        if (getView() == null){
+            return;
+        }
+
         if (tab_candidates != null){
 
+            //todo iterate tabs
             for (int ctr = 0; ctr < tab_candidates.getTabCount(); ctr++){
 
-                if (tab_candidates.getTabAt(ctr).getTag() == null){
-                    break;
-                }
+                if (tab_candidates.getTabAt(ctr).getTag() != null){
 
-                String loTabID = (String) tab_candidates.getTabAt(ctr).getTag();
-                if (loTabID.equalsIgnoreCase(eventIDxx)) {
+                    //todo select tab index if tagged value match event id
+                    String loTabID = (String) tab_candidates.getTabAt(ctr).getTag();
+                    if (loTabID.equalsIgnoreCase(eventIDxx)) {
 
-                    tab_candidates.selectTab(tab_candidates.getTabAt(ctr), true);
-                    break;
+                        tab_candidates.selectTab(tab_candidates.getTabAt(ctr), true);
+                        break;
+                    }
+
                 }
             }
 
@@ -260,6 +269,8 @@ public class Fragment_Poll extends Fragment {
                             return;
                         }
 
+                        Thread.sleep(1000);
+
                         //todo observe vote counts, after loading candidates
                         mViewModel.ObserveVoteCounts(eventIDxx).observe(getViewLifecycleOwner(), new Observer<DVoteLogs.LatestVote>() {
                             @Override
@@ -267,11 +278,11 @@ public class Fragment_Poll extends Fragment {
 
                                 try {
 
-                                    if (lastVote != null){
+                                    //todo if not empty, initialize toolbar message displaying vote balance
+                                    Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+                                    if (loParent != null){
 
-                                        //todo if not empty, initialize toolbar message displaying vote balance
-                                        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
-                                        if (loParent != null){
+                                        if (lastVote != null){
 
                                             if (hasVotedToday(lastVote)){ //todo if voted today, notify user to choose another event on toolbar
                                                 loParent.initToolbarMessage("You have consumed your vote(s) on this day.\n\nChoose another event.");
@@ -279,7 +290,10 @@ public class Fragment_Poll extends Fragment {
                                                 loParent.initToolbarMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
                                             }
 
+                                        }else { //todo if not, display vote balance on toolbar
+                                            loParent.initToolbarMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
                                         }
+
                                     }
 
                                 }catch (Exception e){
@@ -347,7 +361,7 @@ public class Fragment_Poll extends Fragment {
 
             if (lastVote.getdTimeStmp() != null){
 
-                LocalDate loLastVote = LocalDateTime.parse(lastVote.getdTimeStmp(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
+                LocalDate loLastVote = LocalDate.parse(lastVote.getdTimeStmp(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 LocalDate loToday = LocalDateTime.now().toLocalDate();
 
                 return loLastVote.isEqual(loToday) && lastVote.getTotal() > 0;

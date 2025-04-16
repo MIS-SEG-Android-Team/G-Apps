@@ -766,17 +766,25 @@ public class Activity_Dashboard extends AppCompatActivity {
 
                     for (EEvents loEvent : laEvents){
 
-                        Dialog_Promo loDialog = new Dialog_Promo(Activity_Dashboard.this);
+                        if (loEvent.getImageURL() != null){
 
-                        loDialog.initDialog(loEvent.getImageURL(), (dialog) -> {
-                            Intent intent = new Intent(Activity_Dashboard.this, Activity_Browser.class);
-                            intent.putExtra("url_link", loEvent.getEventURL());
-                            intent.putExtra("args", "0");
-                            startActivity(intent);
-                            dialog.dismiss();
-                        });
+                            if (!loEvent.getImageURL().isEmpty()){
 
-                        loDialog.show();
+                                Dialog_Promo loDialog = new Dialog_Promo(Activity_Dashboard.this);
+
+                                loDialog.initDialog(loEvent.getImageURL(), (dialog) -> {
+                                    Intent intent = new Intent(Activity_Dashboard.this, Activity_Browser.class);
+                                    intent.putExtra("url_link", loEvent.getEventURL());
+                                    intent.putExtra("args", loEvent.getImageURL());
+                                    startActivity(intent);
+                                    dialog.dismiss();
+                                });
+
+                                loDialog.show();
+
+                            }
+
+                        }
 
                     }
                 }

@@ -16,10 +16,6 @@ public interface DVoteLogs {
     @Query("DELETE FROM Vote_History")
     void deleteAll();
 
-    @Query("UPDATE Vote_History SET nNoVotesx = nNoVotesx + 1, dVoted = :dVoted " +
-            "WHERE sGroupIDx = :sGroupIDx AND sSubEventIDxx = :sSubEventIDxx AND sUserIDxx = :sUserIDxx ")
-    void updateVote(String dVoted, String sGroupIDx, String sSubEventIDxx, String sUserIDxx);
-
     @Query("SELECT nNoVotesx total, dVoted dTimeStmp FROM Vote_History " +
             "WHERE sSubEventIDxx = :categoryID AND sUserIDxx = :sUserIDxx")
     LiveData<LatestVote> ObserveVoteCounts(String categoryID, String sUserIDxx);

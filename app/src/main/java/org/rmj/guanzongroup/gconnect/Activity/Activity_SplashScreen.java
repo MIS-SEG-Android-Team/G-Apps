@@ -5,14 +5,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.facebook.FacebookSdk;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.rmj.guanzongroup.ganado.Dialog.DialogDisclosure;
@@ -21,6 +20,7 @@ import org.rmj.guanzongroup.gconnect.R;
 import org.rmj.guanzongroup.gconnect.Service.GMessagingService;
 import org.rmj.guanzongroup.gconnect.ViewModel.VMSplashScreen;
 
+@SuppressLint("CustomSplashScreen")
 public class Activity_SplashScreen extends AppCompatActivity {
 
     private static final String TAG = Activity_SplashScreen.class.getSimpleName();
