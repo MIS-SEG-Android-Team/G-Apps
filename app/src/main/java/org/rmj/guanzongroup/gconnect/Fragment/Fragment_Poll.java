@@ -70,6 +70,13 @@ public class Fragment_Poll extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        initKayMessage("Hi! Welcome to the pageant section.\n\nSelect your favorite contestant.");
+    }
+
+    @Override
     public void setArguments(@Nullable Bundle args) {
         super.setArguments(args);
 
@@ -239,14 +246,7 @@ public class Fragment_Poll extends Fragment {
                     try {
 
                         if (eCandidates == null){
-
-                            //todo display error message on toolbar, if no candidates found
-                            Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
-
-                            if (loParent != null){
-                                loParent.initToolbarMessage("Oops! Sorry, No candidates found for this event. \n\nCheck your connection or try refreshing the app");
-                            }
-
+                            initKayMessage("Oops! Sorry, No candidates found for this event. \n\nCheck your connection or try refreshing the app");
                             return;
                         }
 
@@ -259,14 +259,7 @@ public class Fragment_Poll extends Fragment {
                         rv_candidates.setAdapter(adapter_candidates);
 
                         if (eCandidates.size() <= 0){
-
-                            //todo display error message on toolbar, if no candidates found
-                            Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
-
-                            if (loParent != null){
-                                loParent.initToolbarMessage("Oops!\n\n Sorry, no candidates found for this event. \n\nCheck your connection or try refreshing the app");
-                            }
-
+                            initKayMessage("Oops!\n\n Sorry, no candidates found for this event. \n\nCheck your connection or try refreshing the app");
                         }
 
                     }catch (Exception e){
@@ -282,18 +275,12 @@ public class Fragment_Poll extends Fragment {
 
                     try {
 
-                        //todo if not empty, initialize toolbar message displaying vote balance
-                        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
-                        if (loParent != null){
+                        if (lastVote != null){
 
-                            if (lastVote != null){
-
-                                if (hasVotedToday(lastVote)){ //todo if voted today, notify user to choose another event on toolbar
-                                    loParent.initToolbarMessage("You have consumed your vote(s) on this day.\n\nChoose another event.");
-                                } else { //todo if not, display vote balance on toolbar
-                                    loParent.initToolbarMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
-                                }
-
+                            if (hasVotedToday(lastVote)){ //todo if voted today, notify user to choose another event on toolbar
+                                initKayMessage("You have consumed your vote(s) on this day.\n\nChoose another event.");
+                            } else { //todo if not, display vote balance on toolbar
+                                initKayMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
                             }
 
                         }
@@ -305,6 +292,16 @@ public class Fragment_Poll extends Fragment {
             });
 
         }
+    }
+
+    private void initKayMessage(String message){
+
+        //todo if not empty, initialize toolbar message displaying vote balance
+        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+        if (loParent != null){
+            loParent.initToolbarMessage(message);
+        }
+
     }
 
     private Boolean isEventValid(String dtFrom, String dtThru) throws ParseException {

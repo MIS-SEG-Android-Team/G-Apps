@@ -29,6 +29,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.g3appdriver.etc.ViewPagerProperty;
 import org.rmj.guanzongroup.ganado.Activities.Activity_ProductSelection;
+import org.rmj.guanzongroup.gconnect.Activity.Activity_Dashboard;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Events;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Products;
 import org.rmj.guanzongroup.gconnect.R;
@@ -73,6 +74,23 @@ public class Fragment_Home extends Fragment {
         initObservables();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        initKayMessage("Hi! I'm Kay,\n\nTap me to assist you with more features.");
+    }
+
+    private void initKayMessage(String message){
+
+        //todo if not empty, initialize toolbar message displaying vote balance
+        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+        if (loParent != null){
+            loParent.initToolbarMessage(message);
+        }
+
     }
 
     private void initViews(View v) {

@@ -36,6 +36,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EBarcode;
 import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
 import org.rmj.guanzongroup.digitalgcard.Activity.Activity_QrCodeScanner;
+import org.rmj.guanzongroup.gconnect.Activity.Activity_Dashboard;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Barcodes;
 import org.rmj.guanzongroup.gconnect.Dialog.Dialog_BarcodeDetails;
 import org.rmj.guanzongroup.gconnect.R;
@@ -172,7 +173,6 @@ public class Fragment_PhoneBarcode extends Fragment {
         initAnimation(); //todo: animation initialization
         initListener(); //todo: listener initialization
         initObservables(); //todo: observables initialization
-        initAdapter(); //todo: adapter initialization
 
         loQRData = new JSONObject();
 
@@ -184,6 +184,17 @@ public class Fragment_PhoneBarcode extends Fragment {
         super.onResume();
 
         initAnimation();
+        initKayMessage("Hi! Scan your product's barcode here.");
+    }
+
+    private void initKayMessage(String message){
+
+        //todo if not empty, initialize toolbar message displaying vote balance
+        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+        if (loParent != null){
+            loParent.initToolbarMessage(message);
+        }
+
     }
 
     private void initViews(View view){
@@ -280,6 +291,7 @@ public class Fragment_PhoneBarcode extends Fragment {
     }
 
     private void initObservables(){
+
         mviewModel.GetTownProvinceList().observe(getViewLifecycleOwner(), new Observer<List<DTownInfo.TownProvinceInfo>>() {
             @Override
             public void onChanged(List<DTownInfo.TownProvinceInfo> townProvinceInfos) {
@@ -293,35 +305,41 @@ public class Fragment_PhoneBarcode extends Fragment {
                 }
             }
         });
-    }
-
-    private void initAdapter(){
 
         mviewModel.getBarcodeList().observe(getViewLifecycleOwner(), new Observer<List<EBarcode>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<EBarcode> eBarcodes) {
 
-                Adapter_Barcodes adapter_barcodes = new Adapter_Barcodes(requireActivity(), eBarcodes, new Adapter_Barcodes.onDeleteRow() {
-                    @Override
-                    public void onDelete(String barcodeID) {
-                        mviewModel.deleteBarcode(barcodeID);
+                if (eBarcodes != null){
+
+                    Adapter_Barcodes adapter_barcodes = new Adapter_Barcodes(requireActivity(), eBarcodes, new Adapter_Barcodes.onDeleteRow() {
+                        @Override
+                        public void onDelete(String barcodeID) {
+                            mviewModel.deleteBarcode(barcodeID);
+                        }
+                    });
+
+                    adapter_barcodes.notifyDataSetChanged();
+
+                    rv_products.setAdapter(adapter_barcodes);
+                    rv_products.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
+
+                    if (eBarcodes.size() > 0){
+                        layout_personalform.setVisibility(View.VISIBLE);
+                        initKayMessage("You have your barcode entries.\n\nYou can use now the submit button.");
+                    }else {
+                        layout_personalform.setVisibility(View.GONE);
+                        initKayMessage("Looks like you have no barcode entries.\n\nYou can use the scan button.");
                     }
-                });
-                adapter_barcodes.notifyDataSetChanged();
 
-                rv_products.setAdapter(adapter_barcodes);
-                rv_products.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
-
-                //TODO: SHOW BUTTON IF LIST IS NOT EMPTY
-                if (eBarcodes.size() > 0){
-                    layout_personalform.setVisibility(View.VISIBLE);
-                }else {
-                    layout_personalform.setVisibility(View.GONE);
+                    return;
                 }
 
+                initKayMessage("Looks like you have no barcode entries.\n\nYou can use the scan button.");
             }
         });
+
     }
 
     private void initDialogDetails(){
@@ -502,6 +520,7 @@ public class Fragment_PhoneBarcode extends Fragment {
             return null;
         }
     }
+
     private void initMessage(String message, String btnPos, String btnNeg,
                                 int type, Boolean forConfirm, onMessage callback){
 
