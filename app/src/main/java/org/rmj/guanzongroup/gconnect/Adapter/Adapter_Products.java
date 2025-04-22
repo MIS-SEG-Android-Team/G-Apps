@@ -41,11 +41,6 @@ public class Adapter_Products  extends RecyclerView.Adapter<Adapter_Products.VHP
                 .fitCenter()
                 .into(holder.icon_product);
 
-        Glide.with(holder.itemView)
-                .load(laProducts.get(position).getImagelogo())
-                .fitCenter()
-                .into(holder.img_logo);
-
         holder.btn_inquire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,14 +57,12 @@ public class Adapter_Products  extends RecyclerView.Adapter<Adapter_Products.VHP
     public static class VHProducts extends RecyclerView.ViewHolder {
 
         private final ShapeableImageView icon_product;
-        private final ShapeableImageView img_logo;
         private final MaterialButton btn_inquire;
 
         public VHProducts(@NonNull View itemView) {
             super(itemView);
 
             this.icon_product = itemView.findViewById(R.id.icon_product);
-            this.img_logo = itemView.findViewById(R.id.img_logo);
             this.btn_inquire = itemView.findViewById(R.id.btn_inquire);
         }
     }
@@ -78,12 +71,10 @@ public class Adapter_Products  extends RecyclerView.Adapter<Adapter_Products.VHP
 
         private final String brand;
         private final String imageURL;
-        private final String imagelogoURL;
 
-        public Product_Data(String brand, String image, String imagelogo) {
+        public Product_Data(String brand, String image) {
             this.brand = brand;
             this.imageURL = image;
-            this.imagelogoURL = imagelogo;
         }
 
         public String getBrand() {
@@ -92,10 +83,6 @@ public class Adapter_Products  extends RecyclerView.Adapter<Adapter_Products.VHP
 
         public String getImage() {
             return imageURL;
-        }
-
-        public String getImagelogo() {
-            return imagelogoURL;
         }
 
     }

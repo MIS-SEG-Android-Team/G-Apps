@@ -21,7 +21,7 @@
             android:src="@drawable/kay"
             android:background="@color/zxing_transparent"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"/>
+            android:scaleType="centerCrop"/>
 
     </com.google.android.material.card.MaterialCardView>
 

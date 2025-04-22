@@ -238,7 +238,7 @@ public class Dialog_Candidate_Details {
 
                         @SuppressLint("SimpleDateFormat")
                         @Override
-                        public void onResult(Boolean result) {
+                        public void onResult(Boolean result, String message) {
 
                             poLoad.dismiss();
 
@@ -263,7 +263,12 @@ public class Dialog_Candidate_Details {
                                 poMessage.setTitle("Guanzon Connect");
 
                                 poMessage.setIcon(org.rmj.g3appdriver.R.drawable.baseline_error_24);
-                                poMessage.setMessage("Failed to submit vote");
+
+                                if (!message.isEmpty()){
+                                    poMessage.setMessage(message);
+                                }else {
+                                    poMessage.setMessage("Failed to submit vote");
+                                }
 
                                 poMessage.show();
 
@@ -350,7 +355,7 @@ public class Dialog_Candidate_Details {
         @Override
         public VH_ImageList onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new VH_ImageList(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_imageevent_vpagelist, parent, false)
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_slidercandidate_details, parent, false)
             );
         }
 

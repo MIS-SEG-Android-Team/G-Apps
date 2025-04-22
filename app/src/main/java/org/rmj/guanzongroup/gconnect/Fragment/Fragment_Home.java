@@ -71,6 +71,7 @@ public class Fragment_Home extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         initViews(view);
+        initAdapterData(0);
         initObservables();
 
         return view;
@@ -95,7 +96,7 @@ public class Fragment_Home extends Fragment {
 
     private void initViews(View v) {
 
-        layout_header = v.findViewById(R.id.layout_header);
+        layout_header = v.findViewById(R.id.layout_headerhome);
         slider_events = v.findViewById(R.id.slider_events);
         layout_events = v.findViewById(R.id.layout_events);
 
@@ -153,22 +154,22 @@ public class Fragment_Home extends Fragment {
 
                 laProducts.add(
                         new Adapter_Products.Product_Data(
-                                "Yamaha", baseURL + "yamaha.png", baseURL + "yamahalogo.png")
+                                "Yamaha", baseURL + "yamaha.png")
                 );
 
                 laProducts.add(
                         new Adapter_Products.Product_Data(
-                                "Honda", baseURL + "honda.png", baseURL + "hondalogo.png")
+                                "Honda", baseURL + "honda.png")
                 );
 
                 laProducts.add(
                         new Adapter_Products.Product_Data(
-                                "Suzuki", baseURL + "suzuki.png", baseURL + "suzukilogo.png")
+                                "Suzuki", baseURL + "suzuki.png")
                 );
 
                 laProducts.add(
                         new Adapter_Products.Product_Data(
-                                "Kawasaki", baseURL + "kawasaki.png", baseURL + "kawasakilogo.png")
+                                "Kawasaki", baseURL + "kawasaki.png")
                 );
 
                 break;
@@ -179,6 +180,32 @@ public class Fragment_Home extends Fragment {
                 siv_kay.setVisibility(View.VISIBLE);
 
                 break;
+
+            default:
+
+                rcv_products.setVisibility(View.VISIBLE);
+                siv_kay.setVisibility(View.GONE);
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Yamaha", baseURL + "yamaha.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Honda", baseURL + "honda.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Suzuki", baseURL + "suzuki.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Kawasaki", baseURL + "kawasaki.png")
+                );
+
         }
 
         rcv_products.setAdapter(new Adapter_Products(laProducts, new Adapter_Products.onSelectListener() {
@@ -230,18 +257,12 @@ public class Fragment_Home extends Fragment {
                             List<ESub_Events> laActiveEvents = new ArrayList<>();
                             for (ESub_Events loEvent : eSubEvents){
 
-                                //todo get main event if from category
-                                if (mViewModel.getEventBYID(loEvent.getsEventIDx()) != null){
+                                //todo if event is valid, add to active events
+                                if (isEventValid(loEvent.getdVoteStart(), loEvent.getdVoteEnd())){
 
-                                    EEvents loMainEvent = mViewModel.getEventBYID(loEvent.getsEventIDx());
-
-                                    //todo if event is valid, add to active events
-                                    if (isEventValid(loMainEvent.getEvntFrom(), loMainEvent.getEvntThru())){
-
-                                        laActiveEvents.add(loEvent);
-                                    }
-
+                                    laActiveEvents.add(loEvent);
                                 }
+
                             }
 
                             //todo if no active events, hide adapter and navigations
@@ -308,10 +329,6 @@ public class Fragment_Home extends Fragment {
 
             }
         });
-
-        /** PRODUCT LIST ADAPTER INITIALIZATION **/
-
-        initAdapterData(tab_products.getSelectedTabPosition()); //triggers on first login
 
         tab_products.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

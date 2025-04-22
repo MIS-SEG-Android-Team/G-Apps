@@ -105,7 +105,6 @@ public interface iGCardSystem {
     void ImportVoteLogs() throws Exception;
 
     Boolean SubmitVote(String sGroupIDxx) throws Exception;
-    EEvents GetEventByID(String sEventIDxx);
     List<EEvents> CheckEvents();
 }
 

@@ -100,7 +100,10 @@ public class Fragment_Poll extends Fragment {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                initCandidates(tab.getTag().toString());
+
+                if (argsParams == null){
+                    initCandidates(tab.getTag().toString());
+                }
             }
 
             @Override
@@ -173,19 +176,14 @@ public class Fragment_Poll extends Fragment {
                         List<ESub_Events> laActiveCategories = new ArrayList<>();
                         for (int x = 0; x < eSubEvents.size(); x++){
 
-                            tab_candidates.addTab(
-                                    tab_candidates
-                                            .newTab() //todo add tab
-                                            .setTag(eSubEvents.get(x).getsSubEventIDxx()) //todo set tag event id
-                                            .setText(eSubEvents.get(x).getsDescript()) //todo set tab display
-                            );
+                            if (isEventValid(eSubEvents.get(x).getdVoteStart(), eSubEvents.get(x).getdVoteEnd())){
 
-                            EEvents loEvent = mViewModel.getEventByID(eSubEvents.get(x).getsEventIDx());
-
-                            if (!isEventValid(loEvent.getEvntFrom(), loEvent.getEvntThru())){
-                                tab_candidates.getTabAt(x).view.setEnabled(false); //todo disable tab if event date is not valid
-                            }else {
-                                tab_candidates.getTabAt(x).view.setEnabled(true); //todo enable tab if event date is valid
+                                tab_candidates.addTab(
+                                        tab_candidates
+                                                .newTab() //todo add tab
+                                                .setTag(eSubEvents.get(x).getsSubEventIDxx()) //todo set tag event id
+                                                .setText(eSubEvents.get(x).getsDescript()) //todo set tab display
+                                );
 
                                 laActiveCategories.add(eSubEvents.get(x)); //todo add to active events on list
                             }
@@ -220,9 +218,12 @@ public class Fragment_Poll extends Fragment {
             return;
         }
 
+        //todo clear fragment parameters
+        argsParams = null;
+
+        //todo iterate tabs
         if (tab_candidates != null){
 
-            //todo iterate tabs
             for (int ctr = 0; ctr < tab_candidates.getTabCount(); ctr++){
 
                 if (tab_candidates.getTabAt(ctr).getTag() != null){
@@ -230,66 +231,70 @@ public class Fragment_Poll extends Fragment {
                     //todo select tab index if tagged value match event id
                     String loTabID = (String) tab_candidates.getTabAt(ctr).getTag();
                     if (loTabID.equalsIgnoreCase(eventIDxx)) {
+
                         tab_candidates.selectTab(tab_candidates.getTabAt(ctr), true);
+
+                        //todo load candidates
+                        mViewModel.GetCandidates(eventIDxx).observe(getViewLifecycleOwner(), new Observer<List<ECandidates>>() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onChanged(List<ECandidates> eCandidates) {
+
+                                try {
+
+                                    if (eCandidates == null){
+                                        initKayMessage("Oops! Sorry, No candidates found for this event. \n\nCheck your connection or try refreshing the app");
+                                        return;
+                                    }
+
+                                    //todo if not empty, initialize adapter
+                                    adapter_candidates = new Adapter_Candidates(requireContext(), getParentFragment(), eCandidates, mViewModel);
+                                    adapter_candidates.notifyDataSetChanged();
+
+                                    rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
+                                    rv_candidates.setAdapter(adapter_candidates);
+
+                                    if (eCandidates.size() <= 0){
+                                        initKayMessage("Oops!\n\n Sorry, no candidates found for this event. \n\nCheck your connection or try refreshing the app");
+                                        return;
+                                    }
+
+                                    //todo observe vote counts
+                                    mViewModel.ObserveVoteCounts(eventIDxx).observe(getViewLifecycleOwner(), new Observer<DVoteLogs.LatestVote>() {
+                                        @Override
+                                        public void onChanged(DVoteLogs.LatestVote lastVote) {
+
+                                            try {
+
+                                                if (lastVote != null){
+
+                                                    if (hasVotedToday(lastVote)){ //todo if voted today, notify user to choose another event on toolbar
+                                                        initKayMessage("You have consumed your vote(s) on this day.\n\nChoose another event.");
+                                                    } else { //todo if not, display vote balance on toolbar
+                                                        initKayMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
+                                                    }
+
+                                                }else {
+                                                    initKayMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
+                                                }
+
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
                         break;
                     }
 
                 }
             }
-
-            //todo load candidates
-            mViewModel.GetCandidates(eventIDxx).observe(getViewLifecycleOwner(), new Observer<List<ECandidates>>() {
-                @SuppressLint("NotifyDataSetChanged")
-                @Override
-                public void onChanged(List<ECandidates> eCandidates) {
-
-                    try {
-
-                        if (eCandidates == null){
-                            initKayMessage("Oops! Sorry, No candidates found for this event. \n\nCheck your connection or try refreshing the app");
-                            return;
-                        }
-
-                        //todo if not empty, initialize adapter
-                        adapter_candidates = new Adapter_Candidates(requireContext(), getParentFragment(), eCandidates, mViewModel);
-
-                        adapter_candidates.notifyDataSetChanged();
-
-                        rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
-                        rv_candidates.setAdapter(adapter_candidates);
-
-                        if (eCandidates.size() <= 0){
-                            initKayMessage("Oops!\n\n Sorry, no candidates found for this event. \n\nCheck your connection or try refreshing the app");
-                        }
-
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            //todo observe vote counts
-            mViewModel.ObserveVoteCounts(eventIDxx).observe(getViewLifecycleOwner(), new Observer<DVoteLogs.LatestVote>() {
-                @Override
-                public void onChanged(DVoteLogs.LatestVote lastVote) {
-
-                    try {
-
-                        if (lastVote != null){
-
-                            if (hasVotedToday(lastVote)){ //todo if voted today, notify user to choose another event on toolbar
-                                initKayMessage("You have consumed your vote(s) on this day.\n\nChoose another event.");
-                            } else { //todo if not, display vote balance on toolbar
-                                initKayMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
-                            }
-
-                        }
-
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            });
 
         }
     }

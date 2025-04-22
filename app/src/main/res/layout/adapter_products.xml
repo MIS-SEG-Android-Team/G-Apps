@@ -1,47 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
     android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/icon_product"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="@drawable/abstractwihteorange">
+        android:layout_height="match_parent"
+        android:src="@drawable/kay"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.6"/>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/icon_product"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:src="@drawable/kay"
-            android:scaleType="centerCrop"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.6"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_inquire"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Inquire Now"
+        android:layout_margin="10dp"
+        android:alpha="0.8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintHeight_percent="0.3"/>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/img_logo"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toEndOf="@+id/icon_product"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.5"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_inquire"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:text="Inquire Now"
-            android:layout_marginEnd="10dp"
-            android:alpha="0.8"
-            app:layout_constraintStart_toEndOf="@+id/icon_product"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_logo"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHeight_percent="0.3"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

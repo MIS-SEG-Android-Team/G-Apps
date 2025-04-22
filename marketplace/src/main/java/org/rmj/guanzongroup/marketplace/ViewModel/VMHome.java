@@ -298,11 +298,6 @@ public class VMHome extends AndroidViewModel {
         });
     }
 
-    public EEvents getEventBYID(String sEventID){
-        poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
-        return poSystem.GetEventByID(sEventID);
-    }
-
     public LiveData<List<ESub_Events>> getEventCategories(){
         poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
         return poSystem.GetEventCategories();

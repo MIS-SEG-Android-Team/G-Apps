@@ -465,9 +465,6 @@ public class RedemptionManager implements iGCardSystem{
     public LiveData<List<ESub_Events>> GetEventCategories() {return null;}
 
     @Override
-    public EEvents GetEventByID(String sEventIDxx) {return null;}
-
-    @Override
     public void ImportVoteLogs() throws Exception {
 
     }

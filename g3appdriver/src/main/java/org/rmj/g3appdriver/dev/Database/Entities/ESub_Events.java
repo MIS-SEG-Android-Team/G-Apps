@@ -26,6 +26,12 @@ public class ESub_Events {
     @ColumnInfo(name = "cOnlineVt")
     public String cOnlineVt;
 
+    @ColumnInfo(name = "dVoteStart")
+    public String dVoteStart;
+
+    @ColumnInfo(name = "dVoteEnd")
+    public String dVoteEnd;
+
     @NonNull
     public String getsSubEventIDxx() {
         return sSubEventIDxx;
@@ -73,5 +79,21 @@ public class ESub_Events {
 
     public void setcOnlineVt(String cOnlineVt) {
         this.cOnlineVt = cOnlineVt;
+    }
+
+    public String getdVoteStart() {
+        return dVoteStart;
+    }
+
+    public void setdVoteStart(String dVoteStart) {
+        this.dVoteStart = dVoteStart;
+    }
+
+    public String getdVoteEnd() {
+        return dVoteEnd;
+    }
+
+    public void setdVoteEnd(String dVoteEnd) {
+        this.dVoteEnd = dVoteEnd;
     }
 }

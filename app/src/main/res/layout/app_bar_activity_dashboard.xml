@@ -30,7 +30,7 @@
                 android:id="@+id/icon_move"
                 android:layout_width="50dp"
                 android:layout_height="200dp"
-                android:src="@drawable/kay_wave"/>
+                android:src="@drawable/kay"/>
 
             <LinearLayout
                 android:id="@+id/layout_notifkay"

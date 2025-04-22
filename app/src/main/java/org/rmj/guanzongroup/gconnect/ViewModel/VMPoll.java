@@ -26,6 +26,8 @@ public class VMPoll extends AndroidViewModel {
     @SuppressLint("StaticFieldLeak")
     private Context mContext;
     private iGCardSystem poSystem;
+    private String message;
+
     private final RCandidates poCandidates;
 
     public VMPoll(@NonNull Application application) {
@@ -33,11 +35,6 @@ public class VMPoll extends AndroidViewModel {
 
         this.mContext = application;
         poCandidates = new RCandidates(application);
-    }
-
-    public EEvents getEventByID(String eventID) {
-        poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
-        return poSystem.GetEventByID(eventID);
     }
 
     public LiveData<List<ESub_Events>> GetCategories(){
@@ -78,7 +75,10 @@ public class VMPoll extends AndroidViewModel {
                 try{
 
                     poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
-                    return poSystem.SubmitVote((String) args);
+
+                    Boolean result = poSystem.SubmitVote((String) args);
+                    message = poSystem.GetMessage();
+                    return result;
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -90,14 +90,14 @@ public class VMPoll extends AndroidViewModel {
             @Override
             public void OnPostExecute(Object object) {
 
-                callback.onResult((Boolean) object);
+                callback.onResult((Boolean) object, message);
             }
         });
     }
 
     public interface onSubmitVote{
         void onLoad();
-        void onResult(Boolean result);
+        void onResult(Boolean result, String message);
     }
 
 }

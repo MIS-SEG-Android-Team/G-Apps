@@ -35,25 +35,6 @@ public class RCandidates {
         this.loAccount = new AccountInfo(context);
     }
 
-    private String GetDTimeStmp(){
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        }else {
-
-            Date current = Calendar.getInstance().getTime();
-
-            @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-            return dtFormat.format(current);
-
-        }
-
-    }
-
     public LiveData<List<ECandidates>> GetCandidates(String categoryID){
         return daoCandidates.GetAllCandidates(categoryID);
     }

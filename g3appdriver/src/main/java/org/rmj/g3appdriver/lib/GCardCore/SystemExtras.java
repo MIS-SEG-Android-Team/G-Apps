@@ -51,6 +51,8 @@ public class SystemExtras implements iGCardSystem{
     private final GuanzonAppConfig poConfig;
     private final ServerAPIs poAPI;
 
+    private String message;
+
     public SystemExtras(Context context) {
         this.mContext = context;
         this.poBranch = GGC_GuanzonAppDB.getInstance(mContext).EBranchDao();
@@ -488,6 +490,8 @@ public class SystemExtras implements iGCardSystem{
                     loData.setsEventIDx(loJson.getString("sEventIDx"));
                     loData.setnEntryNox(loJson.getString("nEntryNox"));
                     loData.setcOnlineVt(loJson.getString("cOnlineVt"));
+                    loData.setdVoteStart(loJson.getString("dVoteStrt"));
+                    loData.setdVoteEnd(loJson.getString("dVoteEndx"));
 
                     poSubEvnts.save(loData);
                 }
@@ -630,10 +634,13 @@ public class SystemExtras implements iGCardSystem{
             if (lsResult.equalsIgnoreCase("error")) {
 
                 JSONObject loError = loResponse.getJSONObject("error");
+                message = loError.getString("message");
                 Log.d(TAG, loError.getString("message"));
 
-                return false;
+                Thread.sleep(1000);
+                ImportVoteLogs();
 
+                return false;
             }
 
             Thread.sleep(1000);
@@ -654,7 +661,7 @@ public class SystemExtras implements iGCardSystem{
 
     @Override
     public String GetMessage() {
-        return null;
+        return message;
     }
 
     @Override
@@ -670,11 +677,6 @@ public class SystemExtras implements iGCardSystem{
     @Override
     public List<EEvents> CheckEvents() {
         return poEvents.CheckEvent();
-    }
-
-    @Override
-    public EEvents GetEventByID(String sEventIDxx) {
-        return poEvents.getEventByIDxx(sEventIDxx);
     }
 
     @Override
