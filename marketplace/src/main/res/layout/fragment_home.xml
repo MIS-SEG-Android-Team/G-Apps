@@ -29,7 +29,7 @@
                     android:scaleType="fitCenter"
                     android:adjustViewBounds="true"
                     android:background="@color/zxing_transparent"
-                    android:padding="15dp"/>
+                    android:padding="10dp"/>
 
             </LinearLayout>
 

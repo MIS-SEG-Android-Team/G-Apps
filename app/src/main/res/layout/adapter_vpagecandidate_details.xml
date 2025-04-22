@@ -7,13 +7,12 @@
     android:gravity="center">
 
     <ImageButton
-        android:id="@+id/btn_event"
+        android:id="@+id/img_candidate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/kay"
         android:background="@color/zxing_transparent"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:elevation="10dp"/>
+        android:scaleType="fitCenter"/>
 
 </LinearLayout>

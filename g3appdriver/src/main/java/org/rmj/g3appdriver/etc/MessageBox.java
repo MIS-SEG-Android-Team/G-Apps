@@ -17,6 +17,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.divider.MaterialDivider;
@@ -34,12 +37,18 @@ public class MessageBox {
     private MaterialTextView lblTitle;
     private MaterialTextView lblMsgxx;
     private ShapeableImageView msg_icon;
+    private ConstraintLayout data_view;
+
+    private LinearLayout layout_notify;
+    private ShapeableImageView icon_title;
+    private MaterialTextView mtv_message;
 
     private final Context context;
 
     public MessageBox(Context context){
         this.context = Objects.requireNonNull(context);
     }
+
     public void initDialog(){
         AlertDialog.Builder poBuilder = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_message_box, null);
@@ -51,10 +60,16 @@ public class MessageBox {
         msg_icon = view.findViewById(R.id.msg_icon);
         lblTitle = view.findViewById(R.id.lbl_dialogTitle);
         lblMsgxx = view.findViewById(R.id.lbl_dialogMessage);
+        data_view = view.findViewById(R.id.data_view);
+
         btnPositive = view.findViewById(R.id.btn_dialogPositive);
         btnPositive.setVisibility(View.GONE);
         btnNegative = view.findViewById(R.id.btn_dialogNegative);
         btnNegative.setVisibility(View.GONE);
+
+        layout_notify = view.findViewById(R.id.layout_notify);
+        icon_title = view.findViewById(R.id.icon_title);
+        mtv_message = view.findViewById(R.id.mtv_message);
     }
 
     public void setIcon(int psIconx) {
@@ -110,6 +125,16 @@ public class MessageBox {
             poDialogx.getWindow().getAttributes().windowAnimations = R.style.PopupAnimation;
             poDialogx.dismiss();
         }
+    }
+
+    public void displayDialogWithIconTitle(int psIconx, String message){
+
+        data_view.setVisibility(View.GONE);
+        layout_notify.setVisibility(View.VISIBLE);
+
+        icon_title.setImageResource(psIconx);
+        mtv_message.setText(message);
+
     }
 
     public interface DialogButton{

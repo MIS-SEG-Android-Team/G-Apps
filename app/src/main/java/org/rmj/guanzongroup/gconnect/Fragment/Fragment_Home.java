@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,6 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.tabs.TabLayout;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
-import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.g3appdriver.etc.ViewPagerProperty;
@@ -33,6 +33,7 @@ import org.rmj.guanzongroup.gconnect.Activity.Activity_Dashboard;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Events;
 import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Products;
 import org.rmj.guanzongroup.gconnect.R;
+import org.rmj.guanzongroup.marketplace.Activity.Activity_Mobile_Promo;
 import org.rmj.guanzongroup.marketplace.ViewModel.VMHome;
 
 import java.text.ParseException;
@@ -121,9 +122,6 @@ public class Fragment_Home extends Fragment {
                     public void run() {
 
                         slider_events.setCurrentItem(position);
-
-                        //todo: observe, this might cause a crash / delay of updating the adapter.
-                        //todo: should be called once only
                         loAdapter.notifyDataSetChanged();
 
                     }
@@ -176,8 +174,48 @@ public class Fragment_Home extends Fragment {
 
             case 1:
 
-                rcv_products.setVisibility(View.GONE);
-                siv_kay.setVisibility(View.VISIBLE);
+                rcv_products.setVisibility(View.VISIBLE);
+                siv_kay.setVisibility(View.GONE);
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Apple", baseURL + "apple.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Honor", baseURL + "honor.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Huawei", baseURL + "huawei.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Oppo", baseURL + "oppo.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Realme", baseURL + "realme.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Samsung", baseURL + "samsung.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Vivo", baseURL + "vivo.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Xiaomi", baseURL + "xiaomi.png")
+                );
 
                 break;
 
@@ -212,17 +250,25 @@ public class Fragment_Home extends Fragment {
             @Override
             public void onSelect(String brandName) {
 
-                if (mViewModel.GetBrandID(brandName.toUpperCase()) != null){
+                if (tabIndex == 0){
 
-                    if (!mViewModel.GetBrandID(brandName.toUpperCase()).isEmpty()){
+                    if (mViewModel.GetBrandID(brandName.toUpperCase()) != null){
 
-                        Intent loIntent = new Intent(requireActivity(), Activity_ProductSelection.class);
-                        loIntent.putExtra("lsBrandID", mViewModel.GetBrandID(brandName.toUpperCase()));
-                        loIntent.putExtra("lsBrandNm", brandName.toUpperCase());
+                        if (!mViewModel.GetBrandID(brandName.toUpperCase()).isEmpty()){
 
-                        startActivity(loIntent);
+                            Intent loIntent = new Intent(requireActivity(), Activity_ProductSelection.class);
+                            loIntent.putExtra("lsBrandID", mViewModel.GetBrandID(brandName.toUpperCase()));
+                            loIntent.putExtra("lsBrandNm", brandName.toUpperCase());
 
+                            startActivity(loIntent);
+
+                        }
                     }
+
+                } else {
+
+                    Intent loIntent = new Intent(requireActivity(), Activity_Mobile_Promo.class);
+                    startActivity(loIntent);
                 }
             }
         }));
@@ -238,6 +284,7 @@ public class Fragment_Home extends Fragment {
         /** GET ALL EVENTS IMPORTED**/
 
         mViewModel.getEventCategories().observe(getViewLifecycleOwner(), new Observer<List<ESub_Events>>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<ESub_Events> eSubEvents) {
 
@@ -259,7 +306,6 @@ public class Fragment_Home extends Fragment {
 
                                 //todo if event is valid, add to active events
                                 if (isEventValid(loEvent.getdVoteStart(), loEvent.getdVoteEnd())){
-
                                     laActiveEvents.add(loEvent);
                                 }
 
@@ -289,6 +335,7 @@ public class Fragment_Home extends Fragment {
                                 }
                             });
 
+                            loAdapter.notifyDataSetChanged();
                             slider_events.setAdapter(loAdapter);
 
                             /**
@@ -300,14 +347,16 @@ public class Fragment_Home extends Fragment {
                             ViewPagerProperty loViewPagerProperty = new ViewPagerProperty(slider_events);
 
                             loViewPagerProperty.initSliderPadding(
-                                    new ViewPagerProperty.Padding_Property(150, 150,
-                                            0, 0, false, false, 3)
+                                    new ViewPagerProperty.Padding_Property(100, 100,
+                                            0, 0, false, false, 3),
+                                    0.5f
                             );
 
                             loViewPagerProperty.initSliderPageTransformer();
 
                             loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(true);
                             loParent.botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(true);
+
                             layout_events.setVisibility(View.VISIBLE);
 
                         }else {

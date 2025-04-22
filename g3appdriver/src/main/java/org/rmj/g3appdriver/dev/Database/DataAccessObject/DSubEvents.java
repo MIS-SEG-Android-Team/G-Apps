@@ -18,6 +18,6 @@ public interface DSubEvents {
     @Query("DELETE FROM Sub_Events")
     void deleteall();
 
-    @Query("SELECT * FROM Sub_Events")
+    @Query("SELECT * FROM Sub_Events ORDER BY  sSubEventIDxx ASC")
     LiveData<List<ESub_Events>> getEventCategories();
 }

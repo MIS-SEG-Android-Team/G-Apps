@@ -16,14 +16,18 @@ public class ViewPagerProperty {
         this.object = object;
     }
 
-    public void initSliderPadding(Padding_Property loProperties){
+    public void initSliderPadding(Padding_Property loProperties, float paddingDensity){
 
         /**THIS PROPERTIES MAKE THE ITEMS VISIBLE TO THE CURRENT ITEMS VIEW.
          * IT WILL ONLY WORK IF PADDING ON BOTH SIDES OF THE VIEWPAGER IS SET**/
 
         //todo: set viewpager properties, it helps to reduce space between items to make it closer to current item view
-        object.setPadding(loProperties.paddingLeft(), loProperties.paddingTop(),
-                loProperties.paddingRight(), loProperties.paddingBottom());
+
+        //todo get density of the device, this would help to retain the property value into different devices
+        float scale = object.getResources().getDisplayMetrics().density;
+
+        object.setPaddingRelative((int) (loProperties.paddingLeft() * scale + paddingDensity), (int) (loProperties.paddingTop() * scale + paddingDensity),
+                (int) (loProperties.paddingRight() * scale + paddingDensity), (int) (loProperties.paddingBottom() * scale + paddingDensity));
         object.setClipToPadding(loProperties.clipPadding());
         object.setClipChildren(loProperties.clipChildren());
         object.setOffscreenPageLimit(loProperties.offscreenPageLimit());

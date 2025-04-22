@@ -32,7 +32,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/data_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/msg_icon"
@@ -75,6 +76,31 @@
             </ScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_notify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/icon_title"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/ic_baseline_confirmation_pin_24"
+                android:layout_gravity="center"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/mtv_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This is a message with icon title"
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"

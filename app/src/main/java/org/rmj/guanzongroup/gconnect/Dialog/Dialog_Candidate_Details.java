@@ -1,15 +1,10 @@
 package org.rmj.guanzongroup.gconnect.Dialog;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -20,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -31,7 +25,6 @@ import com.google.android.material.textview.MaterialTextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DVoteLogs;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.etc.FacebookShare;
@@ -118,6 +111,7 @@ public class Dialog_Candidate_Details {
 
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         private void initDetails(){
 
             try{
@@ -169,6 +163,7 @@ public class Dialog_Candidate_Details {
                                 }
                             });
 
+                    loAdapter.notifyDataSetChanged();
                     list_images.setAdapter(loAdapter);
 
                     /**
@@ -180,8 +175,9 @@ public class Dialog_Candidate_Details {
                     ViewPagerProperty loViewPagerProperty = new ViewPagerProperty(list_images);
 
                     loViewPagerProperty.initSliderPadding(
-                            new ViewPagerProperty.Padding_Property(200, 200,
-                                    0, 0, false, false, 3)
+                            new ViewPagerProperty.Padding_Property(100, 100,
+                                    0, 0, false, false, 3),
+                            0.5f
                     );
 
                     loViewPagerProperty.initSliderPageTransformer();
@@ -242,23 +238,38 @@ public class Dialog_Candidate_Details {
 
                             poLoad.dismiss();
 
+                            MessageBox poMessage = new MessageBox(context);
+
                             if (result){
 
-                                poDialogx.dismiss();
+                                poMessage.initDialog();
+                                poMessage.displayDialogWithIconTitle(R.drawable.baseline_check_circle_24,
+                                        "Great!\n\n Your vote has been counted");
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                poMessage.setPositiveButton("Okay", new MessageBox.DialogButton() {
+                                    @Override
+                                    public void OnButtonClick(View view, AlertDialog dialog) {
 
-                                    mviewModel.UpdateTimeStmp(details.getsGroupIDx(), details.getsEvntIDxx(),
-                                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
+                                        dialog.dismiss();
+                                        poDialogx.dismiss();
 
-                                }else {
-                                    mviewModel.UpdateTimeStmp(details.getsGroupIDx(), details.getsEvntIDxx(),
-                                            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
-                                }
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                                            mviewModel.UpdateTimeStmp(details.getsGroupIDx(), details.getsEvntIDxx(),
+                                                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
+
+                                        }else {
+                                            mviewModel.UpdateTimeStmp(details.getsGroupIDx(), details.getsEvntIDxx(),
+                                                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
+                                        }
+
+                                    }
+                                });
+
+                                poMessage.show();
 
                             }else {
 
-                                MessageBox poMessage = new MessageBox(context);
                                 poMessage.initDialog();
                                 poMessage.setTitle("Guanzon Connect");
 
@@ -355,7 +366,7 @@ public class Dialog_Candidate_Details {
         @Override
         public VH_ImageList onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new VH_ImageList(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_slidercandidate_details, parent, false)
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_vpagecandidate_details, parent, false)
             );
         }
 
@@ -392,7 +403,7 @@ public class Dialog_Candidate_Details {
 
         public static class VH_ImageList extends RecyclerView.ViewHolder {
 
-            private final ShapeableImageView img_candidate;
+            private final ImageButton img_candidate;
 
             public VH_ImageList(@NonNull View itemView) {
                 super(itemView);
