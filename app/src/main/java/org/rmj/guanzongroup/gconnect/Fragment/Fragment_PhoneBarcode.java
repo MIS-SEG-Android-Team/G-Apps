@@ -384,72 +384,68 @@ public class Fragment_PhoneBarcode extends Fragment {
                                     public void onNegBtnListener() {
                                     }
                                 });
+                        return;
                     }
 
-                    //todo: observe and collect scanned barcodes, if not empty then proceed to generating qr image
-                    mviewModel.getBarcodeList().observe(getViewLifecycleOwner(), new Observer<List<EBarcode>>() {
-                        @Override
-                        public void onChanged(List<EBarcode> eBarcodes) {
+                    if (mviewModel.getBarcodeEntries() != null){
 
-                            if (eBarcodes != null){
+                        if (mviewModel.getBarcodeEntries().size() > 0){
 
-                                if (eBarcodes.size() > 0){ //todo: if barcode list is not empty
+                            List<EBarcode> eBarcodes = mviewModel.getBarcodeEntries();
 
-                                    try {
+                            try {
 
-                                        JSONArray loIEMI = new JSONArray(); //todo: initialize array
+                                JSONArray loIEMI = new JSONArray(); //todo: initialize array
 
-                                        for (EBarcode eBarcode: eBarcodes){
+                                for (EBarcode eBarcode: eBarcodes){
 
-                                            loIEMI.put(eBarcode.getBarcode()); //todo: insert to json array
-                                        }
+                                    loIEMI.put(eBarcode.getBarcode()); //todo: insert to json array
+                                }
 
-                                        loQRData.put("sSerialNo", loIEMI); //todo: insert serial list to QR data
+                                loQRData.put("sSerialNo", loIEMI); //todo: insert serial list to QR data
 
-                                        //todo: generate qr image
-                                        mviewModel.generateQR(loQRData, new VMBarcode.onGenerateQR() {
-                                            @Override
-                                            public void onGenerating() {
-                                                dialogLoad.initDialog("Guanzon Connect", "Generating QR Image...");
-                                                dialogLoad.show();
-                                            }
-
-                                            @Override
-                                            public void onQRGenerated(Bitmap bitmap) {
-                                                dialogLoad.dismiss();
-
-                                                Dialog_BarcodeDetails.Dialog_QRImage  qrPreview =
-                                                        dialogBarcodeInfo.new Dialog_QRImage();
-
-                                                qrPreview.initDialogQRImage(bitmap);
-                                            }
-
-                                            @Override
-                                            public void onQRGenerationFailed(String message) {
-                                                dialogLoad.dismiss();
-
-                                                initMessage(message, "Okay", "", 2, false, new onMessage() {
-                                                    @Override
-                                                    public void onPosBtnListener() {
-
-                                                    }
-
-                                                    @Override
-                                                    public void onNegBtnListener() {
-
-                                                    }
-                                                });
-                                            }
-                                        });
-
-                                    }catch (Exception e){
-                                        e.printStackTrace();
+                                //todo: generate qr image
+                                mviewModel.generateQR(loQRData, new VMBarcode.onGenerateQR() {
+                                    @Override
+                                    public void onGenerating() {
+                                        dialogLoad.initDialog("Guanzon Connect", "Generating QR Image...");
+                                        dialogLoad.show();
                                     }
 
-                                }
+                                    @Override
+                                    public void onQRGenerated(Bitmap bitmap) {
+                                        dialogLoad.dismiss();
+
+                                        Dialog_BarcodeDetails.Dialog_QRImage  qrPreview =
+                                                dialogBarcodeInfo.new Dialog_QRImage();
+
+                                        qrPreview.initDialogQRImage(bitmap);
+                                    }
+
+                                    @Override
+                                    public void onQRGenerationFailed(String message) {
+                                        dialogLoad.dismiss();
+
+                                        initMessage(message, "Okay", "", 2, false, new onMessage() {
+                                            @Override
+                                            public void onPosBtnListener() {
+
+                                            }
+
+                                            @Override
+                                            public void onNegBtnListener() {
+
+                                            }
+                                        });
+                                    }
+                                });
+
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
+
                         }
-                    });
+                    }
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -502,7 +498,6 @@ public class Fragment_PhoneBarcode extends Fragment {
                     break;
                 case "credit card":
                     loObj.put("paymentForm", "1");
-                    loObj.put("term", loVal.getTerms());
                     break;
                 case "financing":
                     loObj.put("paymentForm", "2");

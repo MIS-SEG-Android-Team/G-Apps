@@ -18,6 +18,9 @@ public interface DBarcode {
     @Query("SELECT * FROM Barcode")
     LiveData<List<EBarcode>> getBarcodes();
 
+    @Query("SELECT * FROM Barcode")
+    List<EBarcode> getBarcodeList();
+
     @Query("SELECT COUNT(*) FROM Barcode")
     int getBarcodeCount();
 

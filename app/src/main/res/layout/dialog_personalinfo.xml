@@ -200,43 +200,6 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/layout_terms"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="5dp"
-                    android:visibility="gone">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/CustomDropDownTilStyle"
-                        android:id="@+id/til_terms"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintWidth_percent="0.3">
-
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            style="@style/DropdownStyleTheme"
-                            android:id="@+id/tie_terms"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:hint="Terms"
-                            android:text="0" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Months"
-                        android:layout_marginStart="10dp"
-                        app:layout_constraintStart_toEndOf="@+id/til_terms"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout

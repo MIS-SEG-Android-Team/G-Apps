@@ -55,6 +55,10 @@ public class VMBarcode extends AndroidViewModel {
         return poBarcode.getBarcodeList();
     }
 
+    public List<EBarcode> getBarcodeEntries(){
+        return poBarcode.getBarcodeEntries();
+    }
+
     public int countBarcode(){
         return poBarcode.countBarcode();
     }

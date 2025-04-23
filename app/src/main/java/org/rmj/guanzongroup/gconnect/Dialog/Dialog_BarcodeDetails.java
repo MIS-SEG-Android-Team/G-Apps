@@ -55,13 +55,11 @@ public class Dialog_BarcodeDetails {
     //todo payment info objects
     private LinearLayout layout_payment;
     private MaterialAutoCompleteTextView tie_paytype;
-    private MaterialAutoCompleteTextView tie_terms;
     private MaterialAutoCompleteTextView tie_financer;
     private TextInputEditText tie_amount;
 
     //todo payment info layout objects
     private LinearLayout layout_finance;
-    private ConstraintLayout layout_terms;
     private LinearLayout til_financer;
 
     //todo: dialog button objects
@@ -185,10 +183,8 @@ public class Dialog_BarcodeDetails {
         tie_amount = view.findViewById(R.id.tie_amount);
 
         layout_finance = view.findViewById(R.id.layout_finance);
-        layout_terms = view.findViewById(R.id.layout_terms);
         til_financer = view.findViewById(R.id.til_financer);
 
-        tie_terms = view.findViewById(R.id.tie_terms);
         tie_financer = view.findViewById(R.id.tie_financer);
 
         btn_continue = view.findViewById(R.id.btn_continue);
@@ -225,8 +221,6 @@ public class Dialog_BarcodeDetails {
         List<String> payTypes = List.of("Cash", "Credit Card", "Financing");
         tie_paytype.setAdapter(new ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item, payTypes));
 
-        List<String> payTerms = List.of("3", "6", "12", "24", "36");
-        tie_terms.setAdapter(new ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item, payTerms));
     }
     private void initListener(){
 
@@ -388,7 +382,6 @@ public class Dialog_BarcodeDetails {
         //todo: initialize payment info
         info.setPaytype(tie_paytype.getText().toString());
         info.setAmount(Double.parseDouble(tie_amount.getText().toString()));
-        info.setTerms(Integer.parseInt(tie_terms.getText().toString()));
         info.setFinancer(getAdapterID(laFinancer, tie_financer.getText().toString()));
 
         return info;
@@ -420,12 +413,10 @@ public class Dialog_BarcodeDetails {
                 break;
             case 1: //todo: credit card
                 layout_finance.setVisibility(View.VISIBLE);
-                layout_terms.setVisibility(View.VISIBLE);
                 til_financer.setVisibility(View.GONE);
                 break;
             case 2: //todo: financer
                 layout_finance.setVisibility(View.VISIBLE);
-                layout_terms.setVisibility(View.GONE);
                 til_financer.setVisibility(View.VISIBLE);
                 break;
         }
@@ -471,15 +462,9 @@ public class Dialog_BarcodeDetails {
         if (amount <= 0.00){
             message = "Invalid credit amount";
             return false;
-        } else {
-
-            if (tie_terms.getText().toString().isEmpty()){
-                message = "Terms is required";
-                return false;
-            }else {
-                return true;
-            }
         }
+
+        return true;
 
     }
     private Boolean isFinancerValid(double amount){
@@ -575,7 +560,6 @@ public class Dialog_BarcodeDetails {
         private String paytype = "";
         private String financer = "";
         private double amount = 0.00;
-        private int terms = 0;
 
         //todo personal info data initializer
         public String getLname() {
@@ -660,13 +644,6 @@ public class Dialog_BarcodeDetails {
             this.amount = amount;
         }
 
-        public int getTerms() {
-            return terms;
-        }
-
-        public void setTerms(int terms) {
-            this.terms = terms;
-        }
     }
 
 }

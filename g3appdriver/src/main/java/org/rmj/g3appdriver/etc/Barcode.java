@@ -35,6 +35,10 @@ public class Barcode {
         return barcodeDao.getBarcodes();
     }
 
+    public List<EBarcode> getBarcodeEntries(){
+        return barcodeDao.getBarcodeList();
+    }
+
     public int countBarcode(){
         return barcodeDao.getBarcodeCount();
     }
