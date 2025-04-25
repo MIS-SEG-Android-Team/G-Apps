@@ -20,12 +20,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/coordinatorLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:visibility="gone"
         app:cardElevation="10dp"
         app:cardCornerRadius="10dp"
         app:cardBackgroundColor="@color/app_background"
@@ -57,5 +57,125 @@
         </com.google.android.material.bottomappbar.BottomAppBar>
 
     </com.google.android.material.card.MaterialCardView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_intro"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/end_logo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/kay5"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintHeight_percent="0.3"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/Title"
+            android:id="@+id/mtv_instruct"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="Please swipe left to setup your account"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@+id/end_logo"
+            app:layout_constraintBottom_toBottomOf="@+id/end_logo"
+            app:layout_constraintStart_toEndOf="@+id/end_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.15"
+            app:layout_constraintWidth_percent="0.4"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/logo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/applogo"
+            android:scaleType="fitCenter"
+            android:layout_margin="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/mcv_intro"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintHeight_percent="0.3"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/btnNext"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/arrow1"
+            android:elevation="5dp"
+            android:outlineProvider="none"
+            app:layout_constraintTop_toBottomOf="@+id/logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.15"
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintVertical_bias="0.8"
+            app:layout_constraintHorizontal_bias="0.85"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv_intro"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="-15dp"
+            android:visibility="gone"
+            app:cardCornerRadius="25dp"
+            app:cardBackgroundColor="@color/app_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHeight_percent="0.5">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="15dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/mtv_text"
+                    style="@style/Title"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="15dp"
+                    android:text="Browse your future RIDE"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/siv_icon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/siv_icon"
+                    app:layout_constraintWidth_percent="0.5" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/siv_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@drawable/kay1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_percent="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/mtv_text"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.15" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
