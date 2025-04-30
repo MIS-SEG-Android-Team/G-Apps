@@ -12,138 +12,143 @@
     app:cardMaxElevation="5dp"
     app:cardElevation="5dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/zxing_transparent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/layout_details"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-                app:strokeColor="?attr/colorPrimary"
-                app:strokeWidth="2dp">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/img_candidate"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/kay" />
-
-            </com.google.android.material.card.MaterialCardView>
+            android:background="@color/zxing_transparent">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/layout_details"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/mtv_name"
-                    style="@style/Title"
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Contestant Name"
-                    android:textAlignment="center"
-                    android:textColor="?attr/colorPrimary" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/mtv_school"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Campus Name"
-                    android:textAlignment="center" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_margin="10dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/layout_norecord"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="400dp"
+                    android:layout_margin="10dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="10dp"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="2dp">
 
                     <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/img_background"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:alpha="0.8"
-                        android:src="@drawable/kay" />
-
-                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/img_candidate"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="Images not available" />
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/kay" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/mtv_name"
+                        style="@style/Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Contestant Name"
+                        android:textAlignment="center"
+                        android:textColor="?attr/colorPrimary" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/mtv_school"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Campus Name"
+                        android:textAlignment="center" />
 
                 </LinearLayout>
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/list_images"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone" />
+                    android:layout_height="150dp"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/layout_norecord"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/img_background"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:alpha="0.8"
+                            android:src="@drawable/kay" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Images not available" />
+
+                    </LinearLayout>
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/list_images"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_vote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="15dp"
+                    android:text="Vote Now" />
 
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_vote"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:padding="15dp"
-                android:text="Vote Now" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/mtv_votes"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="15dp"
+                android:background="@drawable/baseline_heart_vote"
+                android:elevation="15dp"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/layout_details"
+                app:layout_constraintHeight_percent="0.055"
+                app:layout_constraintWidth_percent="0.12"/>
 
-        </LinearLayout>
+            <ImageButton
+                android:id="@+id/img_btnShare"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/ic_baseline_share_24"
+                android:background="@color/zxing_transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mtv_votes"
+                app:layout_constraintHeight_percent="0.055"
+                app:layout_constraintWidth_percent="0.12"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/mtv_votes"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="15dp"
-            android:background="@drawable/baseline_heart_vote"
-            android:elevation="15dp"
-            android:gravity="center"
-            android:text="0"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/layout_details"
-            app:layout_constraintHeight_percent="0.055"
-            app:layout_constraintWidth_percent="0.12"/>
-
-        <ImageButton
-            android:id="@+id/img_btnShare"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="15dp"
-            android:src="@drawable/ic_baseline_share_24"
-            android:background="@color/zxing_transparent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mtv_votes"
-            app:layout_constraintHeight_percent="0.055"
-            app:layout_constraintWidth_percent="0.12"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </com.google.android.material.card.MaterialCardView>

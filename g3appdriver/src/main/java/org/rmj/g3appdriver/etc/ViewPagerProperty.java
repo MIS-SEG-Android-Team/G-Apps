@@ -1,5 +1,6 @@
 package org.rmj.g3appdriver.etc;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -16,18 +17,14 @@ public class ViewPagerProperty {
         this.object = object;
     }
 
-    public void initSliderPadding(Padding_Property loProperties, float paddingDensity){
+    public void initSliderPadding(Padding_Property loProperties){
 
         /**THIS PROPERTIES MAKE THE ITEMS VISIBLE TO THE CURRENT ITEMS VIEW.
          * IT WILL ONLY WORK IF PADDING ON BOTH SIDES OF THE VIEWPAGER IS SET**/
 
         //todo: set viewpager properties, it helps to reduce space between items to make it closer to current item view
 
-        //todo get density of the device, this would help to retain the property value into different devices
-        float scale = object.getResources().getDisplayMetrics().density;
-
-        object.setPaddingRelative((int) (loProperties.paddingLeft() * scale + paddingDensity), (int) (loProperties.paddingTop() * scale + paddingDensity),
-                (int) (loProperties.paddingRight() * scale + paddingDensity), (int) (loProperties.paddingBottom() * scale + paddingDensity));
+        object.setPaddingRelative(loProperties.paddingLeft, loProperties.paddingTop,loProperties.paddingRight, loProperties.paddingBottom);
         object.setClipToPadding(loProperties.clipPadding());
         object.setClipChildren(loProperties.clipChildren());
         object.setOffscreenPageLimit(loProperties.offscreenPageLimit());

@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,11 +175,17 @@ public class Dialog_Candidate_Details {
                      **/
                     ViewPagerProperty loViewPagerProperty = new ViewPagerProperty(list_images);
 
+                    Log.d("DENSITY", String.valueOf(list_images.getResources().getDisplayMetrics().densityDpi));
+                    Log.d("DENSITY", String.valueOf(list_images.getResources().getDisplayMetrics().density));
+                    Log.d("DENSITY", String.valueOf(list_images.getResources().getDisplayMetrics().xdpi));
+
+                    //todo get device density width
+                    int densWidth = (int) (list_images.getResources().getDisplayMetrics().xdpi);
+
+                    //todo formula to retain padding (density width - ( 30% of density width ))
                     loViewPagerProperty.initSliderPadding(
-                            new ViewPagerProperty.Padding_Property(100, 100,
-                                    0, 0, false, false, 3),
-                            0.5f
-                    );
+                            new ViewPagerProperty.Padding_Property((int) (densWidth - (densWidth * 0.3)), (int) (densWidth - (densWidth * 0.3)),
+                                    0, 0, false, false, 3));
 
                     loViewPagerProperty.initSliderPageTransformer();
 
