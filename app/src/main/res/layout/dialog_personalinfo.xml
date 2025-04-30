@@ -9,230 +9,237 @@
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
 
-    <LinearLayout
-        android:id="@+id/layout_barcodedetails"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/layout_personaldetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <com.google.android.material.textview.MaterialTextView
-                style="@style/Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Personal_Details"
-                android:textSize="18dp"
-                android:layout_marginVertical="5dp"
-                android:layout_marginStart="5dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/guanzon_digital_orange"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_lname"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Lastname"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_fname"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Firstname"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_mname"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Middlename"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_suffix"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Suffix"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_mobile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Mobile"
-                    android:maxLength="11"
-                    android:inputType="number"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Address"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
-
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    style="@style/AutoCompleteStyleTheme"
-                    android:id="@+id/tie_towncity"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Town/Municipality"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_payment"
+            android:id="@+id/layout_barcodedetails"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginTop="10dp"
-            android:visibility="visible">
-
-            <com.google.android.material.textview.MaterialTextView
-                style="@style/Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Payment Details"
-                android:textSize="18dp"
-                android:layout_marginVertical="5dp"
-                android:layout_marginStart="5dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/guanzon_digital_orange"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/CustomDropDownTilStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
-
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    style="@style/DropdownStyleTheme"
-                    android:id="@+id/tie_paytype"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Select Payment"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
+            android:padding="10dp">
 
             <LinearLayout
-                android:id="@+id/layout_finance"
+                android:id="@+id/layout_personaldetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Personal_Details"
+                    android:textSize="18sp"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginStart="5dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/guanzon_digital_orange"/>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/CustomDropDownTilStyle"
-                    android:id="@+id/til_financer"
+                    style="@style/TextInputStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:visibility="gone">
+                    android:layout_marginTop="5dp">
 
-                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        style="@style/DropdownStyleTheme"
-                        android:id="@+id/tie_financer"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_lname"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="Financer"/>
+                        android:hint="Lastname"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_fname"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Firstname"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_mname"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Middlename"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_suffix"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Suffix"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Mobile"
+                        android:maxLength="11"
+                        android:inputType="number"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Address"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        style="@style/AutoCompleteStyleTheme"
+                        android:id="@+id/tie_towncity"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Town/Municipality"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputStyle"
+            <LinearLayout
+                android:id="@+id/layout_payment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:visibility="visible">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Payment Details"
+                    android:textSize="18sp"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginStart="5dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/guanzon_digital_orange"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/CustomDropDownTilStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        style="@style/DropdownStyleTheme"
+                        android:id="@+id/tie_paytype"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Select Payment"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_finance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/CustomDropDownTilStyle"
+                        android:id="@+id/til_financer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:visibility="gone">
+
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            style="@style/DropdownStyleTheme"
+                            android:id="@+id/tie_financer"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="Financer"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Amount"
+                        android:text="0.00"
+                        android:inputType="numberDecimal"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_continue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:text="Continue"
+                android:layout_marginTop="10dp"/>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_amount"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Amount"
-                    android:text="0.00"
-                    android:inputType="numberDecimal"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cancel"/>
 
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_continue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Continue"
-            android:layout_marginTop="10dp"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cancel"/>
-
-    </LinearLayout>
+    </ScrollView>
 
 </com.google.android.material.card.MaterialCardView>
