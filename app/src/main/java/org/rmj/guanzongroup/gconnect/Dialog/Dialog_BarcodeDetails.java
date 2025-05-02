@@ -391,14 +391,11 @@ public class Dialog_BarcodeDetails {
     //todo payment info methods
     private void initFinancer(){
 
-        HashMap<String, String> laFinancerVal = new HashMap<>();
-        laFinancerVal.put("C00118000296", "NorthPoint Excelsior Credit Corporation");
-        laFinancerVal.put("C0W110000001", "Samsung Electronics Philippines Corporation");
-        laFinancerVal.put("GCO116000731", "Home Credit Philippines");
-        laFinancerVal.put("GCO116000734", "Flexi, Finance");
-        laFinancerVal.put("GCO121000006", "GCash");
-
-        laFinancer = laFinancerVal;
+        laFinancer.put("C00118000296", "NorthPoint Excelsior Credit Corporation");
+        laFinancer.put("C0W110000001", "Samsung Electronics Philippines Corporation");
+        laFinancer.put("GCO116000731", "Home Credit Philippines");
+        laFinancer.put("GCO116000734", "Flexi, Finance");
+        laFinancer.put("GCO121000006", "GCash");
 
         List<String> financers = new ArrayList<>(laFinancer.values());
         tie_financer.setAdapter(new ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item, financers));

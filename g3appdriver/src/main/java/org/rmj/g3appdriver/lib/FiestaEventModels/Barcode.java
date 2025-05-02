@@ -1,4 +1,4 @@
-package org.rmj.g3appdriver.etc;
+package org.rmj.g3appdriver.lib.FiestaEventModels;
 
 import android.content.Context;
 import android.graphics.Bitmap;

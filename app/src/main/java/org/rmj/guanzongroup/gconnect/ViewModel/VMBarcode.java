@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DTownInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarcode;
 import org.rmj.g3appdriver.dev.Repositories.RTown;
-import org.rmj.g3appdriver.etc.Barcode;
+import org.rmj.g3appdriver.lib.FiestaEventModels.Barcode;
 import org.rmj.g3appdriver.utils.Task.OnTaskExecuteListener;
 import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 

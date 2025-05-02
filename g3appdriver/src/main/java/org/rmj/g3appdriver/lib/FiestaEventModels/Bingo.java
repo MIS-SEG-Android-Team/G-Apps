@@ -1,4 +1,4 @@
-package org.rmj.g3appdriver.etc;
+package org.rmj.g3appdriver.lib.FiestaEventModels;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,9 +14,7 @@ import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class Bingo {

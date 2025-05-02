@@ -1,7 +1,6 @@
 package org.rmj.guanzongroup.gconnect.ViewModel;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -9,7 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import org.json.JSONArray;
 import org.rmj.g3appdriver.dev.Database.Entities.EBingoCard;
-import org.rmj.g3appdriver.etc.Bingo;
+import org.rmj.g3appdriver.lib.FiestaEventModels.Bingo;
 import org.rmj.g3appdriver.utils.Task.OnTaskExecuteListener;
 import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 
