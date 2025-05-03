@@ -8,10 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DAddress;
-import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBarcode;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBingoCard;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBranchInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
@@ -50,7 +50,6 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DUserInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DVoteLogs;
 import org.rmj.g3appdriver.dev.Database.Entities.EAddressInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarangayInfo;
-import org.rmj.g3appdriver.dev.Database.Entities.EBarcode;
 import org.rmj.g3appdriver.dev.Database.Entities.EBingoCard;
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
@@ -140,10 +139,9 @@ import org.rmj.g3appdriver.dev.Database.Entities.EVoteLogs;
         EGCard_Ledger.class,
         EPointsRequest.class,
         EBingoCard.class,
-        EBarcode.class,
         ESub_Events.class,
         ECandidates.class,
-        EVoteLogs.class}, version = 14, exportSchema = false)
+        EVoteLogs.class}, version = 16, exportSchema = false)
 public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     private static final String TAG = "GuanzonApp_DB_Manager";
     private static GGC_GuanzonAppDB instance;
@@ -184,7 +182,6 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     public abstract DGCard_Ledger GLedgerDao();
     public abstract DPointsRequest GPointsRqstDao();
     public abstract DBingoCard BingoCardDao();
-    public abstract DBarcode BarcodeDao();
     public abstract DSubEvents SubEvntsDao();
     public abstract DCandidates CandidatesDao();
     public abstract DVoteLogs VoteLogsDao();
@@ -193,9 +190,9 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
         if(instance == null){
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             GGC_GuanzonAppDB.class, "GGC_ISysDBF.db")
-                    .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
                     .addCallback(roomCallBack)
+                    .addMigrations(MIGRATION_V16)
                     .build();
         }
         return instance;
@@ -206,6 +203,14 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
             Log.e(TAG, "Local database has been created.");
+        }
+    };
+
+    static final Migration MIGRATION_V16 = new Migration(15, 16) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
+
+            supportSQLiteDatabase.execSQL("DROP TABLE Barcode");
         }
     };
 }
