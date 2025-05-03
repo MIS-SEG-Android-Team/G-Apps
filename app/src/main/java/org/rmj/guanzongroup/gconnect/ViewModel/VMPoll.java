@@ -14,6 +14,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Repositories.RCandidates;
+import org.rmj.g3appdriver.etc.ConnectionUtil;
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
 import org.rmj.g3appdriver.lib.GCardCore.iGCardSystem;
 import org.rmj.g3appdriver.utils.Task.OnTaskExecuteListener;
@@ -26,6 +27,7 @@ public class VMPoll extends AndroidViewModel {
     @SuppressLint("StaticFieldLeak")
     private Context mContext;
     private iGCardSystem poSystem;
+    private ConnectionUtil poConnect;
     private String message;
 
     private final RCandidates poCandidates;
@@ -34,7 +36,8 @@ public class VMPoll extends AndroidViewModel {
         super(application);
 
         this.mContext = application;
-        poCandidates = new RCandidates(application);
+        this.poConnect = new ConnectionUtil(application);
+        this.poCandidates = new RCandidates(application);
     }
 
     public LiveData<List<ESub_Events>> GetCategories(){
@@ -73,6 +76,11 @@ public class VMPoll extends AndroidViewModel {
             public Object DoInBackground(Object args) {
 
                 try{
+
+                    if (!poConnect.isDeviceConnected()){
+                        message = "Oops! Sorry, server is not reachable for now.";
+                        return false;
+                    }
 
                     poSystem = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
 

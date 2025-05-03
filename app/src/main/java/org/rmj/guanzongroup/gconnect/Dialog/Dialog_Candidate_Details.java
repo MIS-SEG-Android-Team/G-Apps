@@ -175,10 +175,6 @@ public class Dialog_Candidate_Details {
                      **/
                     ViewPagerProperty loViewPagerProperty = new ViewPagerProperty(list_images);
 
-                    Log.d("DENSITY", String.valueOf(list_images.getResources().getDisplayMetrics().densityDpi));
-                    Log.d("DENSITY", String.valueOf(list_images.getResources().getDisplayMetrics().density));
-                    Log.d("DENSITY", String.valueOf(list_images.getResources().getDisplayMetrics().xdpi));
-
                     //todo get device density width
                     int densWidth = (int) (list_images.getResources().getDisplayMetrics().xdpi);
 

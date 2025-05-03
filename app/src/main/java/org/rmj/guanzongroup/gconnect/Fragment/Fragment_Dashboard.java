@@ -98,8 +98,6 @@ public class Fragment_Dashboard extends Fragment {
                 viewPager.setCurrentItem(0);
             }  else if(item.getItemId() == R.id.nav_promos){
                 viewPager.setCurrentItem(1);
-            }  else if(item.getItemId() == R.id.nav_Barcode){
-                viewPager.setCurrentItem(2);
             }  else if(item.getItemId() == R.id.nav_Poll){
                 viewPager.setCurrentItem(3);
             }
@@ -127,7 +125,6 @@ public class Fragment_Dashboard extends Fragment {
                 if (eClientInfo != null){
                     //botNav.getMenu().findItem(R.id.nav_Bingo).setVisible(true); todo: for future use, postponed
                     mcv_BotNav.setVisibility(View.VISIBLE);
-                    botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(true);
                     botNav.getMenu().findItem(R.id.nav_Poll).setVisible(true);
 
                     layout_intro.setVisibility(View.GONE);
@@ -137,7 +134,6 @@ public class Fragment_Dashboard extends Fragment {
                 }else {
                     //botNav.getMenu().findItem(R.id.nav_Bingo).setVisible(false); todo: for future use, postponed
                     mcv_BotNav.setVisibility(View.GONE);
-                    botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(false);
                     botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
 
                     viewPager.setCurrentItem(0);
@@ -208,7 +204,6 @@ public class Fragment_Dashboard extends Fragment {
         Fragment[] loFragments = new Fragment[]{
                 new Fragment_Home(),
                 new Fragment_Promotion(),
-                new Fragment_PhoneBarcode(),
                 loPoll};
 
         FragmentAdapter loAdapter = new FragmentAdapter(getChildFragmentManager(), getLifecycle());

@@ -315,7 +315,6 @@ public class Fragment_Home extends Fragment {
                             if (laActiveEvents.size() <= 0){
 
                                 loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
-                                loParent.botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(false);
                                 layout_events.setVisibility(View.GONE);
 
                                 return;
@@ -357,20 +356,17 @@ public class Fragment_Home extends Fragment {
                             loViewPagerProperty.initSliderPageTransformer();
 
                             loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(true);
-                            loParent.botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(true);
 
                             layout_events.setVisibility(View.VISIBLE);
 
                         }else {
 
                             loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
-                            loParent.botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(false);
                             layout_events.setVisibility(View.GONE);
                         }
 
                     }else {
                         loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
-                        loParent.botNav.getMenu().findItem(R.id.nav_Barcode).setVisible(false);
                         layout_events.setVisibility(View.GONE);
                     }
 

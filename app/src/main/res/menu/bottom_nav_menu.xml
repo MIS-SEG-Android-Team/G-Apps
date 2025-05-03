@@ -1,34 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-<!--    android:title="@string/menu_home" -->
     <item
         android:id="@+id/nav_home"
         android:title=""
         android:enabled="true"
         android:icon="@drawable/ic_baseline_home_24"/>
 
-<!--    android:title="@string/menu_promos" -->
     <item
         android:id="@+id/nav_promos"
         android:title=""
         android:enabled="true"
         android:icon="@drawable/ic_baseline_promo_24"/>
 
-<!--    android:title="@string/lbl_poll" -->
     <item
         android:id="@+id/nav_Poll"
         android:enabled="true"
         android:title=""
         android:icon="@drawable/baseline_poll_24"
-        android:visible="false"/>
-
-<!--    android:title="@string/lbl_poll" -->
-    <item
-        android:id="@+id/nav_Barcode"
-        android:enabled="true"
-        android:title=""
-        android:icon="@drawable/baseline_barcode_reader_24"
         android:visible="false"/>
 
     <!--    android:title="@string/lbl_bingo" -->

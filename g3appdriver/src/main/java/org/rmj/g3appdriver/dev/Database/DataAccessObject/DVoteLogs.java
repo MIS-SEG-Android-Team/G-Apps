@@ -17,11 +17,13 @@ public interface DVoteLogs {
     void deleteAll();
 
     @Query("SELECT nNoVotesx total, dVoted dTimeStmp FROM Vote_History " +
-            "WHERE sSubEventIDxx = :categoryID AND sUserIDxx = :sUserIDxx")
+            "WHERE sSubEventIDxx = :categoryID AND sUserIDxx = :sUserIDxx " +
+            "ORDER BY dVoted DESC LIMIT 1")
     LiveData<LatestVote> ObserveVoteCounts(String categoryID, String sUserIDxx);
 
     @Query("SELECT nNoVotesx total, dVoted dTimeStmp FROM Vote_History " +
-            "WHERE sSubEventIDxx = :categoryID AND sUserIDxx = :sUserIDxx")
+            "WHERE sSubEventIDxx = :categoryID AND sUserIDxx = :sUserIDxx " +
+            "ORDER BY dVoted DESC LIMIT 1")
     LatestVote GetVoteCounts(String categoryID, String sUserIDxx);
 
     @Query("SELECT nNoVotesx FROM Vote_History " +
