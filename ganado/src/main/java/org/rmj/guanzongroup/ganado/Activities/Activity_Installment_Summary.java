@@ -28,9 +28,7 @@ public class Activity_Installment_Summary extends AppCompatActivity {
     private ProductInquiry poApp;
     private VMInstallmentSummary mViewModel;
     private String Transaction,ModelID, BrandID,Paym, terms, MonthPaym;
-    private MaterialTextView  txtTerms,  txtTargetDtes;
     private TextInputEditText txtPaymMod;
-    private MaterialAutoCompleteTextView txtTargetDtex;
     private MaterialAutoCompleteTextView txtMinDP;
     private ConstraintLayout installmentgrp;
     private TextInputEditText txtCashPrice;
@@ -40,13 +38,15 @@ public class Activity_Installment_Summary extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_installment_summary);
+
         initWidgets();
+
         mViewModel.InitializeApplication(getIntent());
         setWidgets();
-        btnsave.setOnClickListener(view -> {
 
-//            Intent loIntent = new Intent(Activity_Installment_Summary.this, Activity_ProductInquiry.class);
+        btnsave.setOnClickListener(view -> {
             Intent loIntent = new Intent(Activity_Installment_Summary.this, Activity_Inquiries.class);
             loIntent.putExtra("lsBrandID", BrandID);
             loIntent.putExtra("lsModelID", ModelID);
@@ -69,10 +69,7 @@ public class Activity_Installment_Summary extends AppCompatActivity {
         txtTerm.setEnabled(false);
         txtPaymMod.setEnabled(false);
     }
-
     private void setWidgets(){
-//        mViewModel = new ViewModelProvider(Activity_Installment_Summary.this).  get(VMInstallmentSummary.class);
-
         mViewModel.GetInquiryDetail().observe(Activity_Installment_Summary.this, eGanadoOnline->{
             try {
                 JSONObject jsonProdInfo = new JSONObject(eGanadoOnline.getProdInfo());
@@ -89,7 +86,6 @@ public class Activity_Installment_Summary extends AppCompatActivity {
                     txtTerm.setText(GConstants.INSTALLMENT_TERM[4]);
                 }
 
-                //txtTerm.setText(GConstants.getAdapter(Activity_Installment_Summary.this, GConstants.INSTALLMENT_TERM));
                 Log.e("val mo : ", GConstants.PAYMENT_FORM[Integer.parseInt(eGanadoOnline.getPaymForm())]);
 
                 txtPaymMod.setText(GConstants.PAYMENT_FORM[Integer.parseInt(eGanadoOnline.getPaymForm())]);
@@ -97,14 +93,6 @@ public class Activity_Installment_Summary extends AppCompatActivity {
                     installmentgrp.setVisibility(View.GONE);
                 }
                 txtTargetDte.setText(eGanadoOnline.getTargetxx().toString());
-//                if(eGanadoOnline.getPaymForm().toString()=="1"){
-//                    txtPaymMod.setText("Installment");
-//                    Log.e("value ng ins",txtPaymMod.toString());
-//                }else{
-//                    txtPaymMod.setText("Cash");
-//                    Log.e("value ng cash",txtPaymMod.toString());
-//                    installmentgrp.setVisibility(View.GONE);
-//                }
 
                 mViewModel.setModelID(jsonProdInfo.getString("sModelIDx"));
                 ModelID = jsonProdInfo.getString("sModelIDx");
@@ -124,36 +112,6 @@ public class Activity_Installment_Summary extends AppCompatActivity {
                         mViewModel.getModel().setDownPaym(String.valueOf(Paym));
                         txtMinDP.setText(FormatUIText.getCurrencyUIFormat(String.valueOf(Paym)));
                         txtMontlyAmort.setText(FormatUIText.getCurrencyUIFormat(MonthPaym));
-                        Log.d("txtMontlyAmort", String.valueOf(MonthPaym));
-//                        mViewModel.GetMinimumDownpayment(modelID,jsonPaymInfo.getInt("sTermIDxx"), new VMInstallmentSummary.OnRetrieveInstallmentInfo() {
-//                            @Override
-//                            public void OnRetrieve(InstallmentInfo loResult) {
-//                                Log.e("getMonthlyAmortization",FormatUIText.getCurrencyUIFormat(String.valueOf(loResult.getMonthlyAmortization())) + "");
-//                                Log.e("getMonthlyAmortization",FormatUIText.getCurrencyUIFormat(String.valueOf(loResult.getMinimumDownpayment())) + "");
-////                              txtPaymMod.setText(get);
-//
-//                            }
-//
-//                            @Override
-//                            public void OnFailed(String message) {
-//
-//                            }
-//                        });
-                        Log.d("","");
-//                        mViewModel.CalculateNewDownpayment(ModelID, Integer.parseInt(terms), Double.parseDouble(Paym), new VMInstallmentSummary.OnCalculateNewDownpayment() {
-//                            @Override
-//                            public void OnCalculate(double lnResult) {
-//                                Log.d("new Compute ", String.valueOf(lnResult));
-//                                //Toast.makeText(Activity_Installment_Summary.this, String.valueOf(lnResult), Toast.LENGTH_SHORT).show();
-//                                txtMontlyAmort.setText(FormatUIText.getCurrencyUIFormat(String.valueOf(lnResult)));
-//                            }
-//
-//                            @Override
-//                            public void OnFailed(String message) {
-//                                Log.d("new Compute fa ", String.valueOf(message));
-//                            }
-//                        });
-
                     } catch (NullPointerException e){
                         e.printStackTrace();
                     } catch (Exception e){
@@ -166,18 +124,5 @@ public class Activity_Installment_Summary extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-//        mViewModel.CalculateNewDownpayment(lsModelID, Integer.parseInt(mViewModel.getModel().getTermIDxx()), lnInput, new VMInstallmentSummary.OnCalculateNewDownpayment() {
-//            @Override
-//            public void OnCalculate(double lnResult) {
-//                txtMontlyAmort.setText(FormatUIText.getCurrencyUIFormat(String.valueOf(lnResult)));
-//            }
-//
-//            @Override
-//            public void OnFailed(String message) {
-//
-//            }
-//        } );
-
-
     }
 }

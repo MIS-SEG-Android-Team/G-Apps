@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/GuanzonMarketplace.Theme"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.Fragment_Notification">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_notifications"
         android:layout_width="match_parent"
@@ -45,7 +47,7 @@
             app:layout_constraintEnd_toEndOf="@+id/shapeableImageView2"
             app:layout_constraintStart_toStartOf="@+id/shapeableImageView2"
             app:layout_constraintTop_toBottomOf="@+id/shapeableImageView2" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

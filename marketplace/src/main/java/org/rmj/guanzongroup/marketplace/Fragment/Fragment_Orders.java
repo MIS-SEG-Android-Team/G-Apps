@@ -56,8 +56,9 @@ public class Fragment_Orders extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(requireActivity()).get(VMOrders.class);
+
         View view = inflater.inflate(R.layout.fragment_orders, container, false);
+        mViewModel = new ViewModelProvider(requireActivity()).get(VMOrders.class);
 //        mViewModel.ImportOrdersTask();
         tabLayout = view.findViewById(R.id.tab_layout_orders);
         txtNoList = view.findViewById(R.id.txtNoList);

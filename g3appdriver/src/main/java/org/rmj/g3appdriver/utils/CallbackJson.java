@@ -10,9 +10,11 @@ public class CallbackJson {
         try {
             loJson.put("status", foCStatus);
             loJson.put("message", fsMessage);
+
             return loJson.toString();
         } catch (JSONException e) {
             e.printStackTrace();
+
             return loJson.toString();
         }
     }

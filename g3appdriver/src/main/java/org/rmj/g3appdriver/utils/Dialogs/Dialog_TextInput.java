@@ -18,7 +18,6 @@ import org.rmj.g3appdriver.R;
 import java.util.Objects;
 
 public class Dialog_TextInput {
-    private static final String TAG = Dialog_DoubleButton.class.getSimpleName();
 
     private AlertDialog poDialogx;
     private final Context poContext;

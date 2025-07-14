@@ -58,6 +58,7 @@ public interface DGanadoOnline {
             "a.sModelIDx AS ModelIDx " +
             ",a.sModelNme AS ModelNme " +
             ",a.sBrandIDx AS BrandIDx" +
+            ",'' AS sBrandNme" +
             ",c.sColorIDx AS ColorIDx" +
             ",c.sColorNme AS ColorNme " +
             "FROM Mc_Model a " +
@@ -67,22 +68,6 @@ public interface DGanadoOnline {
             " AND a.sBrandIDx =:BrandID"+
             " AND c.sColorIDx =:ColorID")
     McInfo GetMCInfo(String ModelID,String BrandID,String ColorID);
-
-    @Query("SELECT  " +
-            "a.nSelPrice, " +
-            "a.nMinDownx, " +
-            "b.nMiscChrg, " +
-            "b.nRebatesx, " +
-            "b.nEndMrtgg, " +
-            "c.nAcctThru, " +
-            "c.nFactorRt " +
-            "FROM Mc_Model_Price a, MC_Category b, MC_Term_Category c, Mc_Model d " +
-            "WHERE a.sMCCatIDx = b.sMCCatIDx " +
-            "AND a.sMCCatIDx = c.sMCCatIDx " +
-            "AND a.sModelIDx = d.sModelIDx " +
-            "AND a.sModelIDx = :ModelID " +
-            "AND c.nAcctThru = :Term")
-    LiveData<McAmortization> getMonthlyPayment(String ModelID, int Term);
 
     @Query("SELECT  " +
             "a.nSelPrice, " +

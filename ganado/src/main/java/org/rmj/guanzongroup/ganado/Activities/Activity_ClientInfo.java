@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -19,14 +20,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DTownInfo;
 import org.rmj.g3appdriver.etc.LoadDialog;
 import org.rmj.g3appdriver.etc.MessageBox;
-import org.rmj.g3appdriver.etc.MessageBoxInstallment;
 import org.rmj.guanzongroup.ganado.R;
 import org.rmj.guanzongroup.ganado.ViewModel.VMPersonalInfo;
 
@@ -41,37 +40,37 @@ public class Activity_ClientInfo extends AppCompatActivity {
 
     private VMPersonalInfo mViewModel;
     private MessageBox poMessage ;
-    private MessageBoxInstallment icMessage;
     private LoadDialog poDialogx;
-    private  String ClientID,SourceCD, SourceNo;
     private TextInputEditText txtLastNm, txtFrstNm, txtMiddNm, txtSuffixx,  txtBirthDt,
             txtEmailAdd, txtMobileNo,  txtHouseNox, txtAddress;
 
     private MaterialAutoCompleteTextView txtMunicipl,txtBPlace;
     private RadioGroup rgGender;
     private MaterialAutoCompleteTextView spinner_relation;
-    private MaterialButton btnContinue, btnPrev;
-    private MaterialCheckBox txtMobileType1, txtMobileType2, txtMobileType3;
+    private MaterialButton btnContinue;
 
     private MaterialToolbar toolbar;
-    private String sTansNox = "";
-    private String monthlyValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_client_info);
+
         poMessage = new MessageBox(Activity_ClientInfo.this);
         poDialogx = new LoadDialog(Activity_ClientInfo.this);
-        setContentView(R.layout.activity_client_info);
+
         initWidgets();
+
         mViewModel.InitializeApplication(getIntent());
+
         mViewModel.InitGeoLocation(Activity_ClientInfo.this);
+
         mViewModel.getRelation().observe(Activity_ClientInfo.this, eRelations->{
             try {
                 ArrayList<String> string = new ArrayList<>();
                 for (int x = 0; x < eRelations.size(); x++) {
                     String lsColor = eRelations.get(x).getRelatnDs();
-//                        String lsTown =  loList.get(x).sProvName ;
                     string.add(lsColor);
 
                 }
@@ -86,6 +85,7 @@ public class Activity_ClientInfo extends AppCompatActivity {
         });
 
         spinner_relation.setOnItemClickListener(new OnItemClickListener(spinner_relation));
+
         mViewModel.GetTownProvinceList().observe(Activity_ClientInfo.this, new Observer<List<DTownInfo.TownProvinceInfo>>() {
             @Override
             public void onChanged(List<DTownInfo.TownProvinceInfo> loList) {
@@ -93,7 +93,6 @@ public class Activity_ClientInfo extends AppCompatActivity {
                     ArrayList<String> string = new ArrayList<>();
                     for (int x = 0; x < loList.size(); x++) {
                         String lsTown = loList.get(x).sTownName + ", " + loList.get(x).sProvName;
-//                        String lsTown =  loList.get(x).sProvName ;
                         string.add(lsTown);
 
                     }
@@ -114,8 +113,10 @@ public class Activity_ClientInfo extends AppCompatActivity {
                             }
                         }
                     });
+
                     ArrayAdapter<String> adapters1 = new ArrayAdapter<>(Activity_ClientInfo.this, android.R.layout.simple_spinner_dropdown_item, string.toArray(new String[0]));
                     txtMunicipl.setAdapter(adapters1);
+
                     txtMunicipl.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -140,6 +141,7 @@ public class Activity_ClientInfo extends AppCompatActivity {
                 }
             }
         });
+
         txtBirthDt.setOnClickListener(v -> {
             final Calendar newCalendar = Calendar.getInstance();
             @SuppressLint("SimpleDateFormat") final SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM dd, yyyy");
@@ -152,7 +154,6 @@ public class Activity_ClientInfo extends AppCompatActivity {
                     txtBirthDt.setText(lsDate);
                     Date loDate = new SimpleDateFormat("MMMM dd, yyyy").parse(lsDate);
                     lsDate = new SimpleDateFormat("yyyy-MM-dd").format(loDate);
-//                    Log.d(TAG, "Save formatted time: " + lsDate);
                     mViewModel.getModel().setBirthDte(lsDate);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -172,55 +173,66 @@ public class Activity_ClientInfo extends AppCompatActivity {
         });
 
         btnContinue.setOnClickListener(v ->{
+
             mViewModel.InitGeoLocation(Activity_ClientInfo.this);
-            mViewModel.getModel().setFrstName(txtFrstNm.getText().toString().trim());
-            mViewModel.getModel().setMiddName(txtMiddNm.getText().toString().trim());
-            mViewModel.getModel().setLastName(txtLastNm.getText().toString().trim());
-            mViewModel.getModel().setSuffixNm(txtSuffixx.getText().toString().trim());
-            mViewModel.getModel().setHouseNox(txtHouseNox.getText().toString());
-            mViewModel.getModel().setAddressx(txtAddress.getText().toString().trim());
-            mViewModel.getModel().setEmailAdd(txtEmailAdd.getText().toString().trim());
-            mViewModel.getModel().setMobileNo(txtMobileNo.getText().toString());
-            mViewModel.SaveData(new VMPersonalInfo.OnSaveInquiry() {
-                @Override
-                public void OnSave() {
-                    poDialogx.initDialog("Benta", "Saving inquiry. Please wait...", false);
-                    poDialogx.show();
-                    Log.d("ako ito", "OnSave:");
-                }
 
-                @Override
-                public void OnSuccess(String args) {
+            mViewModel.getModel().setFrstName(Objects.requireNonNull(txtFrstNm.getText()).toString().trim());
+            mViewModel.getModel().setMiddName(Objects.requireNonNull(txtMiddNm.getText()).toString().trim());
+            mViewModel.getModel().setLastName(Objects.requireNonNull(txtLastNm.getText()).toString().trim());
+            mViewModel.getModel().setSuffixNm(Objects.requireNonNull(txtSuffixx.getText()).toString().trim());
+            mViewModel.getModel().setHouseNox(Objects.requireNonNull(txtHouseNox.getText()).toString());
+            mViewModel.getModel().setAddressx(Objects.requireNonNull(txtAddress.getText()).toString().trim());
+            mViewModel.getModel().setEmailAdd(Objects.requireNonNull(txtEmailAdd.getText()).toString().trim());
+            mViewModel.getModel().setMobileNo(Objects.requireNonNull(txtMobileNo.getText()).toString());
 
-                    poDialogx.dismiss();
-                    poMessage.initDialog();
-                    poMessage.setTitle("Benta");
-                    poMessage.setMessage("Motorcycle inquiry saved successfully!");
-                    poMessage.setPositiveButton("Okay", (view, dialog) -> {
-                        poMessage.dismiss();
+            if (!mViewModel.InitGeoLocation(Activity_ClientInfo.this)){
+                poMessage.initDialog();
+                poMessage.setIcon(R.drawable.baseline_error_24);
+                poMessage.setTitle("Kita Moto");
+                poMessage.setMessage(mViewModel.GetMessage());
+                poMessage.setPositiveButton("Dismiss", (view, dialog) -> {
+                    dialog.dismiss();
+                });
+                poMessage.show();
+
+            }else {
+                mViewModel.SaveData(new VMPersonalInfo.OnSaveInquiry() {
+                    @Override
+                    public void OnSave() {
+                        poDialogx.initDialog("Benta", "Saving inquiry. Please wait...", false);
+                        poDialogx.show();
+                    }
+                    @Override
+                    public void OnSuccess(String args) {
+
+                        poDialogx.dismiss();
+                        poMessage.initDialog();
+                        poMessage.setIcon(R.drawable.ic_baseline_message_24);
+                        poMessage.setTitle("Kita Moto");
+                        poMessage.setMessage("Motorcycle inquiry saved successfully!");
+                        poMessage.setPositiveButton("Dismiss", (view, dialog) -> {
+                            poMessage.dismiss();
                             Intent loIntent = new Intent(Activity_ClientInfo.this, Activity_Installment_Summary.class);
                             loIntent.putExtra("sTransNox", args);
                             startActivity(loIntent);
                             overridePendingTransition(R.anim.anim_intent_slide_in_right, R.anim.anim_intent_slide_out_left);
                             finish();
-                        Log.d("ako ito", "OnSuccess:");
 
-                    });
-                    poMessage.show();
-                }
-
-
-                @Override
-                public void OnFailed(String message) {
-                    poDialogx.dismiss();
-                    poMessage.initDialog();
-                    poMessage.setTitle("Benta");
-                    poMessage.setMessage(message);
-                    poMessage.setPositiveButton("Okay", (view1, dialog) -> dialog.dismiss());
-                    poMessage.show();
-                    Log.d("ako ito", "OnFailed:");
-                }
-            });
+                        });
+                        poMessage.show();
+                    }
+                    @Override
+                    public void OnFailed(String message) {
+                        poDialogx.dismiss();
+                        poMessage.initDialog();
+                        poMessage.setIcon(R.drawable.baseline_error_24);
+                        poMessage.setTitle("Kita Moto");
+                        poMessage.setMessage(message);
+                        poMessage.setPositiveButton("Dismiss", (view1, dialog) -> dialog.dismiss());
+                        poMessage.show();
+                    }
+                });
+            }
         });
     }
 
@@ -228,8 +240,9 @@ public class Activity_ClientInfo extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar_PersonalInfo);
         mViewModel = new ViewModelProvider(Activity_ClientInfo.this).get(VMPersonalInfo.class);
         poMessage = new MessageBox(Activity_ClientInfo.this);
-        icMessage = new MessageBoxInstallment(Activity_ClientInfo.this);
+
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         txtLastNm = findViewById(R.id.txt_lastname);
@@ -251,16 +264,9 @@ public class Activity_ClientInfo extends AppCompatActivity {
             @Override
             public void handleOnBackPressed() {
                 showConfirmationDialog();
-//                finish();
             }
         });
     }
-
-//    @Override
-//    public void finish() {
-//        super.finish();
-//        overridePendingTransition(R.anim.anim_intent_slide_in_left, R.anim.anim_intent_slide_out_right);
-//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -304,8 +310,9 @@ public class Activity_ClientInfo extends AppCompatActivity {
 
         });
         poMessage.setNegativeButton("No", (view, dialog) -> dialog.dismiss());
-        poMessage.setTitle("Benta");
-        poMessage.setMessage("Do you really want to close the client information module? Every detail entered will be removed.");
+        poMessage.setIcon(R.drawable.baseline_contact_support_24);
+        poMessage.setTitle("Kita Moto");
+        poMessage.setMessage("Do you really want to exit? Every detail entered will be removed.");
         poMessage.show();
     }
 }

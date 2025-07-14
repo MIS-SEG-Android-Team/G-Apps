@@ -3,266 +3,149 @@ package org.rmj.guanzongroup.gconnect.ViewModel;
 import android.Manifest;
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import org.rmj.g3appdriver.dev.Repositories.RAddressMobile;
-import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
-import org.rmj.g3appdriver.dev.Repositories.RMcBrand;
-import org.rmj.g3appdriver.dev.Repositories.RMcCategory;
-import org.rmj.g3appdriver.dev.Repositories.RMcModel;
-import org.rmj.g3appdriver.dev.Repositories.RMcModelPrice;
-import org.rmj.g3appdriver.dev.Repositories.RMcTermCategory;
 import org.rmj.g3appdriver.dev.Repositories.RNotificationInfo;
 import org.rmj.g3appdriver.dev.Repositories.ROrder;
 import org.rmj.g3appdriver.dev.Repositories.RProduct;
-import org.rmj.g3appdriver.dev.Repositories.RTown;
-import org.rmj.g3appdriver.dev.Repositories.Relation;
 import org.rmj.g3appdriver.etc.AppConstants;
 import org.rmj.g3appdriver.etc.GuanzonAppConfig;
-import org.rmj.g3appdriver.etc.oLoadStat;
 import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
 import org.rmj.g3appdriver.lib.GCardCore.iGCardSystem;
+import org.rmj.g3appdriver.utils.Task.OnLoadApplicationListener;
+import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VMSplashScreen extends AndroidViewModel {
     private static final String TAG = VMSplashScreen.class.getSimpleName();
-
     private final Context mContext;
-
-    private final String[] laPermissions =  new String[]{
-        Manifest.permission.POST_NOTIFICATIONS,
-        Manifest.permission.INTERNET,
-        Manifest.permission.ACCESS_NETWORK_STATE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.READ_PHONE_STATE,
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.GET_ACCOUNTS,
-        Manifest.permission.CAMERA,
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION};
-
-    private final MutableLiveData<oLoadStat> poLoadStat = new MutableLiveData<>();
+    private final GuanzonAppConfig loConfig;
+    private final RAddressMobile loAddress;
+    private final RProduct loProduct;
 
     public VMSplashScreen(@NonNull Application application) {
         super(application);
         this.mContext = application;
-    }
 
-    public interface OnInitializeData{
-        void OnLoad(String args);
-        void OnFinished(String args);
-    }
+        loConfig = new GuanzonAppConfig(mContext);
+        loAddress = new RAddressMobile(mContext);
+        loProduct = new RProduct(mContext);
 
-    public void setupApp(){
-        GuanzonAppConfig loConfig = new GuanzonAppConfig(mContext);
         loConfig.setProductID("GuanzonApp");
         loConfig.setClientID(AppConstants.APP_CLIENT);
+        loConfig.setIfPermissionsGranted(true);
+
         loConfig.setTestCase(false);
-        loConfig.setIfPermissionsGranted(hasPermissions(mContext, laPermissions));
-        poLoadStat.setValue(new oLoadStat(
-                loConfig.IsPermissionsGranted(),
-                new AccountInfo(mContext).getLoginStatus()));
     }
-
-    public void setPermissionsGranted(boolean val){
-        oLoadStat loStat = poLoadStat.getValue();
-        Objects.requireNonNull(loStat).setPermissionGranted(val);
-        poLoadStat.setValue(loStat);
-        new GuanzonAppConfig(mContext).setIfPermissionsGranted(val);
+    public void setsAppVrsnCd(String sAppVrsnCd){
+        loConfig.setAppversionCode(sAppVrsnCd);
     }
+    public void setsAppVrsnNm(String sAppVrsnNm){
+        loConfig.setAppversionName(sAppVrsnNm);
+    }
+    public List<String> GetPermissions(){
+        List<String> laPermissions = new ArrayList<>();
+        laPermissions.add(Manifest.permission.POST_NOTIFICATIONS);
+        laPermissions.add(Manifest.permission.INTERNET);
+        laPermissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
+        laPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        laPermissions.add(Manifest.permission.READ_PHONE_STATE);
+        laPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        laPermissions.add(Manifest.permission.GET_ACCOUNTS);
+        laPermissions.add(Manifest.permission.CAMERA);
 
-    public String[] GetPermissions(){
         return laPermissions;
     }
-
-    public LiveData<oLoadStat> GetLoadStatus(){
-        return poLoadStat;
-    }
-
-    private static boolean hasPermissions(Context context, String... permissions){
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && permissions!=null ){
-            for (String permission: permissions){
-                if(ActivityCompat.checkSelfPermission(context, permission)!= PackageManager.PERMISSION_GRANTED){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     public void InitializeData(OnInitializeData listener){
-        new InitDataTask(mContext, listener).execute();
-    }
-
-    private static class InitDataTask extends AsyncTask<String, Void, String>{
-
-        private final Context mContext;
-        private final OnInitializeData listener;
-
         GCardSystem.GCardSystemCallback poCallback = new GCardSystem.GCardSystemCallback() {
             @Override
             public void OnSuccess(String args) {
                 Log.d(TAG, "Import Success...");
             }
-
             @Override
             public void OnFailed(String message) {
                 Log.e(TAG, "Import failed... " + message);
             }
         };
 
-
-        public InitDataTask(Context mContext, OnInitializeData listener) {
-            this.mContext = mContext;
-            this.listener = listener;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            listener.OnLoad("Started!");
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                GuanzonAppConfig loConfig = new GuanzonAppConfig(mContext);
-                if(loConfig.isAppFirstLaunch()){
-                    RAddressMobile loAddress = new RAddressMobile(mContext);
-                    loAddress.ImportBarangayList();
-                    pause();
-                    loAddress.ImportTownList();
-                    pause();
-                    loAddress.ImportProvinceList();
-                    pause();
-                    loAddress.ImportCountryList();
-                    pause();
-                    RMcBrand loMcBrand = new RMcBrand(mContext);
-                    loMcBrand.ImportMCBrands();
-                    pause();
-                    RClientInfo loClientInfo = new RClientInfo((mContext));
-                    loClientInfo.ImportAccountInfo();
-                }
-                pause();
-
-                //TODO : Revise importing data to improve speed on splash screen...
-                //Import Dashboard products only if possible,
-                // import other important must be imported before the operation of usage...
-                if (new RProduct(mContext).ImportProductList()) {
-                    Log.d(TAG, "Product Sales imported successfully...");
-                }
-                pause();
-                iGCardSystem loGcard = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.EXTRAS);
-                loGcard.DownloadBranchesList(poCallback);
-                pause();
-                loGcard.DownloadPromotions(poCallback);
-                pause();
-//                loGcard.DownloadNewsEvents(poCallback);
-//                Log.d(TAG, "News events imported successfully...");
-//                pause();
-                if (new RMcModel(mContext).ImportMCModel()) {
-                    Log.d(TAG, "MC Model imported successfully...");
-                }
-                pause();
-                if (new RMcModel(mContext).ImportCashPrices()) {
-                    Log.d(TAG, "MC Model Cash Prices imported successfully...");
-                }
-                pause();
-                if (new RMcModel(mContext).ImportModelColor()) {
-                    Log.d(TAG, "MC Model Color imported successfully...");
-                }
-                pause();
-
-                if (new RMcBrand(mContext).ImportMCBrands()) {
-                    Log.d(TAG, "MC Brand imported successfully...");
-                }
-                pause();
-                if (new RClientInfo(mContext).ImportAccountInfo()) {
-                    Log.d(TAG, "Client Info imported successfully...");
-                }
-                pause();
-                if (new RMcModelPrice(mContext).ImportMcModelPrice()) {
-                    Log.d(TAG, "MC Model Cash Prices imported successfully...");
-                }
-                pause();
-
-
-                if (new RMcCategory(mContext).ImportMcCategory()) {
-                    Log.d(TAG, "MC Category imported successfully...");
-                }
-                pause();
-                if (new RMcTermCategory(mContext).ImportMcTermCategory()) {
-                    Log.d(TAG, "MC Term Category imported successfully...");
-                }
-                pause();
-                if (new AccountInfo(mContext).getLoginStatus()) {
-                    RNotificationInfo loNotif = new RNotificationInfo(mContext);
-                    loNotif.ImportClientNotifications(0);
-                    pause();
-                    loGcard = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.GCARD);
-                    loGcard.DownloadGcardNumbers(poCallback);
-                    if(loGcard.hasActiveGcard().size() > 0){
-                        pause();
-                        loGcard.DownloadMCServiceInfo(poCallback);
-                        pause();
-                        loGcard.DownloadTransactions(poCallback);
-                        pause();
-                    } else {
-                        Log.e(TAG, "No gcard registered on this account.");
+        TaskExecutor loTask = new TaskExecutor();
+        loTask.setOnLoadApplicationListener(new OnLoadApplicationListener() {
+            @Override
+            public Object DoInBackground() {
+                try {
+                    //TODO: IMPORT DATA NEEDED FOR ADDRESS
+                    loTask.publishProgress(1);
+                    if (!loAddress.ImportBarangayList()){
+                        Log.d(TAG, "Unable to Import Baranggay Info");
                     }
-                    loGcard = new GCardSystem(mContext).getInstance(GCardSystem.CoreFunctions.REDEMPTION);
-                    loGcard.DownloadRedeemables(poCallback);
-                    pause();
-                    if (new RTown(mContext).ImportTown()){
-                        Log.d(TAG, "Town imported successfully...");
-                    }
-                    pause();
-                    if (new Relation(mContext).ImportRelations()){
-                        Log.d(TAG, "Town imported successfully...");
-                    }
-                    pause();
-                    if(new AccountInfo(mContext).getVerificationStatus() > 0){
-                        if(new ROrder(mContext).ImportMarketPlaceItemCart()){
-                            Log.d(TAG, "Marketplace cart items imported successfully...");
-                        }
 
-                    } else {
-                        Log.e(TAG, "User doesn't have complete details for marketplace.");
+                    loTask.publishProgress(2);
+                    Thread.sleep(500);
+                    if (!loAddress.ImportTownList()){
+                        Log.d(TAG, "Unable to Import Town Info");
                     }
-                } else {
 
-                    Log.e(TAG, "No account session found.");
+                    loTask.publishProgress(3);
+                    Thread.sleep(500);
+                    if (!loAddress.ImportProvinceList()){
+                        Log.d(TAG, "Unable to Import Province Info");
+                    }
+
+                    loTask.publishProgress(4);
+                    Thread.sleep(500);
+                    if (!loAddress.ImportCountryList()){
+                        Log.d(TAG, "Unable to Import Country Info");
+                    }
+
+                    //TODO: IMPORT NEW PRODUCTS
+                    loTask.publishProgress(5);
+                    Thread.sleep(500);
+                    if (loProduct.ImportProductList()) {
+                        Log.d(TAG, "Product Sales imported successfully...");
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
-            } catch (Exception e){
-                e.printStackTrace();
+                return null;
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            listener.OnFinished("Finished!");
-        }
-
-        private void pause() {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            @Override
+            public void OnProgress(int progress) {
+                switch (progress){
+                    case 1:
+                        listener.OnProgress("Importing Barangays", progress);
+                        break;
+                    case 2:
+                        listener.OnProgress("Importing Towns", progress);
+                        break;
+                    case 3:
+                        listener.OnProgress("Importing Province", progress);
+                        break;
+                    case 4:
+                        listener.OnProgress("Importing Country", progress);
+                        break;
+                    case 5:
+                            listener.OnProgress("Importing Products and Services", progress);
+                            break;
+                }
             }
-        }
+            @Override
+            public void OnPostExecute(Object object) {
+                listener.OnFinished("Finished loading data");
+            }
+        });
+        loTask.Execute();
+    }
+    public interface OnInitializeData{
+        void OnLoad(String args);
+        void OnProgress(String args, int progress);
+        void OnFinished(String args);
     }
 
 }

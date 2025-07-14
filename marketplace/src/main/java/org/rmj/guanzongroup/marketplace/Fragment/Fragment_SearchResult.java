@@ -26,15 +26,12 @@ public class Fragment_SearchResult extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = FragmentSearchResultBinding.inflate(inflater, container, false);
-        return mBinding.getRoot();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(requireActivity()).get(VMSearchItem.class);
+
         mBinding.rvSuggest.setLayoutManager(new LinearLayoutManager(requireActivity()));
         mBinding.rvSuggest.setHasFixedSize(true);
+
+        return mBinding.getRoot();
     }
 
     @Override

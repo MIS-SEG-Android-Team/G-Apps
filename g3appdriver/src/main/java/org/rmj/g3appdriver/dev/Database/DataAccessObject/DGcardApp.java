@@ -53,6 +53,9 @@ public interface DGcardApp {
     @Query("SELECT sGCardNox FROM Gcard_App_Master WHERE cActvStat = '1'")
     String getCardNox();
 
+    @Query("SELECT sCardNmbr FROM Gcard_App_Master WHERE sCardNmbr = :gCardNo")
+    String getCardNmbr(String gCardNo);
+
     @Query("SELECT * FROM GCard_App_Master ")
     List<EGcardApp> hasMultipleGCard();
 

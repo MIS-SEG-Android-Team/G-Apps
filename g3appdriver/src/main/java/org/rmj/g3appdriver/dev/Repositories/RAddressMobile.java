@@ -127,25 +127,37 @@ public class RAddressMobile {
             JSONObject param = new JSONObject();
             param.put("bsearch", true);
             param.put("descript", "All");
+
             ServerAPIs loApis = new ServerAPIs(new GuanzonAppConfig(mContext).getTestCase());
+
             String lsAddress = loApis.getImportBarangayAPI();
             String lsResponse = WebClient.httpsPostJSon(lsAddress, param.toString(), new HttpHeaders(mContext).getHeaders());
+
             if(lsResponse == null){
                 message = "Server no response";
                 return false;
             } else {
+
                 JSONObject loResponse = new JSONObject(lsResponse);
                 String lsResult = loResponse.getString("result");
+
                 if(!lsResult.equalsIgnoreCase("success")){
+
                     JSONObject loError = loResponse.getJSONObject("error");
+
                     message = loError.getString("message");
                     Log.e(TAG, message);
+
                     return false;
                 } else {
+
                     Log.d(TAG, "Importing barangay info success.");
+
                     JSONArray laJson = loResponse.getJSONArray("detail");
                     List<EBarangayInfo> laDetail = new ArrayList<>();
+
                     for(int x = 0; x < laJson.length(); x++){
+
                         JSONObject loJson = laJson.getJSONObject(x);
                         EBarangayInfo loDetail = new EBarangayInfo();
                         loDetail.setBrgyIDxx(loJson.getString("sBrgyIDxx"));
@@ -157,8 +169,10 @@ public class RAddressMobile {
                         loDetail.setTimeStmp(loJson.getString("dTimeStmp"));
                         laDetail.add(loDetail);
                     }
+
                     poDao.SaveBarangay(laDetail);
                     Log.d(TAG, "Saving barangay info success.");
+
                     return true;
                 }
             }

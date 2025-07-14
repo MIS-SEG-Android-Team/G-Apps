@@ -30,15 +30,21 @@ public class Fragment_Promotion extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         mViewModel = new ViewModelProvider(this).get(VMEventsPromos.class);
+
         View view = inflater.inflate(R.layout.fragment__promotion, container, false);
+
         eventsPromoView = view.findViewById(R.id.recycler_view_EventsPromo);
+
         LinearLayoutManager loManager = new LinearLayoutManager(requireActivity());
         loManager.setOrientation(RecyclerView.VERTICAL);
+
         eventsPromoView.setLayoutManager(loManager);
         eventsPromoView.setHasFixedSize(true);
 
         mViewModel.DownloadPromos();
+
         mViewModel.getPromos().observe(getViewLifecycleOwner(), promos -> {
             poAdapter = new Adapter_EventsPromos(requireActivity(), (url, args) -> {
                 Intent intent = new Intent(getActivity(), Activity_Browser.class);
@@ -49,6 +55,7 @@ public class Fragment_Promotion extends Fragment {
             eventsPromoView.setAdapter(poAdapter);
             poAdapter.notifyDataSetChanged();
         });
+
         return view;
     }
 }

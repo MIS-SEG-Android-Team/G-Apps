@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="16:9"
@@ -16,9 +16,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-
-
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imageView"
             android:layout_width="65dp"
             android:layout_height="65dp"
@@ -35,14 +33,12 @@
             android:src="@drawable/kay"/>
 
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/lbl_UserFullName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:fontFamily="@font/roboto_medium"
         android:text="@string/mock_fullname"
-        android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintHorizontal_bias="0"
@@ -62,7 +58,7 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lblGcardNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,7 +66,7 @@
             android:textColor="@color/white"
             android:textSize="14sp"/>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lblGcardPts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -89,12 +85,11 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lbl_Signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/lblSignup"
-            android:textColor="@color/link_log_color"
             android:fontFamily="@font/roboto_bold"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
@@ -105,12 +100,11 @@
             android:layout_marginHorizontal="8dp"
             android:layout_gravity="center"/>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lbl_Login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lblLogin"
-            android:textColor="@color/link_log_color"
             android:fontFamily="@font/roboto_bold"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 

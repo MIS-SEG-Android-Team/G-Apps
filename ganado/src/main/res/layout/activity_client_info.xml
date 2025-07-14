@@ -81,6 +81,13 @@
                 android:layout_marginBottom="30dp"
                 android:orientation="vertical">
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/required"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/guanzon_digital_red"/>
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/CustomDropDownTilStyle"
                     android:layout_width="match_parent"
@@ -95,12 +102,19 @@
                         android:padding="16dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/required"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/guanzon_digital_red"/>
+
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/TextInputStyle"
+                    style="@style/TextInputStyleRequired"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Last Name">
+                    android:hint="@string/lblLastname">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_lastname"
@@ -112,12 +126,19 @@
                         android:nextFocusForward="@+id/txt_firstname" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/required"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/guanzon_digital_red"/>
+
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/TextInputStyle"
+                    style="@style/TextInputStyleRequired"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="First Name">
+                    android:hint="@string/lblFirstname">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_firstname"
@@ -134,7 +155,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Middle Name">
+                    android:hint="@string/lblMiddname">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_middname"
@@ -157,7 +178,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Suffix">
+                        android:hint="@string/lblSuffix">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/txt_suffix"
@@ -176,12 +197,27 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <com.google.android.material.textview.MaterialTextView
-                            style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto"
-                            android:text="Gender" />
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto"
+                                android:text="@string/lblGender"
+                                android:gravity="center"/>
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/required"
+                                android:textColor="@color/guanzon_digital_red"
+                                android:gravity="center"/>
+
+                        </LinearLayout>
 
                         <RadioGroup
                             android:id="@+id/rg_gender"
@@ -195,14 +231,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Male" />
+                                android:text="@string/lblmale" />
 
                             <com.google.android.material.radiobutton.MaterialRadioButton
                                 android:id="@+id/rb_female"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Female" />
+                                android:text="@string/lblfemale" />
                         </RadioGroup>
                     </LinearLayout>
                 </LinearLayout>
@@ -211,7 +247,7 @@
                     style="@style/TextInputStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Birth Date">
+                    android:hint="@string/lblBirthdate">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_birthdate"
@@ -219,7 +255,6 @@
                         android:layout_height="wrap_content"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:focusedByDefault="false"
                         android:imeOptions="actionNext"
                         android:inputType="number|none"
                         android:maxLength="20"
@@ -231,7 +266,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:hint="Birth Place">
+                    android:hint="@string/lblBirthplace">
 
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/txt_bpTown"
@@ -247,7 +282,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="House No.">
+                    android:hint="@string/lblHouseNo">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_houseNox"
@@ -264,7 +299,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Address">
+                    android:hint="@string/lblAddress">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_address"
@@ -276,12 +311,19 @@
                         android:nextFocusForward="@+id/txt_town" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/required"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/guanzon_digital_red"/>
+
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/TextInputStyle"
+                    style="@style/TextInputStyleRequired"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Town/Municipality">
+                    android:hint="@string/lblTownCity">
 
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/txt_town"
@@ -295,12 +337,18 @@
                         tools:ignore="LabelFor" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/TextInputStyle"
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Mobile No">
+                    android:text="@string/required"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/guanzon_digital_red"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TextInputStyleRequired"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/lblMobileNumber">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_mobile"
@@ -317,7 +365,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:hint="Email Address">
+                    android:hint="@string/lblEmailAddress">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txt_emailAdd"
@@ -334,7 +382,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginVertical="40dp"
-                    android:text="Save" />
+                    android:text="@string/lblSave" />
 
             </LinearLayout>
 

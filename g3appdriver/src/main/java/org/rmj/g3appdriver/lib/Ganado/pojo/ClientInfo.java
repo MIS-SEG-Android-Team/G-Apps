@@ -182,27 +182,11 @@ public class ClientInfo {
 
         if(sFrstName.isEmpty()){
             message = "Please enter first name.";
+            return false;
         }
 
         if(cGenderCd.isEmpty()){
             message = "Please select gender";
-            return false;
-        }
-
-//        if(cGenderCd.equalsIgnoreCase("1")) {
-//            if (sMaidenNm.isEmpty()) {
-//                message = "Please enter maiden name.";
-//                return false;
-//            }
-//        }
-
-        if(dBirthDte.isEmpty()){
-            message = "Please enter birth date.";
-            return false;
-        }
-
-        if(sBirthPlc.isEmpty()){
-            message = "Please enter birth place.";
             return false;
         }
 
@@ -222,10 +206,6 @@ public class ClientInfo {
             return false;
         }
 
-        if(sEmailAdd.isEmpty()){
-            message = "Please enter email address.";
-            return false;
-        }
         if(sReltionx.isEmpty()){
             message = "Please select relationship.";
             return false;

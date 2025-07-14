@@ -38,9 +38,11 @@ public class Activity_SearchItem extends AppCompatActivity {
         mViewModel = new ViewModelProvider(Activity_SearchItem.this).get(VMSearchItem.class);
         mBinding = ActivitySearchItemBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-// Get the intent, verify the action and get the query
+
+        // Get the intent, verify the action and get the query
         setUpToolbar();
         showAds();
+
         mBinding.searchview.requestFocus();
         mBinding.searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

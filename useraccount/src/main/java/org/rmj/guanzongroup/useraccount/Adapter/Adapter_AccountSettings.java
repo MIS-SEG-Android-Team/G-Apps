@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textview.MaterialTextView;
+
 import org.rmj.guanzongroup.useraccount.R;
 
 import java.util.ArrayList;
@@ -25,8 +27,10 @@ public class Adapter_AccountSettings extends RecyclerView.Adapter<Adapter_Accoun
     @NonNull
     @Override
     public SettingsMenuHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.settings_menu_list, parent, false);
+
         return new SettingsMenuHolder(view, callBack);
     }
 
@@ -62,17 +66,20 @@ public class Adapter_AccountSettings extends RecyclerView.Adapter<Adapter_Accoun
     public static class SettingsMenuHolder extends RecyclerView.ViewHolder{
 
         public ImageView imgIcon;
-        public TextView lblMenuTitle;
-        public TextView lblDescription;
+        public MaterialTextView lblMenuTitle;
+        public MaterialTextView lblDescription;
 
         public SettingsMenuHolder(@NonNull View itemView, OnSettingsMenuSelection callBack) {
             super(itemView);
+
             imgIcon = itemView.findViewById(R.id.imgIcon);
             lblMenuTitle = itemView.findViewById(R.id.lblMenuTitle);
             lblDescription = itemView.findViewById(R.id.lblDescription);
 
             itemView.setOnClickListener(v -> {
+
                 int position = getAdapterPosition();
+
                 if(position != RecyclerView.NO_POSITION) {
                     callBack.onClick(position);
                 }

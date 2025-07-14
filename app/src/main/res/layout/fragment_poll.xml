@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_header"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient_orange_dark"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.15">
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/Title"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="Choose your candidates"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_percent="0.5"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/kay_wave"
+            app:layout_constraintStart_toEndOf="@+id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="0.9"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/layout_poll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="-20dp"
+        android:layout_marginBottom="10dp"
+        app:cardElevation="15dp"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_header"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/layout_tabcontainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/layout_list"
+                app:layout_constraintEnd_toEndOf="@+id/layout_list">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_candidates"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/zxing_transparent"
+                    android:textAlignment="center"
+                    app:tabTextAppearance="@style/SubText"
+                    app:tabSelectedTextColor="?attr/colorPrimary"
+                    app:tabIndicatorColor="@android:color/white"
+                    app:tabIndicatorGravity="stretch">
+
+                </com.google.android.material.tabs.TabLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_list"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:background="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@+id/layout_tabcontainer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TextInputStyle"
+                    android:id="@+id/til_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/guanzon_digital_grey"
+                    app:boxStrokeColor="@color/guanzon_digital_grey">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tv_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Search your candidate"
+                        android:textColor="@color/guanzon_digital_grey"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_candidates"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/zxing_transparent"
+                    android:layout_marginTop="10dp"/>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

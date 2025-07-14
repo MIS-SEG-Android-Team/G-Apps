@@ -17,7 +17,7 @@
         android:theme="@style/AppToolbar"/>
   </com.google.android.material.appbar.AppBarLayout>
 
-  <org.rmj.g3appdriver.etc.NonSwipeableViewPager
+  <androidx.viewpager2.widget.ViewPager2
       android:id="@+id/viewpager_signup"
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>

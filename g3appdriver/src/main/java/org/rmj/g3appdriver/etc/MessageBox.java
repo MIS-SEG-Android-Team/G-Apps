@@ -17,9 +17,13 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.divider.MaterialDivider;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
 import org.rmj.g3appdriver.R;
@@ -32,14 +36,19 @@ public class MessageBox {
     private MaterialButton btnNegative;
     private MaterialTextView lblTitle;
     private MaterialTextView lblMsgxx;
-    private MaterialDivider midBorder;
+    private ShapeableImageView msg_icon;
+    private ConstraintLayout data_view;
+
+    private LinearLayout layout_notify;
+    private ShapeableImageView icon_title;
+    private MaterialTextView mtv_message;
 
     private final Context context;
 
     public MessageBox(Context context){
-        // Must be, at all times, pass Activity Context.
         this.context = Objects.requireNonNull(context);
     }
+
     public void initDialog(){
         AlertDialog.Builder poBuilder = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_message_box, null);
@@ -48,14 +57,27 @@ public class MessageBox {
         poDialogx = poBuilder.create();
         poDialogx.setCancelable(false);
 
+        msg_icon = view.findViewById(R.id.msg_icon);
         lblTitle = view.findViewById(R.id.lbl_dialogTitle);
         lblMsgxx = view.findViewById(R.id.lbl_dialogMessage);
-        midBorder = view.findViewById(R.id.view_midBorder);
+        data_view = view.findViewById(R.id.data_view);
+
         btnPositive = view.findViewById(R.id.btn_dialogPositive);
         btnPositive.setVisibility(View.GONE);
         btnNegative = view.findViewById(R.id.btn_dialogNegative);
-        midBorder.setVisibility(View.GONE);
         btnNegative.setVisibility(View.GONE);
+
+        layout_notify = view.findViewById(R.id.layout_notify);
+        icon_title = view.findViewById(R.id.icon_title);
+        mtv_message = view.findViewById(R.id.mtv_message);
+    }
+
+    public void setIcon(int psIconx) {
+        try {
+            msg_icon.setImageResource(psIconx);
+        } catch(NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     public void setMessage(String psMessage) {
@@ -79,33 +101,40 @@ public class MessageBox {
         btnPositive.setText(psBtnPost);
         btnPositive.setOnClickListener(view -> {
             listener.OnButtonClick(view, poDialogx);
-//            isDialogShown = false;
         });
     }
 
     public void setNegativeButton(String psBtnNegt, final DialogButton listener) {
-        midBorder.setVisibility(View.VISIBLE);
         btnNegative.setVisibility(View.VISIBLE);
         btnNegative.setText(psBtnNegt);
         btnNegative.setOnClickListener(view -> {
             listener.OnButtonClick(view, poDialogx);
-//            isDialogShown = false;
         });
     }
 
     public void show() {
         if(!poDialogx.isShowing()) {
-            poDialogx.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            Objects.requireNonNull(poDialogx.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             poDialogx.getWindow().getAttributes().windowAnimations = R.style.PopupAnimation;
             poDialogx.show();
         }
     }
     public void dismiss() {
         if(poDialogx.isShowing()) {
-            poDialogx.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            Objects.requireNonNull(poDialogx.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             poDialogx.getWindow().getAttributes().windowAnimations = R.style.PopupAnimation;
             poDialogx.dismiss();
         }
+    }
+
+    public void displayDialogWithIconTitle(int psIconx, String message){
+
+        data_view.setVisibility(View.GONE);
+        layout_notify.setVisibility(View.VISIBLE);
+
+        icon_title.setImageResource(psIconx);
+        mtv_message.setText(message);
+
     }
 
     public interface DialogButton{

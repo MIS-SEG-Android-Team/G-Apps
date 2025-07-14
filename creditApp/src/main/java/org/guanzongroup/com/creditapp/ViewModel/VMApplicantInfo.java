@@ -2,24 +2,19 @@ package org.guanzongroup.com.creditapp.ViewModel;
 
 import android.app.Application;
 import android.content.Intent;
-import android.os.AsyncTask;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import org.guanzongroup.com.creditapp.Model.PurchaseInfo;
 import org.json.JSONObject;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DAddress;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarangayInfo;
-import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
-import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
-import org.rmj.g3appdriver.etc.AppConstants;
 import org.rmj.g3appdriver.etc.ConnectionUtil;
 import org.rmj.g3appdriver.lib.CreditApp.CreditApplication;
 import org.rmj.g3appdriver.lib.CreditApp.model.MpCreditApp;
-
+import org.rmj.g3appdriver.utils.Task.OnTaskExecuteListener;
+import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 import java.util.List;
 
 public class VMApplicantInfo extends AndroidViewModel {
@@ -58,96 +53,83 @@ public class VMApplicantInfo extends AndroidViewModel {
         poModel.setLsInstallx(foVal.getStringExtra("sLoanTerm"));
     }
 
-    public PurchaseInfo getModel(){
-        return poModel;
-    }
-
-    public void setTownID(String val){
-        this.psTownID.setValue(val);
-    }
-
     public LiveData<String> GetTownID(){
         return psTownID;
     }
-
     public LiveData<List<EBarangayInfo>> GetBarangayList(String TownID) {
         return poApp.GetBarangayList(TownID);
     }
-
     public LiveData<List<DAddress.oTownObj>> GetTownList() {
         return poApp.GetTownList();
     }
 
-    public void InitializeApplicantInfo(OnInitializeInfo listener){
-        new InitializeApplicantInfo(listener).execute(poModel);
+    public PurchaseInfo getModel(){
+        return poModel;
     }
+    public void setTownID(String val){
+        this.psTownID.setValue(val);
+    }
+    public void InitializeApplicantInfo(OnInitializeInfo listener){
+        TaskExecutor.Execute(poModel, new OnTaskExecuteListener() {
+            @Override
+            public void OnPreExecute() {
+                listener.OnLoad("Apply For A Loan", "Initializing applicant info");
+            }
+            @Override
+            public Object DoInBackground(Object args) {
+                try {
+                    if(!poConn.isDeviceConnected()){
+                        message = "Unable to connect.";
+                        return null;
+                    }
 
-    private class InitializeApplicantInfo extends AsyncTask<PurchaseInfo, Void, MpCreditApp> {
+                    String lsResult = poApp.GetOtherApplicationInfo();
 
-        private final OnInitializeInfo listener;
+                    if(lsResult == null){
+                        message = poApp.getMessage();
+                        return null;
+                    }
 
-        public InitializeApplicantInfo(OnInitializeInfo listener) {
-            this.listener = listener;
-        }
+                    PurchaseInfo info = (PurchaseInfo) args;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            listener.OnLoad("Apply For A Loan", "Initializing applicant info...");
-        }
+                    JSONObject loJson = new JSONObject(lsResult);
 
-        @Override
-        protected MpCreditApp doInBackground(PurchaseInfo... info) {
-            try {
-                if(!poConn.isDeviceConnected()){
-                    message = "Unable to connect.";
+                    String lsUnitAppl = info.getLsUnitAppl();
+                    String lsModelIDx = info.getLsModelIDx();
+                    String lsDiscount = info.getLsDiscount();
+                    String lsAmortztn = info.getLsAmortztn();
+                    String lsDownPaym = info.getLsDownPaym();
+                    String lsMiscExps = info.getLsMiscExps();
+                    String lsInstallx = info.getLsInstallx();
+
+                    MpCreditApp loApp = poApp.ParseData(loJson);
+
+                    loApp.setUnitApplied(lsUnitAppl);
+                    loApp.setModel(lsModelIDx);
+                    loApp.setUnitType("1");
+                    loApp.setDiscount(lsDiscount);
+                    loApp.setDownpayment(lsDownPaym);
+                    loApp.setAmortization(lsAmortztn);
+                    loApp.setMiscellaneousExpense(lsMiscExps);
+                    loApp.setInstallmentTerm(lsInstallx.split(" ")[0]);
+
+                    return loApp;
+                } catch (Exception e){
+                    e.printStackTrace();
+                    message = e.getMessage();
                     return null;
                 }
+            }
+            @Override
+            public void OnPostExecute(Object object) {
+                MpCreditApp result = (MpCreditApp) object;
 
-                String lsResult = poApp.GetOtherApplicationInfo();
-
-                if(lsResult == null){
-                    message = poApp.getMessage();
-                    return null;
+                if(result == null){
+                    listener.OnFailed(message);
+                } else {
+                    listener.OnSuccess(result);
                 }
-
-                JSONObject loJson = new JSONObject(lsResult);
-
-                String lsUnitAppl = info[0].getLsUnitAppl();
-                String lsModelIDx = info[0].getLsModelIDx();
-                String lsDiscount = info[0].getLsDiscount();
-                String lsAmortztn = info[0].getLsAmortztn();
-                String lsDownPaym = info[0].getLsDownPaym();
-                String lsMiscExps = info[0].getLsMiscExps();
-                String lsInstallx = info[0].getLsInstallx();
-
-                MpCreditApp loApp = poApp.ParseData(loJson);
-
-                loApp.setUnitApplied(lsUnitAppl);
-                loApp.setModel(lsModelIDx);
-                loApp.setUnitType("1");
-                loApp.setDiscount(lsDiscount);
-                loApp.setDownpayment(lsDownPaym);
-                loApp.setAmortization(lsAmortztn);
-                loApp.setMiscellaneousExpense(lsMiscExps);
-                loApp.setInstallmentTerm(lsInstallx.split(" ")[0]);
-
-                return loApp;
-            } catch (Exception e){
-                e.printStackTrace();
-                message = e.getMessage();
-                return null;
             }
-        }
-
-        @Override
-        protected void onPostExecute(MpCreditApp result) {
-            super.onPostExecute(result);
-            if(result == null){
-                listener.OnFailed(message);
-            } else {
-                listener.OnSuccess(result);
-            }
-        }
+        });
     }
 }

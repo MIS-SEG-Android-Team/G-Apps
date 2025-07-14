@@ -133,7 +133,6 @@ public interface DRedeemItemInfo {
         public String cPlcOrder;
         public String cNotified;
         public String sPromoDsc;
-        public String cForCheck;
         public double origPoints;
         public String sImageUrl;
         public String sAvlPoint;

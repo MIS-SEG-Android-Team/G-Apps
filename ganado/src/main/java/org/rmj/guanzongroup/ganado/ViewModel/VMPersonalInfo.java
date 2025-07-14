@@ -39,10 +39,7 @@ public class VMPersonalInfo extends AndroidViewModel implements GanadoUI {
 
     public interface OnSaveInquiry {
         void OnSave();
-
         void OnSuccess(String args);
-
-
         void OnFailed(String message);
     }
 
@@ -52,9 +49,12 @@ public class VMPersonalInfo extends AndroidViewModel implements GanadoUI {
         this.poModel = new ClientInfo();
         this.poTown = new RTown(application);
     }
-    public void InitGeoLocation(Activity activity){
-        this.poApp.InitGeoLocation(activity);
-        Log.d("init location","OK");
+    public String GetMessage(){
+        return message;
+    }
+    public Boolean InitGeoLocation(Activity activity){
+        message = this.poApp.getMessage();
+        return this.poApp.InitGeoLocation(activity);
     }
 
     public void RemoveInQuiry(){
@@ -101,7 +101,7 @@ public class VMPersonalInfo extends AndroidViewModel implements GanadoUI {
     }
 
     public void SaveData(OnSaveInquiry listener) {
-//        new SaveDetailTask(listener).execute(poModel);
+
         TaskExecutor.Execute(poModel, new OnTaskExecuteListener() {
             @Override
             public void OnPreExecute() {

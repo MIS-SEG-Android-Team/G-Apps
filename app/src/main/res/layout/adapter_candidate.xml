@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="3dp"
+    android:theme="@style/GuanzonMarketplace.Theme"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mcv_img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="?attr/colorPrimary"
+        app:cardElevation="10dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="4:5.5">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_candidate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/kay"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/mtv_votes"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="0"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/marketplace_orange"
+        android:layout_margin="15dp"
+        android:background="@drawable/baseline_heart_vote"
+        android:elevation="15dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="@+id/mcv_img"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.15"
+        app:layout_constraintWidth_percent="0.2"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

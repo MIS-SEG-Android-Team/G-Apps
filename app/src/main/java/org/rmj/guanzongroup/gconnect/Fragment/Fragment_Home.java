@@ -1,171 +1,471 @@
 package org.rmj.guanzongroup.gconnect.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
-import com.smarteist.autoimageslider.SliderAnimations;
-import com.smarteist.autoimageslider.SliderView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.tabs.TabLayout;
 
-import org.rmj.g3appdriver.dev.Database.DataAccessObject.DProduct;
+import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
+import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
+import org.rmj.g3appdriver.etc.ViewPagerProperty;
+import org.rmj.guanzongroup.ganado.Activities.Activity_ProductSelection;
+import org.rmj.guanzongroup.gconnect.Activity.Activity_Dashboard;
+import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Events;
+import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Products;
 import org.rmj.guanzongroup.gconnect.R;
-import org.rmj.guanzongroup.marketplace.Activity.Activity_ProductList;
-import org.rmj.guanzongroup.marketplace.Activity.Activity_ProductOverview;
-import org.rmj.guanzongroup.marketplace.Adapter.Adapter_Categories;
-import org.rmj.g3appdriver.lib.Promotions.Adapter_ImageSlider;
-import org.rmj.guanzongroup.marketplace.Adapter.Adapter_ProductList;
-import org.rmj.g3appdriver.lib.Promotions.model.HomeImageSliderModel;
+import org.rmj.guanzongroup.marketplace.Activity.Activity_Mobile_Promo;
 import org.rmj.guanzongroup.marketplace.ViewModel.VMHome;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Fragment_Home extends Fragment {
-    private static final String TAG = Fragment_Home.class.getSimpleName();
-
     private VMHome mViewModel;
-    private Adapter_ProductList poAdapter;
-    private RecyclerView poRvProds, poRvCateg;
-    private SliderView poSliderx;
-    private final List<DProduct.oProduct> poList = new ArrayList<>();
+    private RClientInfo loClient;
+
+    private LinearLayout layout_header;
+    private LinearLayout layout_events;
+    private ViewPager2 slider_events;
+    private Adapter_Events loAdapter;
+
+    private LinearLayout layout_products;
+    private TabLayout tab_products;
+    private RecyclerView rcv_products;
+    private ShapeableImageView siv_kay;
 
     public Fragment_Home() {}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         mViewModel = new ViewModelProvider(requireActivity()).get(VMHome.class);
+        loClient = new RClientInfo(requireActivity());
+
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
         initViews(view);
-        displayData();
+        initAdapterData(0);
+        initObservables();
+
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        initKayMessage("Hi! I'm Kay,\n\nTap me to assist you with more features.");
+    }
+
+    private void initKayMessage(String message){
+
+        //todo if not empty, initialize toolbar message displaying vote balance
+        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+        if (loParent != null){
+            loParent.initToolbarMessage(message);
+        }
+
+    }
+
     private void initViews(View v) {
-        poSliderx = v.findViewById(R.id.imgSlider);
-        poSliderx.setIndicatorAnimation(IndicatorAnimationType.WORM);
-        poSliderx.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-        poSliderx.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
-        poSliderx.setIndicatorSelectedColor(Color.WHITE);
-        poSliderx.setIndicatorUnselectedColor(Color.GRAY);
-        poSliderx.setScrollTimeInSec(5);
-        poSliderx.startAutoCycle();
 
-        poRvProds = v.findViewById(R.id.rv_products);
-        poRvProds.setLayoutManager(new GridLayoutManager(requireActivity(),
-                2, RecyclerView.VERTICAL, false));
-        poRvProds.setHasFixedSize(true);
+        layout_header = v.findViewById(R.id.layout_headerhome);
+        slider_events = v.findViewById(R.id.slider_events);
+        layout_events = v.findViewById(R.id.layout_events);
 
-        poRvCateg = v.findViewById(R.id.rv_categories);
-        poRvCateg.setLayoutManager(new GridLayoutManager(requireActivity(),
-                2, RecyclerView.HORIZONTAL, false));
-        poRvCateg.setHasFixedSize(true);
+        layout_products = v.findViewById(R.id.layout_products);
+        tab_products = v.findViewById(R.id.tab_products);
+        rcv_products = v.findViewById(R.id.rcv_products);
+        siv_kay = v.findViewById(R.id.siv_kay);
     }
 
-    private void displayData() {
-        setSliderImages();
-        setCategoryAdapter();
-        setProductAdapter();
-    }
+    private void initListener(){
 
-    private void setCategoryAdapter() {
-        mViewModel.GetBrandNames().observe(getViewLifecycleOwner(), strings -> {
-            try {
-                final Adapter_Categories loAdapter = new Adapter_Categories(strings, args -> {
-                    Intent loIntent = new Intent(requireActivity(), Activity_ProductList.class);
-                    loIntent.putExtra("xBrandNme", args);
-                    startActivity(loIntent);
-                });
-                loAdapter.notifyDataSetChanged();
-                poRvCateg.setAdapter(loAdapter);
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        });
-    }
-
-    private void setProductAdapter() {
-        mViewModel.getProductList(0).observe(getViewLifecycleOwner(), products -> {
-            try {
-                if(products.size() > 0) {
-                    poList.clear();
-                    poList.addAll(products);
-                    poAdapter = new Adapter_ProductList(poList, listingId -> {
-                        Intent loIntent = new Intent(requireActivity(), Activity_ProductOverview.class);
-                        loIntent.putExtra("sListngId", listingId);
-                        Log.d(TAG, "Passed parameter: " + listingId);
-                        startActivity(loIntent);
-                    });
-                    poRvProds.setAdapter(poAdapter);
-                    poAdapter.notifyDataSetChanged();
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        });
-
-        poRvProds.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        //todo: viewpager page change listener
+        slider_events.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                LinearLayoutManager layoutManager = LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
-                int totalItemCount = layoutManager.getItemCount();
-                int lastVisible = layoutManager.findLastVisibleItemPosition();
+            public void onPageSelected(int position) {
 
-                boolean endHasBeenReached = lastVisible + 5 >= totalItemCount;
-                if (totalItemCount > 0 && endHasBeenReached) {
-                    mViewModel.getProductList(totalItemCount).observe(getViewLifecycleOwner(), products -> {
-                        try {
-                            if(products.size() > 0) {
-                                poList.addAll(products);
-                                poAdapter.notifyDataSetChanged();
-                                Log.d(TAG, "New items added");
-                            }
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
-            }
-        });
-    }
+                super.onPageSelected(position);
 
-    private void setSliderImages() {
-        List<HomeImageSliderModel> loSliders = new ArrayList<>();
-        mViewModel.GetPromoLinkList().observe(getViewLifecycleOwner(), ePromos -> {
-            try {
-                for (int x = 0; x < ePromos.size(); x++) {
-                    loSliders.add(new HomeImageSliderModel(ePromos.get(x).getImageUrl()));
-                }
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
 
-                Adapter_ImageSlider adapter = new Adapter_ImageSlider(loSliders, args -> {
-                    try{
-                        Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
-                        intent.putExtra("url_link", ePromos.get(args).getPromoUrl());
-                        intent.putExtra("browser_args", "1");
-                        intent.putExtra("args", "promo");
-                        requireActivity().sendBroadcast(intent);
-                    } catch (Exception e){
-                        e.printStackTrace();
+                        slider_events.setCurrentItem(position);
+                        loAdapter.notifyDataSetChanged();
+
                     }
                 });
-                poSliderx.setSliderAdapter(adapter);
-            } catch (Exception e){
-                e.printStackTrace();
+
+            }
+        });
+
+    }
+
+    private void initTabs(){
+        tab_products.removeAllTabs();
+        tab_products.addTab(tab_products.newTab().setText("Motorcycles"));
+        tab_products.addTab(tab_products.newTab().setText("Mobile"));
+    }
+
+    private void initAdapterData(int tabIndex){
+
+        List<Adapter_Products.Product_Data> laProducts = new ArrayList<>();
+        String baseURL = "https://restgk.guanzongroup.com.ph/img/prodinquire/";
+
+        switch (tabIndex){
+
+            case 0:
+
+                rcv_products.setVisibility(View.VISIBLE);
+                siv_kay.setVisibility(View.GONE);
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Yamaha", baseURL + "yamaha.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Honda", baseURL + "honda.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Suzuki", baseURL + "suzuki.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Kawasaki", baseURL + "kawasaki.png")
+                );
+
+                break;
+
+            case 1:
+
+                rcv_products.setVisibility(View.VISIBLE);
+                siv_kay.setVisibility(View.GONE);
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Apple", baseURL + "apple.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Honor", baseURL + "honor.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Huawei", baseURL + "huawei.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Oppo", baseURL + "oppo.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Realme", baseURL + "realme.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Samsung", baseURL + "samsung.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Vivo", baseURL + "vivo.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Xiaomi", baseURL + "xiaomi.png")
+                );
+
+                break;
+
+            default:
+
+                rcv_products.setVisibility(View.VISIBLE);
+                siv_kay.setVisibility(View.GONE);
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Yamaha", baseURL + "yamaha.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Honda", baseURL + "honda.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Suzuki", baseURL + "suzuki.png")
+                );
+
+                laProducts.add(
+                        new Adapter_Products.Product_Data(
+                                "Kawasaki", baseURL + "kawasaki.png")
+                );
+
+        }
+
+        rcv_products.setAdapter(new Adapter_Products(laProducts, new Adapter_Products.onSelectListener() {
+            @Override
+            public void onSelect(String brandName) {
+
+                if (tabIndex == 0){
+
+                    if (mViewModel.GetBrandID(brandName.toUpperCase()) != null){
+
+                        if (!mViewModel.GetBrandID(brandName.toUpperCase()).isEmpty()){
+
+                            Intent loIntent = new Intent(requireActivity(), Activity_ProductSelection.class);
+                            loIntent.putExtra("lsBrandID", mViewModel.GetBrandID(brandName.toUpperCase()));
+                            loIntent.putExtra("lsBrandNm", brandName.toUpperCase());
+
+                            startActivity(loIntent);
+
+                        }
+                    }
+
+                } else {
+
+                    Intent loIntent = new Intent(requireActivity(), Activity_Mobile_Promo.class);
+                    startActivity(loIntent);
+                }
+            }
+        }));
+
+        rcv_products.setLayoutManager(
+                new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+        );
+
+    }
+
+    private void initAdapter(){
+
+        /** GET ALL EVENTS IMPORTED**/
+
+        mViewModel.getEventCategories().observe(getViewLifecycleOwner(), new Observer<List<ESub_Events>>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onChanged(List<ESub_Events> eSubEvents) {
+
+                try {
+
+                    //todo: get parent fragment, validate if empty
+                    Fragment_Dashboard loParent = (Fragment_Dashboard) getParentFragment();
+                    if (loParent == null){
+                        return;
+                    }
+
+                    if (eSubEvents != null){
+
+                        if (eSubEvents.size() > 0){
+
+                            //todo: initiate list of active events
+                            List<ESub_Events> laActiveEvents = new ArrayList<>();
+                            for (ESub_Events loEvent : eSubEvents){
+
+                                //todo if event is valid, add to active events
+                                if (isEventValid(loEvent.getdVoteStart(), loEvent.getdVoteEnd())){
+                                    laActiveEvents.add(loEvent);
+                                }
+
+                            }
+
+                            //todo if no active events, hide adapter and navigations
+                            if (laActiveEvents.size() <= 0){
+
+                                loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
+                                layout_events.setVisibility(View.GONE);
+
+                                return;
+                            }
+
+                            loAdapter = new Adapter_Events(laActiveEvents, slider_events, new Adapter_Events.onSelectListener() {
+                                @Override
+                                public void onSelect(int position, String eventIDxx) {
+
+                                    Bundle loArgs = new Bundle();
+                                    loArgs.putString("eventID", String.valueOf(eventIDxx));
+
+                                    loParent.viewPager.setCurrentItem(3);
+                                    loParent.loPoll.setArguments(loArgs);
+                                    loParent.botNav.setSelectedItemId(R.id.nav_Poll);
+
+                                }
+                            });
+
+                            loAdapter.notifyDataSetChanged();
+                            slider_events.setAdapter(loAdapter);
+
+                            /**
+                             * Set viewpager properties and design
+                             * Custom library for designing viewpager.
+                             * Add new designs , for future layout viewpager design
+                             * Guillier 03/28/2025
+                             **/
+                            ViewPagerProperty loViewPagerProperty = new ViewPagerProperty(slider_events);
+
+                            //todo get device density width
+                            int densWidth = (int) (slider_events.getResources().getDisplayMetrics().xdpi);
+
+                            //todo formula to retain padding (density width - ( 30% of density width ))
+                            loViewPagerProperty.initSliderPadding(
+                                    new ViewPagerProperty.Padding_Property((int) (densWidth - (densWidth * 0.3)), (int) (densWidth - (densWidth * 0.3)),
+                                            0, 0, false, false, 3));
+
+                            loViewPagerProperty.initSliderPageTransformer();
+
+                            loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(true);
+
+                            layout_events.setVisibility(View.VISIBLE);
+
+                        }else {
+
+                            loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
+                            layout_events.setVisibility(View.GONE);
+                        }
+
+                    }else {
+                        loParent.botNav.getMenu().findItem(R.id.nav_Poll).setVisible(false);
+                        layout_events.setVisibility(View.GONE);
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        tab_products.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                initAdapterData(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
     }
+
+    private void initDisplayonLogin(int isDisplayed){
+        layout_header.setVisibility(isDisplayed);
+        layout_events.setVisibility(isDisplayed);
+        layout_products.setVisibility(isDisplayed);
+    }
+
+    private void initObservables(){
+
+        loClient.getClientInfo().observe(getViewLifecycleOwner(), new Observer<EClientInfo>() {
+            @Override
+            public void onChanged(EClientInfo eClientInfo) {
+
+                if (eClientInfo != null){
+
+                    //todo: display after login
+                    initDisplayonLogin(View.VISIBLE);
+                    initListener();
+                    initTabs();
+                    initAdapter();
+
+                }else {
+
+                    initDisplayonLogin(View.GONE);
+                }
+            }
+        });
+
+    }
+
+    private Boolean isEventValid(String dtFrom, String dtThru) throws ParseException {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            LocalDate currentDt = LocalDate.now();
+            LocalDate eventFrom = LocalDateTime.parse(dtFrom, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
+            LocalDate eventThru = LocalDateTime.parse(dtThru, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
+
+            //todo: current date is equal to event date
+            if (currentDt.isEqual(eventFrom) || currentDt.isEqual(eventThru)){
+                return true;
+            }else {
+
+                //todo: current date is between event date
+                if (currentDt.isAfter(eventFrom) && currentDt.isBefore(eventThru)){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+
+        }else {
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date loToday = dtFormat.parse(dtFormat.format(Calendar.getInstance().getTime()));
+            Date loEvntFrom = dtFormat.parse(dtFormat.format(dtFormat.parse(dtFrom)));
+            Date loEvntThru = dtFormat.parse(dtFormat.format(dtFormat.parse(dtThru)));
+
+            if (loToday.equals(dtFrom) || loToday.equals(dtFrom)){
+                return true;
+            }else {
+
+                if (loToday.after(loEvntFrom) && loToday.before(loEvntThru)){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+        }
+
+    }
+
 }

@@ -54,7 +54,7 @@ public class GPanaloTest {
     public void test01Login() throws Exception{
         new AccountAuthentication(mContext).
                 LoginAccount(
-                        new AccountAuthentication.LoginCredentials("mikegarcia8748@gmail.com", "123456", "09171870011"),
+                        new AccountAuthentication.LoginCredentials("mikegarcia8748@gmail.com", "123456"),
                         new AccountAuthentication.OnLoginCallback() {
                             @Override
                             public void OnSuccessLogin(String message) {

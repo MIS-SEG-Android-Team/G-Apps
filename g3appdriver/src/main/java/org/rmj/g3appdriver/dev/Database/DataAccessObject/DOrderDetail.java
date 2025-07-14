@@ -62,12 +62,13 @@ public interface DOrderDetail {
     LiveData<List<OrderHistoryDetail>> GetOrderHistoryDetail(String fsVal);
 
     @Query("SELECT a.sListngID AS sListIDxx, " +
-            "a.xModelNme, " +
-            "a.nUnitPrce, " +
-            "a.sStockIDx, " +
-            "a.sImagesxx, " +
-            "b.nQuantity, " +
-            "b.cReviewed " +
+            "a.xModelNme AS xModelNme, " +
+            "a.nUnitPrce AS nUnitPrce, " +
+            "a.sStockIDx AS sStockIDx, " +
+            "a.sImagesxx AS sImagesxx, " +
+            "b.nQuantity AS nQuantity, " +
+            "'' AS nDiscount, " +
+            "b.cReviewed AS cReviewed " +
             "FROM Product_Inventory a " +
             "LEFT JOIN MarketPlace_Order_Detail b " +
             "ON a.sListngID = b.sReferNox " +
@@ -91,12 +92,12 @@ public interface DOrderDetail {
 
     class OrderedItemsInfo{
         public String sListIDxx;
-        public String sImagesxx;
-        public String sStockIDx;
         public String xModelNme;
         public String nUnitPrce;
-        public String nDiscount;
+        public String sStockIDx;
+        public String sImagesxx;
         public String nQuantity;
+        public String nDiscount;
         public String cReviewed;
     }
 }

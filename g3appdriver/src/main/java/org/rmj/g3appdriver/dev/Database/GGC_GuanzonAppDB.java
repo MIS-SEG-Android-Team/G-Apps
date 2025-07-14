@@ -8,14 +8,19 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DAddress;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBingoCard;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBranchInfo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DClientInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DEmployeeInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DEvents;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGCardTransactionLedger;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGCard_Ledger;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGCard_Points;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGanadoOnline;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGcardApp;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DItemCart;
@@ -30,6 +35,7 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DNotifications;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DOrderDetail;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DOrderMaster;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPanalo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPointsRequest;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DProduct;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPromo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRawDao;
@@ -38,17 +44,23 @@ import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRedeemablesInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRelation;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DSearchLog;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DServiceInfo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DSubEvents;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DTownInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DUserInfo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DVoteLogs;
 import org.rmj.g3appdriver.dev.Database.Entities.EAddressInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EBarangayInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.EBingoCard;
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.EClientInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ECountryInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEmailInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEmployeeInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
+import org.rmj.g3appdriver.dev.Database.Entities.EGCardPoints;
 import org.rmj.g3appdriver.dev.Database.Entities.EGCardTransactionLedger;
+import org.rmj.g3appdriver.dev.Database.Entities.EGCard_Ledger;
 import org.rmj.g3appdriver.dev.Database.Entities.EGanadoOnline;
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
 import org.rmj.g3appdriver.dev.Database.Entities.EGuanzonPanalo;
@@ -68,6 +80,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.ENotificationUser;
 import org.rmj.g3appdriver.dev.Database.Entities.EOrderDetail;
 import org.rmj.g3appdriver.dev.Database.Entities.EOrderMaster;
 import org.rmj.g3appdriver.dev.Database.Entities.EPanaloReward;
+import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EProducts;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
 import org.rmj.g3appdriver.dev.Database.Entities.EProvinceInfo;
@@ -76,9 +89,11 @@ import org.rmj.g3appdriver.dev.Database.Entities.ERedeemablesInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ERelation;
 import org.rmj.g3appdriver.dev.Database.Entities.ESearchLog;
 import org.rmj.g3appdriver.dev.Database.Entities.EServiceInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Database.Entities.ETokenInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.ETownInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.EVoteLogs;
 
 @Database(entities = {
         EEvents.class,
@@ -119,7 +134,14 @@ import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
         EMcModelPrice.class,
         EMCModelCashPrice.class,
         EMcCategory.class,
-        EMcTermCategory.class}, version = 2, exportSchema = false)
+        EMcTermCategory.class,
+        EGCardPoints.class,
+        EGCard_Ledger.class,
+        EPointsRequest.class,
+        EBingoCard.class,
+        ESub_Events.class,
+        ECandidates.class,
+        EVoteLogs.class}, version = 16, exportSchema = false)
 public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     private static final String TAG = "GuanzonApp_DB_Manager";
     private static GGC_GuanzonAppDB instance;
@@ -156,14 +178,21 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     public abstract DMcModelPrice McModelPriceDao();
     public abstract DMcCategory McCategoryDao();
     public abstract DMcTermCategory McTermCategoryDao();
+    public abstract DGCard_Points GPointsDao();
+    public abstract DGCard_Ledger GLedgerDao();
+    public abstract DPointsRequest GPointsRqstDao();
+    public abstract DBingoCard BingoCardDao();
+    public abstract DSubEvents SubEvntsDao();
+    public abstract DCandidates CandidatesDao();
+    public abstract DVoteLogs VoteLogsDao();
 
     public static synchronized GGC_GuanzonAppDB getInstance(Context context){
         if(instance == null){
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             GGC_GuanzonAppDB.class, "GGC_ISysDBF.db")
-                    .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
                     .addCallback(roomCallBack)
+                    .addMigrations(MIGRATION_V16)
                     .build();
         }
         return instance;
@@ -174,6 +203,14 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
             Log.e(TAG, "Local database has been created.");
+        }
+    };
+
+    static final Migration MIGRATION_V16 = new Migration(15, 16) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
+
+            supportSQLiteDatabase.execSQL("DROP TABLE Barcode");
         }
     };
 }
