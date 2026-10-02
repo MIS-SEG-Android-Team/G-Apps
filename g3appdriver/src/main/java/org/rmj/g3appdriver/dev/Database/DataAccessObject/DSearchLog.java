@@ -23,7 +23,4 @@ public interface DSearchLog {
 
     @Query("SELECT COUNT(*) + 1 AS nEntryNox FROM Mkt_Search_log")
     int CreateNewEntryNox();
-
-    @Query("SELECT * FROM Mkt_Search_log ORDER BY dTimeStmp DESC LIMIT 10")
-    LiveData<List<ESearchLog>> GetSearchLog();
 }

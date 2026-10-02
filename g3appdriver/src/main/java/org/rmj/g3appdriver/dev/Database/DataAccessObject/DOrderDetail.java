@@ -24,15 +24,6 @@ public interface DOrderDetail {
     EOrderDetail GetOrderDetail(String fsVal, String fsVal1);
 
     @Query("SELECT * FROM MarketPlace_Order_Detail WHERE sTransNox =:fsTransNo")
-    LiveData<List<EOrderDetail>> GetOrderDetail(String fsTransNo);
-
-    @Query("SELECT COUNT(sTransNox) FROM MarketPlace_Order_Detail")
-    int CheckIfDetailHasRecord();
-
-    @Query("SELECT dTimeStmp FROM MarketPlace_Order_Detail ORDER BY dTimeStmp DESC LIMIT 1")
-    String getDetailLatestTimeStmp();
-
-    @Query("SELECT * FROM MarketPlace_Order_Detail WHERE sTransNox =:fsTransNo")
     LiveData<List<EOrderDetail>> GetDetailInfo(String fsTransNo);
 
     @Query("UPDATE MarketPlace_Order_Detail SET cReviewed = '1' WHERE sTransNox =:OrderID AND sReferNox =:ListID")

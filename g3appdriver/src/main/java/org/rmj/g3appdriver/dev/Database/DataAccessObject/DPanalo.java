@@ -24,9 +24,6 @@ public interface DPanalo {
     @Update
     void Update(EGuanzonPanalo foVal);
 
-    @Query("SELECT * FROM Guanzon_Panalo")
-    EGuanzonPanalo GetPanaloRedeem();
-
     @Query("SELECT * FROM Panalo_Reward")
     LiveData<EPanaloReward> GetPanaloRewardNotice();
 }

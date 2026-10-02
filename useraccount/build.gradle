@@ -6,7 +6,7 @@ android {
     compileSdk 35
 
     defaultConfig {
-        minSdk 21
+        minSdk 24
         targetSdkVersion 35
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -77,6 +77,6 @@ dependencies {
 
     implementation 'com.google.zxing:core:3.5.0'
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
-    implementation 'me.dm7.barcodescanner:zxing:1.9.13'
+    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
     implementation 'com.karumi:dexter:6.2.3'
 }

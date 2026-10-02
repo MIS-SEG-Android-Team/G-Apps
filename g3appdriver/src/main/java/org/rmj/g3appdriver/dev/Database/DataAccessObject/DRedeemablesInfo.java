@@ -40,7 +40,7 @@ public interface DRedeemablesInfo {
     @Query("SELECT * FROM Redeemables WHERE strftime('%Y-%m-%d','now') BETWEEN dDateFrom AND IFNULL(dDateThru, strftime('%Y-%m-%d','now'))")
     LiveData<List<ERedeemablesInfo>> getRedeemablesList();
 
-    @Query("SELECT nPointsxx AS Filter FROM Redeemables WHERE strftime('%Y-%m-%d','now') BETWEEN dDateFrom AND IFNULL(dDateThru, strftime('%Y-%m-%d','now')) GROUP BY nPointsxx")
+    @Query("SELECT nPointsxx AS Points FROM Redeemables WHERE strftime('%Y-%m-%d','now') BETWEEN dDateFrom AND IFNULL(dDateThru, strftime('%Y-%m-%d','now')) GROUP BY nPointsxx")
     LiveData<List<Double>> GetRedeemablePointsFilter();
 
     @Query("SELECT * FROM Redeemables WHERE nPointsxx =:fsVal AND strftime('%Y-%m-%d','now') BETWEEN dDateFrom AND IFNULL(dDateThru, strftime('%Y-%m-%d','now'))")

@@ -162,37 +162,12 @@ public interface DProduct {
             "'' AS xBrandNme, " +
             "'' AS sModelIDx " +
             "FROM Product_Inventory " +
-            "WHERE xBrandNme LIKE '%' || :fsArgs || '%' " +
-            "AND sListngID !=:fsArgs1 " +
-            "AND strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
-            "AND nQtyOnHnd > 0 " +
-            "AND cTranStat = '1'" +
-            "LIMIT 10")
-    LiveData<List<oProduct>> GetProductListSameBrandSuggestions(String fsArgs, String fsArgs1);
-
-    @Query("SELECT sListngID AS sProdctID, " +
-            "xBrandNme|| ' ' ||xModelNme  AS sProdctNm, " +
-            "nUnitPrce AS sPricexxx," +
-            "sImagesxx, " +
-            "nSoldQtyx AS sUntsSold, " +
-            "'' AS xBrandNme, " +
-            "'' AS sModelIDx " +
-            "FROM Product_Inventory " +
             "WHERE sProdctNm LIKE '%' || :fsVal || '%' " +
             "AND strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
             "AND nQtyOnHnd > 0 " +
             "AND cTranStat = '1'" +
             "ORDER BY nUnitPrce ASC")
     LiveData<List<oProduct>> SearchProducts(String fsVal);
-
-    @Query("SELECT nUnitPrce " +
-            "FROM Product_Inventory " +
-            "WHERE xBrandNme LIKE '%' || :fsArgs || '%' " +
-            "AND strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
-            "AND nQtyOnHnd > 0 " +
-            "AND cTranStat = '1'" +
-            "GROUP BY nUnitPrce")
-    LiveData<List<String>> GetPriceFilterForBrand(String fsArgs);
 
     @Query("SELECT sListngID AS sProdctID, " +
             "xBrandNme|| ' ' ||xModelNme  AS sProdctNm, " +

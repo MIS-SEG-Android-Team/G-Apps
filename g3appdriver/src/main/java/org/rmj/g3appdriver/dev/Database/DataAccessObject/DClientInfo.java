@@ -30,9 +30,6 @@ public interface DClientInfo {
     @Query("SELECT * FROM Client_Profile_Info")
     LiveData<EClientInfo> getClientInfo();
 
-    @Query("SELECT sClientID FROM Client_Profile_Info")
-    String getClientId();
-
     @Query("DELETE FROM Client_Profile_Info")
     void LogoutAccount();
 
