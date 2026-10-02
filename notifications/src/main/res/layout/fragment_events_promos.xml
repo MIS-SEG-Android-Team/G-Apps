@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="org.rmj.guanzongroup.notifications.Fragment.Fragment_EventsPromos">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_EventsPromo"
         android:layout_width="match_parent"

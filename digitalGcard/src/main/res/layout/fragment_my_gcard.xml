@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -43,9 +44,7 @@
                 android:text="@string/lblAddGcard" />
 
         </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
                     android:text="@string/lblActiveGcard"
-                    android:textColor="@color/font_regular"
+                    android:textStyle="bold"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -130,7 +129,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="36dp"
                             android:fontFamily="@font/roboto_medium"
-                            android:text="Doe, John"
+                            android:text=""
                             android:textAllCaps="true"
                             android:textColor="@color/black"
                             android:textSize="14sp"
@@ -144,24 +143,36 @@
                             android:layout_marginStart="36dp"
                             android:layout_marginBottom="40dp"
                             android:fontFamily="@font/roboto_medium"
-                            android:text="00118-000229-02"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent" />
 
+                        <ImageButton
+                            android:id="@+id/btn_refresh"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/baseline_autorenew_24"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@color/zxing_transparent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+
                         <TextView
-                            android:id="@+id/lbl_gcard_points"
                             style="@style/GcardTextInfoStyle.Active"
+                            android:id="@+id/lbl_gcard_points"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:fontFamily="@font/roboto_medium"
-                            android:text="Points: 100.00"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="16sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent" />
+                            app:layout_constraintEnd_toStartOf="@+id/btn_refresh"
+                            app:layout_constraintTop_toTopOf="@+id/btn_refresh"
+                            app:layout_constraintBottom_toBottomOf="@+id/btn_refresh"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -277,9 +288,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/card_schedule" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,24 +1,20 @@
 package org.rmj.guanzongroup.useraccount.Fragment;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-
-import org.rmj.g3appdriver.etc.AppConstants;
 import org.rmj.g3appdriver.etc.InputFieldController;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_ShippingAddress;
 import org.rmj.guanzongroup.useraccount.Model.ShippingInfoModel;
+import org.rmj.guanzongroup.useraccount.R;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMShippingAddress;
 import org.rmj.guanzongroup.useraccount.databinding.FragmentAddressCreateBinding;
 
@@ -29,7 +25,7 @@ public class Fragment_AddressCreate extends Fragment {
 
     private VMShippingAddress mViewModel;
     private FragmentAddressCreateBinding mBinding;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
     private Dialog_Loading poLoading;
     private ShippingInfoModel infoModel;
 
@@ -37,14 +33,21 @@ public class Fragment_AddressCreate extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         mViewModel = new ViewModelProvider(requireActivity()).get(VMShippingAddress.class);
         mBinding = FragmentAddressCreateBinding.inflate(inflater, container, false);
+
         View view = mBinding.getRoot();
-        poDialogx = new Dialog_SingleButton(requireActivity());
+
+        poDialogx = new MessageBox(requireActivity());
         poLoading = new Dialog_Loading(requireActivity());
         infoModel = new ShippingInfoModel(new AccountInfo(requireActivity()).getClientID());
+
         initInputSelectors();
+        poDialogx.initDialog();
+
         mBinding.btnAddShp.setOnClickListener(v -> addShipping());
+
         return view;
     }
 
@@ -122,26 +125,53 @@ public class Fragment_AddressCreate extends Fragment {
                 @Override
                 public void onSuccess(String fsMessage) {
                     poLoading.dismiss();
-                    poDialogx.setButtonText("Okay");
-                    poDialogx.initDialog("Shipping Address", fsMessage, () -> {
-                        poDialogx.dismiss();
-                        Activity_ShippingAddress.getInstance().setFragment(0);
+
+                    poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                    poDialogx.setTitle("Shipping Address");
+                    poDialogx.setMessage(fsMessage);
+                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
+                            Activity_ShippingAddress.getInstance().setFragment(0);
+                        }
                     });
+
                     poDialogx.show();
                 }
 
                 @Override
                 public void onFailed(String fsMessage) {
                     poLoading.dismiss();
-                    poDialogx.setButtonText("Okay");
-                    poDialogx.initDialog("Shipping Address", fsMessage, () -> poDialogx.dismiss());
+
+                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                    poDialogx.setTitle("Shipping Address");
+                    poDialogx.setMessage(fsMessage);
+                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            dialog.dismiss();
+                        }
+                    });
+
                     poDialogx.show();
+
                 }
             });
         } else {
-            poDialogx.setButtonText("Okay");
-            poDialogx.initDialog("Shipping Address", infoModel.getErrorMessage(), () -> poDialogx.dismiss());
+
+            poDialogx.setIcon(R.drawable.baseline_error_24);
+            poDialogx.setTitle("Shipping Address");
+            poDialogx.setMessage(infoModel.getErrorMessage());
+            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                @Override
+                public void OnButtonClick(View view, AlertDialog dialog) {
+                    dialog.dismiss();
+                }
+            });
+
             poDialogx.show();
+
         }
     }
 

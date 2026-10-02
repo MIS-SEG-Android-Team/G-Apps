@@ -11,8 +11,6 @@
 
 package org.rmj.g3appdriver.dev.Database.DataAccessObject;
 
-import android.database.Cursor;
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -36,34 +34,14 @@ public interface DEmployeeInfo {
     @Delete
     void delete(EEmployeeInfo employee);
 
-    @Query("SELECT * FROM User_Info_Master")
-    LiveData<EEmployeeInfo> getEmployeeInfo();
-
-    @Query("SELECT * FROM User_Info_Master")
-    EEmployeeInfo getEmployeeInfoNonLiveData();
-
-    @Query("DELETE FROM User_Info_Master")
-    void deleteAllEmployeeInfo();
 
     @Query("SELECT sUserIDxx FROM User_Info_Master")
     LiveData<String> getUserID();
 
-    @Query("SELECT sLogNoxxx FROM User_Info_Master")
-    LiveData<String> getLogNumber();
 
     @Query("SELECT sClientID FROM User_Info_Master")
     LiveData<String> getClientID();
 
-
-    @Query("SELECT sBranchCD FROM User_Info_Master")
-    LiveData<String> getSBranchID();
-
-    @Query("SELECT * FROM User_Info_Master")
-    Cursor getUserInfo();
-
-
-    @Query("SELECT dSessionx FROM User_Info_Master")
-    LiveData<String> getSessionDate();
 
 
 }

@@ -15,9 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kofigyan.stateprogressbar.StateProgressBar;
-
-import org.rmj.g3appdriver.dev.Database.DataAccessObject.DNotifications;
 import org.rmj.g3appdriver.etc.DateTimeFormatter;
 import org.rmj.guanzongroup.notifications.R;
 import org.rmj.guanzongroup.notifications.ViewModel.VMViewNotification;

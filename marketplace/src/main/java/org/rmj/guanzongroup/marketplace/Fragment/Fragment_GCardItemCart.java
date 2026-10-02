@@ -14,19 +14,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRedeemItemInfo;
-import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.digitalgcard.ViewModel.VMGCardSystem;
 import org.rmj.guanzongroup.marketplace.Activity.Activity_ItemCart;
 import org.rmj.guanzongroup.marketplace.Adapter.Adapter_ItemCart;
@@ -41,7 +38,6 @@ import java.util.List;
 public class Fragment_GCardItemCart extends Fragment {
     String TAG = Fragment_GCardItemCart.class.getSimpleName();
     private VMGCardSystem mViewModel;
-    //    private VMGCardItemCart mVModel;
     private RecyclerView recyclerView;
     private LinearLayout noItem, lnGCardFooter;
     private MaterialButton btnCheckOut,btnShopNow;
@@ -50,7 +46,7 @@ public class Fragment_GCardItemCart extends Fragment {
     private List<ItemCartModel> itemList;
     private List<DRedeemItemInfo.GCardCartItem> gcardItem;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poMessage;
+    private MessageBox poMessage;
     public static Fragment_GCardItemCart newInstance() {
         return new Fragment_GCardItemCart();
     }
@@ -58,9 +54,13 @@ public class Fragment_GCardItemCart extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_gcard_item_cart, container, false);
-        mViewModel = new ViewModelProvider(this).get(VMGCardSystem.class);
         initWidgets(v);
+
+        poMessage.initDialog();
+
+        mViewModel = new ViewModelProvider(this).get(VMGCardSystem.class);
         mViewModel.GetCartItems().observe(getViewLifecycleOwner(), itemCart ->{
             try {
                 if (itemCart.size() > 0){
@@ -121,6 +121,7 @@ public class Fragment_GCardItemCart extends Fragment {
             intent.putExtra("args","2");
             startActivity(intent);
         });
+
         btnCheckOut.setOnClickListener(view->{
             mViewModel.GetMCBranchesForRedemption(branchInfos -> {
                 Log.e(TAG, String.valueOf(branchInfos.size()));
@@ -135,14 +136,16 @@ public class Fragment_GCardItemCart extends Fragment {
                     @Override
                     public void onSuccess(String fsMessage) {
                         poLoading.dismiss();
-                        showMessage("Place Order",fsMessage);
+
+                        showMessage("Place Order",fsMessage, R.drawable.ic_baseline_message_24);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void onFailed(String fsMessage) {
                         poLoading.dismiss();
-                        showMessage("Place Order",fsMessage);
+
+                        showMessage("Place Order",fsMessage, R.drawable.baseline_error_24);
 
                     }
 
@@ -158,7 +161,9 @@ public class Fragment_GCardItemCart extends Fragment {
         return v;
     }
     public List<ItemCartModel> ParseDataForAdapter(List<DRedeemItemInfo.GCardCartItem> foVal) {
+
         ArrayList<ItemCartModel> list = new ArrayList<>();
+
         for(int x = 0; x < foVal.size(); x++){
             ItemCartModel loDetail = new ItemCartModel();
             loDetail.setMarket(false);
@@ -173,7 +178,7 @@ public class Fragment_GCardItemCart extends Fragment {
     }
     private void initWidgets(View view){
         poLoading = new Dialog_Loading(requireActivity());
-        poMessage = new Dialog_SingleButton(requireActivity());
+        poMessage = new MessageBox(requireActivity());
         recyclerView = view.findViewById(R.id.recyclerView_GCardCart);
         noItem = view.findViewById(R.id.layoutGCardNoItem);
         lnGCardFooter = view.findViewById(R.id.lnGCardFooter);
@@ -181,10 +186,21 @@ public class Fragment_GCardItemCart extends Fragment {
         btnCheckOut = view.findViewById(R.id.btnGCardCheckOut);
         btnShopNow = view.findViewById(R.id.btnGCarShopNow);
     }
-    void showMessage(String title, String msg){
-        poMessage.setButtonText("Okay");
-        poMessage.initDialog(title, msg, () -> poMessage.dismiss());
+
+    void showMessage(String title, String msg, int fsIconx){
+
+        poMessage.setIcon(fsIconx);
+        poMessage.setTitle(title);
+        poMessage.setMessage(msg);
+        poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+            @Override
+            public void OnButtonClick(View view, AlertDialog dialog) {
+                dialog.dismiss();
+            }
+        });
+
         poMessage.show();
+
     }
     public static String currencyFormat(double amount) {
         DecimalFormat formatter = new DecimalFormat("###,###,##0.00");

@@ -58,16 +58,8 @@ public class RMcModel {
         return message;
     }
 
-    public LiveData<List<EMcModel>> getMcModelFromBrand(String BrandID){
-        return poDao.getAllModeFromBrand(BrandID);
-    }
-
     public String getLatestDataTime(){
         return poDao.getLatestDataTime();
-    }
-
-    public EMcModel getModelInfo(String TransNox){
-        return poDao.getModelInfo(TransNox);
     }
 
     public LiveData<DMcModel.McAmortInfo> GetMonthlyPayment(String fsModel, int fnTerm){

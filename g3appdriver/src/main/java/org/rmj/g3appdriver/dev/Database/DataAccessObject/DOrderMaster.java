@@ -318,7 +318,7 @@ public interface DOrderMaster {
 
     @Query("SELECT a.sTransNox," +
             " a.dTransact," +
-            " IFNULL(a.dExpected, ''), dExpected," +
+            " dExpected," +
             " a.sReferNox," +
             " a.nTranTotl," +
             " a.nFreightx," +
@@ -346,8 +346,6 @@ public interface DOrderMaster {
             " ON d.sProvIDxx = e.sProvIDxx " +
             " WHERE a.sTransNox =:fsVal")
     LiveData<DetailedOrderHistory> GetDetailOrderHistory(String fsVal);
-
-
 
     //POJO use for list
     class OrderHistory{

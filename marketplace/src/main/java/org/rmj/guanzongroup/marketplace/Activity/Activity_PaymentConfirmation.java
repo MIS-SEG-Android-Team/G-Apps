@@ -19,9 +19,9 @@ import com.google.android.material.button.MaterialButton;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.rmj.g3appdriver.etc.CashFormatter;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.etc.PaymentMethod;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_TextInput;
 import org.rmj.guanzongroup.marketplace.Etc.OnTransactionsCallback;
 import org.rmj.guanzongroup.marketplace.R;
@@ -33,7 +33,7 @@ public class Activity_PaymentConfirmation extends AppCompatActivity {
 
     private VMPaymentConfirmation mViewModel;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
 
     private Toolbar toolbar;
     private MaterialButton btnConfrm;
@@ -48,11 +48,17 @@ public class Activity_PaymentConfirmation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_payment_confirmation);
+
         mViewModel = new ViewModelProvider(Activity_PaymentConfirmation.this).get(VMPaymentConfirmation.class);
         poLoading = new Dialog_Loading(Activity_PaymentConfirmation.this);
-        poDialogx = new Dialog_SingleButton(Activity_PaymentConfirmation.this);
-        setContentView(R.layout.activity_payment_confirmation);
+
+        poDialogx = new MessageBox(Activity_PaymentConfirmation.this);
+        poDialogx.initDialog();
+
         setupWidgets();
+
         PayMthod = getIntent().getStringExtra("oPayMethd");
         TransNox = getIntent().getStringExtra("TransNox");
         OrdrAmnt = getIntent().getDoubleExtra("nSubTotal", 0.00);
@@ -88,7 +94,9 @@ public class Activity_PaymentConfirmation extends AppCompatActivity {
                             cardviewPaymentInfo.setVisibility(View.GONE);
                             linearCod.setVisibility(View.VISIBLE);
                             btnConfrm.setText("Continue Shopping");
+
                             if(getIntent().hasExtra("nSubTotal")){
+
                                 lblOrderAmount.setText(CashFormatter.parse(String.valueOf(OrdrAmnt)));
                                 lblCodAmount.setText(CashFormatter.parse(String.valueOf(OrdrAmnt)));
                             }
@@ -97,8 +105,17 @@ public class Activity_PaymentConfirmation extends AppCompatActivity {
                         @Override
                         public void onFailed(String fsMessage) {
                             poLoading.dismiss();
-                            poDialogx.setButtonText("Okay");
-                            poDialogx.initDialog("Pay Order", fsMessage, () -> poDialogx.dismiss());
+
+                            poDialogx.setIcon(R.drawable.baseline_error_24);
+                            poDialogx.setTitle("Pay Order");
+                            poDialogx.setMessage(fsMessage);
+                            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                @Override
+                                public void OnButtonClick(View view, AlertDialog dialog) {
+                                    poDialogx.dismiss();
+                                }
+                            });
+
                             poDialogx.show();
                         }
                     });
@@ -137,9 +154,19 @@ public class Activity_PaymentConfirmation extends AppCompatActivity {
                 @Override
                 public void onFailed(String fsMessage) {
                     poLoading.dismiss();
-                    poDialogx.setButtonText("Okay");
-                    poDialogx.initDialog("Pay Order", fsMessage, () -> poDialogx.dismiss());
+
+                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                    poDialogx.setTitle("Pay Order");
+                    poDialogx.setMessage(fsMessage);
+                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+                            poDialogx.dismiss();
+                        }
+                    });
+
                     poDialogx.show();
+
                 }
             });
         }
@@ -161,6 +188,7 @@ public class Activity_PaymentConfirmation extends AppCompatActivity {
                 cardviewPaymentInfo.setVisibility(View.GONE);
                 linearCod.setVisibility(View.VISIBLE);
                 btnConfrm.setText("Continue Shopping");
+
                 if(getIntent().hasExtra("nSubTotal")){
                     lblOrderAmount.setText(CashFormatter.parse(String.valueOf(OrdrAmnt)));
                     lblCodAmount.setText(CashFormatter.parse(String.valueOf(OrdrAmnt)));
@@ -170,21 +198,35 @@ public class Activity_PaymentConfirmation extends AppCompatActivity {
             @Override
             public void onFailed(String fsMessage) {
                 poLoading.dismiss();
-                poDialogx.setButtonText("Okay");
-                poDialogx.initDialog("Pay Order", fsMessage, () -> poDialogx.dismiss());
+
+                poDialogx.setIcon(R.drawable.baseline_error_24);
+                poDialogx.setTitle("Pay Order");
+                poDialogx.setMessage(fsMessage);
+                poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        poDialogx.dismiss();
+                    }
+                });
+
                 poDialogx.show();
+
             }
         });
     }
 
     private void payOrder(){
         final Dialog_TextInput loDialog = new Dialog_TextInput(Activity_PaymentConfirmation.this);
+
         loDialog.initDialog("Reference Number", new Dialog_TextInput.OnDialogConfirmation() {
             @Override
             public void onConfirm(String fsInputx, AlertDialog dialog) {
+
                 if(!fsInputx.isEmpty()) {
+
                     String lsRefNoxx = fsInputx;
                     dialog.dismiss();
+
                     mViewModel.payOrder(TransNox,
                             getPaymentMethod(PayMthod),
                             lsRefNoxx, new OnTransactionsCallback() {
@@ -198,32 +240,66 @@ public class Activity_PaymentConfirmation extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Pay Order", fsMessage, () -> {
-                                        poDialogx.dismiss();
-                                        Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
-                                        intent.putExtra("args", "purchase");
-                                        sendBroadcast(intent);
-                                        Activity_PayOrder.getInstance().finish();
-                                        finish();
+
+                                    poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                                    poDialogx.setTitle("Pay Order");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+
+                                            poDialogx.dismiss();
+                                            Intent intent = new Intent("android.intent.action.SUCCESS_LOGIN");
+                                            intent.putExtra("args", "purchase");
+                                            sendBroadcast(intent);
+                                            Activity_PayOrder.getInstance().finish();
+                                            finish();
+
+                                        }
                                     });
+
                                     poDialogx.show();
+
                                 }
 
                                 @Override
                                 public void onFailed(String fsMessage) {
                                     poLoading.dismiss();
-                                    poDialogx.setButtonText("Okay");
-                                    poDialogx.initDialog("Pay Order", fsMessage, () -> poDialogx.dismiss());
+
+                                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                                    poDialogx.setTitle("Pay Order");
+                                    poDialogx.setMessage(fsMessage);
+                                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                        @Override
+                                        public void OnButtonClick(View view, AlertDialog dialog) {
+
+                                            poDialogx.dismiss();
+
+                                        }
+                                    });
+
                                     poDialogx.show();
+
                                 }
                             });
                 } else {
+
                     dialog.dismiss();
-                    poDialogx.setButtonText("Okay");
-                    poDialogx.initDialog("Pay Order",
-                            "Please enter payment reference number.", () -> poDialogx.dismiss());
+
+                    poDialogx.setIcon(R.drawable.baseline_error_24);
+                    poDialogx.setTitle("Pay Order");
+                    poDialogx.setMessage("Please enter payment reference number.");
+                    poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                        @Override
+                        public void OnButtonClick(View view, AlertDialog dialog) {
+
+                            poDialogx.dismiss();
+
+                        }
+                    });
+
                     poDialogx.show();
+
                 }
             }
 

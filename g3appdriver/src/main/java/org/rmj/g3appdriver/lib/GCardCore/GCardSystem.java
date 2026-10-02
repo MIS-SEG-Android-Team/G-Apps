@@ -13,8 +13,8 @@ public class GCardSystem {
     }
 
     public interface ParseQrCodeCallback{
-        void ApplicationResult(String args);
-        void TransactionResult(String args);
+        void ApplicationResult(String src, Object args);
+        void TransactionResult(String src, Object args);
         void OnFailed(String message);
     }
 
@@ -23,11 +23,9 @@ public class GCardSystem {
         REDEMPTION,
         EXTRAS
     }
-
     public GCardSystem(Context context) {
         this.mContext = context;
     }
-
     public iGCardSystem getInstance(CoreFunctions core){
         if(core == CoreFunctions.GCARD){
             return new GCardManager(mContext);

@@ -12,7 +12,6 @@
 package org.rmj.g3appdriver.dev.Repositories;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRawDao;
 import org.rmj.g3appdriver.dev.Database.Entities.ETokenInfo;
@@ -30,17 +29,9 @@ public class RRawData {
     }
 
     public void SaveNewToken(String val){
-        new SaveNewTokenTask().execute(val);
-    }
+        ETokenInfo loToken = new ETokenInfo();
+        loToken.setTokenInf(val);
 
-    private class SaveNewTokenTask extends AsyncTask<String, Void, String>{
-
-        @Override
-        protected String doInBackground(String... strings) {
-            ETokenInfo loToken = new ETokenInfo();
-            loToken.setTokenInf(strings[0]);
-            poDaw.insertTokenInfo(loToken);
-            return null;
-        }
+        poDaw.insertTokenInfo(loToken);
     }
 }

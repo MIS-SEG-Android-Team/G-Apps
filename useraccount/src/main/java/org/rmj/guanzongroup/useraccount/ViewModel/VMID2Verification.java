@@ -1,21 +1,20 @@
 package org.rmj.guanzongroup.useraccount.ViewModel;
 
 import android.app.Application;
-import android.os.AsyncTask;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-
 import org.rmj.g3appdriver.etc.ConnectionUtil;
 import org.rmj.g3appdriver.etc.SessionManager;
 import org.rmj.g3appdriver.lib.Account.AccountVerification;
+import org.rmj.g3appdriver.utils.Task.OnTaskExecuteListener;
+import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 import org.rmj.guanzongroup.useraccount.Etc.IDDetail;
 
 public class VMID2Verification extends AndroidViewModel {
-
     private final AccountVerification poSys;
     private final ConnectionUtil poConn;
     private final SessionManager poSession;
+    private String lomessage;
 
     public VMID2Verification(@NonNull Application application) {
         super(application);
@@ -27,73 +26,57 @@ public class VMID2Verification extends AndroidViewModel {
     public String getUserID(){
         return poSession.getUserID();
     }
-
     public void SubmitIDPicture(IDDetail foVal, OnSubmitIDPictureListener listener){
-        new SubmitIDTask(listener).execute(foVal);
-    }
+        TaskExecutor.Execute(foVal, new OnTaskExecuteListener() {
+            @Override
+            public void OnPreExecute() {
+                listener.OnSubmit("Loan Application", "Uploading id picture. Please wait...");
+            }
+            @Override
+            public Object DoInBackground(Object args) {
+                try{
+                    if(!poConn.isDeviceConnected()){
+                        lomessage = poConn.getMessage();
+                        return false;
+                    }
 
-    private class SubmitIDTask extends AsyncTask<IDDetail, Void, Boolean> {
+                    IDDetail loDetail = (IDDetail) args;
+                    String lsFilePath = loDetail.getsFrntPath();
+                    String lsFileName = loDetail.getsFrontImg();
 
-        private final OnSubmitIDPictureListener listener;
+                    if(!poSys.SubmitIDVerification(lsFilePath, lsFileName)){
+                        lomessage = poSys.getMessage();
+                        return false;
+                    }
 
-        private String message;
+                    if(!loDetail.getcHasBackx().equalsIgnoreCase("1")){
+                        return true;
+                    }
 
-        public SubmitIDTask(OnSubmitIDPictureListener listener) {
-            this.listener = listener;
-        }
+                    Thread.sleep(1000);
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            listener.OnSubmit("Loan Application", "Uploading id picture. Please wait...");
-        }
+                    lsFilePath = loDetail.getsBackPath();
+                    lsFileName = loDetail.getsBackImgx();
+                    if(!poSys.SubmitIDVerification(lsFilePath, lsFileName)){
+                        lomessage = poSys.getMessage();
+                        return false;
+                    }
 
-        @Override
-        protected Boolean doInBackground(IDDetail... args) {
-            try{
-                if(!poConn.isDeviceConnected()){
-                    message = "Unable to connect.";
-                    return false;
-                }
-
-                IDDetail loDetail = args[0];
-                String lsFilePath = loDetail.getsFrntPath();
-                String lsFileName = loDetail.getsFrontImg();
-
-                if(!poSys.SubmitIDVerification(lsFilePath, lsFileName)){
-                    message = poSys.getMessage();
-                    return false;
-                }
-
-                if(!loDetail.getcHasBackx().equalsIgnoreCase("1")){
                     return true;
-                }
-
-                Thread.sleep(1000);
-
-                lsFilePath = loDetail.getsBackPath();
-                lsFileName = loDetail.getsBackImgx();
-                if(!poSys.SubmitIDVerification(lsFilePath, lsFileName)){
-                    message = poSys.getMessage();
+                } catch (Exception e){
+                    lomessage = e.getMessage();
                     return false;
                 }
-
-                return true;
-            } catch (Exception e){
-                e.printStackTrace();
-                message = e.getMessage();
-                return false;
             }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean isSuccess) {
-            super.onPostExecute(isSuccess);
-            if(!isSuccess){
-                listener.OnFailed(message);
-            } else {
-                listener.OnSuccess("Id picture uploaded successfully.");
+            @Override
+            public void OnPostExecute(Object object) {
+                Boolean isSuccess = (Boolean) object;
+                if(!isSuccess){
+                    listener.OnFailed(lomessage);
+                } else {
+                    listener.OnSuccess("Id picture uploaded successfully.");
+                }
             }
-        }
+        });
     }
 }

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/guanzon_digital_light_grey"
     android:orientation="vertical"
     android:theme="@style/GuanzonMarketplace.Theme"
     tools:context=".Activity.Activity_NotificationList">
 
-
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_orange_dark">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_notification"
@@ -22,35 +22,42 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tablayout_notifList"
         style="@style/Widget.MaterialComponents.TabLayout"
+        android:id="@+id/tablayout_notifList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/app_background"
-        android:elevation="5dp"
-        android:paddingVertical="10dp"
-        app:tabGravity="fill"
-        app:tabIconTint="@color/tab_select_indicator_dashboard"
-        app:tabIndicator="@color/guanzon_digital_orange"
-        app:tabIndicatorAnimationDuration="1"
-        app:tabIndicatorColor="@color/guanzon_digital_orange"
-        app:tabIndicatorFullWidth="true"
-        app:tabIndicatorGravity="bottom"
-        app:tabIndicatorHeight="4dp"
-        app:tabMode="fixed"
-        app:tabTextColor="@color/font_heavy">
+        android:background="@color/zxing_transparent"
+        app:tabSelectedTextColor="@color/guanzon_digital_light_orange"
+        app:tabIndicatorColor="@color/white"
+        app:tabIndicatorGravity="stretch"
+        app:tabMode="fixed">
 
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notification"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Promotions"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Guanzon Panalo"/>
 
     </com.google.android.material.tabs.TabLayout>
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/Notif_viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/zxing_transparent">
 
-    </androidx.viewpager.widget.ViewPager>
+    </androidx.viewpager2.widget.ViewPager2>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/lbl_no_notifications"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

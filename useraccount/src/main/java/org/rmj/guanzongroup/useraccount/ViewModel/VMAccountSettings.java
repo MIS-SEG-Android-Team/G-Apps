@@ -20,7 +20,4 @@ public class VMAccountSettings extends AndroidViewModel {
         return poClientx.getClientInfo();
     }
 
-    public String getClientId() {
-        return poClientx.getClientId();
-    }
 }

@@ -155,6 +155,7 @@ public class Ganado {
             }
 
             JSONObject joClient = new JSONObject();
+
             joClient.put("sLastName", loInfo.getLastName());
             joClient.put("sFrstName", loInfo.getFrstName());
             joClient.put("sMiddName", loInfo.getMiddName());
@@ -194,11 +195,14 @@ public class Ganado {
     public void RemoveInquiry(){
         poDao.RemoveInquiry();
     }
-    public void InitGeoLocation(Activity poActivty){
+    public Boolean InitGeoLocation(Activity poActivty){
         Log.d("InitGEOLocation","inits1");
+
         int LOCATION_REFRESH_TIME = 2000; // 15 seconds to update
         int LOCATION_REFRESH_DISTANCE = 500; // 500 meters to update
+
         Log.d("InitGEOLocation","inits2");
+
         if (ActivityCompat.checkSelfPermission(instance, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(instance, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
@@ -210,6 +214,8 @@ public class Ganado {
             Location location1 = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             Location location2 = locManager.getLastKnownLocation(LocationManager. PASSIVE_PROVIDER);
+
+            Boolean hasLocation = false;
             if (location != null) {
                 nLatitude = String.valueOf(location.getLatitude());
                 nLongitude = String.valueOf(location.getLongitude());
@@ -221,24 +227,25 @@ public class Ganado {
                 nLongitude = String.valueOf(location2.getLongitude());
             }else{
                 message = "Unable to Trace your location";
-                Log.e("message", message);
-
-//                listner.OnFailedRetrieve("Unable to Trace your location");
+                return false;
             }
+
             x= nLatitude;
             y=nLongitude;
+
             Log.e("nLatitude", String.valueOf(nLatitude));
             Log.e("nLongitud", String.valueOf(nLongitude));
-
 
             locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
                     LOCATION_REFRESH_DISTANCE, mLocationListener);
 
-        }else {
+            return true;
 
-            Log.e("nLatitude", String.valueOf(nLatitude));
-            Log.e("nLongitud", String.valueOf(nLongitude));
+        }else {
+            message = "Please allow app permission for location";
             ActivityCompat.requestPermissions(poActivty, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+
+            return false;
         }
     }
     public String SaveInquiry(String TransNox){

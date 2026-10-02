@@ -40,6 +40,7 @@ public class ConnectionUtil {
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
+
     public String getMessage() {
         return message;
     }
@@ -54,9 +55,9 @@ public class ConnectionUtil {
         {
             String lsAddress;
             if(new GuanzonAppConfig(context).getTestCase()){
-                lsAddress = "http://192.168.10.68:8080";
+                lsAddress = "http://192.165.29.175";
             } else {
-                lsAddress = "https://restgk.guanzongroup.com.ph";
+                lsAddress = "https://apps.guanzongroup.com.ph";
             }
             HttpURLConnection httpUrlConnection = (HttpURLConnection) new URL(
                     lsAddress).openConnection();

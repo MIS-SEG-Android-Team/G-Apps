@@ -52,7 +52,7 @@ public class TestAddToCartItem {
         new GuanzonAppConfig(mContext).setTestCase(true);
         new AccountAuthentication(mContext).
                 LoginAccount(
-                        new AccountAuthentication.LoginCredentials("mikegarcia8748@gmail.com", "12345678", "09171870011"),
+                        new AccountAuthentication.LoginCredentials("mikegarcia8748@gmail.com", "12345678"),
                         new AccountAuthentication.OnLoginCallback() {
                             @Override
                             public void OnSuccessLogin(String message) {

@@ -3,32 +3,50 @@
 
     <item
         android:id="@+id/nav_home"
+        android:title=""
         android:enabled="true"
-        android:icon="@drawable/ic_baseline_home_24"
-        android:title="@string/menu_home" />
+        android:icon="@drawable/ic_baseline_home_24"/>
 
     <item
         android:id="@+id/nav_promos"
-        android:title="@string/menu_promos"
+        android:title=""
         android:enabled="true"
         android:icon="@drawable/ic_baseline_promo_24"/>
 
     <item
-        android:id="@+id/nav_Panalo"
+        android:id="@+id/nav_Poll"
         android:enabled="true"
-        android:title="@string/panalo"
-        android:icon="@drawable/ic_baseline_card_giftcard_24" />
+        android:title=""
+        android:icon="@drawable/baseline_poll_24"
+        android:visible="false"/>
 
-    <item
-        android:id="@+id/nav_MpItemCart"
-        android:enabled="true"
-        android:title="@string/menu_item_cart"
-        android:icon="@drawable/ic_baseline_shopping_cart_24" />
+    <!--    android:title="@string/lbl_bingo" -->
+    <!--    <item-->
+    <!--        android:id="@+id/nav_Bingo"-->
+    <!--        android:enabled="true"-->
+    <!--        android:title=""-->
+    <!--        android:icon="@drawable/baseline_apps_24"-->
+    <!--        android:visible="false"/>-->
 
-    <item
-        android:id="@+id/nav_MyGcard"
-        android:enabled="true"
-        android:title="@string/my_gcard"
-        android:icon="@drawable/ic_baseline_credit_card_24" />
+<!--    <item-->
+<!--        android:id="@+id/nav_Panalo"-->
+<!--        android:enabled="true"-->
+<!--        android:title="@string/panalo"-->
+<!--        android:icon="@drawable/ic_baseline_card_giftcard_24"-->
+<!--        android:visible="false"/>-->
+
+<!--    <item-->
+<!--        android:id="@+id/nav_MpItemCart"-->
+<!--        android:enabled="true"-->
+<!--        android:title="@string/menu_item_cart"-->
+<!--        android:icon="@drawable/ic_baseline_shopping_cart_24"-->
+<!--        android:visible="false"/>-->
+
+<!--    <item-->
+<!--        android:id="@+id/nav_MyGcard"-->
+<!--        android:enabled="true"-->
+<!--        android:title="@string/my_gcard"-->
+<!--        android:icon="@drawable/ic_baseline_credit_card_24"-->
+<!--        android:visible="false"/>-->
 
 </menu>

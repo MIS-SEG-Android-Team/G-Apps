@@ -8,4 +8,5 @@
     <string name="honda_adv_160">HONDA ADV 160</string>
     <string name="close">Close</string>
     <string name="inquire">Inquire</string>
+    <string name="required">* Required</string>
 </resources>

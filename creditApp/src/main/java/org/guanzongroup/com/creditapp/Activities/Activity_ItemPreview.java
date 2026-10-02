@@ -3,7 +3,6 @@ package org.guanzongroup.com.creditapp.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,11 +12,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.material.badge.BadgeDrawable;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -29,12 +26,7 @@ import org.guanzongroup.com.creditapp.R;
 import org.guanzongroup.com.creditapp.ViewModel.VMItemPreview;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.rmj.g3appdriver.dev.Database.Entities.EProducts;
 import org.rmj.g3appdriver.etc.CashFormatter;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
-
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,13 +37,9 @@ public class Activity_ItemPreview extends AppCompatActivity {
     private VMItemPreview mViewModel;
 
     private Toolbar toolbar;
-    private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
     private LinearLayout poItmSpec;
     private SliderView poSliderx;
     private RecyclerView rvItmSpec;
-    private ImageView imgPromox;
-    private BadgeDrawable loBadge;
     private TextView txtProdNm, txtUntPrc, txtBrandx, txtCatgry, txtColorx, txtStocks,
             txtBriefx;
 
@@ -132,7 +120,6 @@ public class Activity_ItemPreview extends AppCompatActivity {
         rvItmSpec.setLayoutManager(new LinearLayoutManager(Activity_ItemPreview.this));
         rvItmSpec.setHasFixedSize(true);
 
-        imgPromox = findViewById(R.id.imgPromox);
         txtProdNm = findViewById(R.id.txt_product_name);
         txtUntPrc = findViewById(R.id.txt_product_price);
         txtBrandx = findViewById(R.id.txt_brand_name);

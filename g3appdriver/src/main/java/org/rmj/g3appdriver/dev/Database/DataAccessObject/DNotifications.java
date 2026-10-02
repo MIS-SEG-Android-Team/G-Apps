@@ -70,22 +70,6 @@ public interface DNotifications {
             "WHERE sTransNox =:MessageID")
     void UpdateSentResponseStatus(String MessageID, String Status, String dateTime);
 
-    @Query("UPDATE Notification_Info_Recepient SET " +
-            "dLastUpdt =:fsArgs, " +
-            "dReceived =:fsArgs, " +
-            "cMesgStat = '2', " +
-            "cStatSent = '1' " +
-            "WHERE sTransNox =:MessageID")
-    void updateRecipientReceivedStatus(String MessageID, String fsArgs);
-
-    @Query("UPDATE Notification_Info_Recepient SET " +
-            "dLastUpdt =:fsArgs, " +
-            "dReadxxxx =:fsArgs, " +
-            "cMesgStat = '3', " +
-            "cStatSent = '1' " +
-            "WHERE sTransNox =:MessageID")
-    void updateReadReceivedStatus(String MessageID, String fsArgs);
-
     @Query("SELECT a.sMesgIDxx AS MesgIDxx," +
             "a.sAppSrcex AS AppSrcex," +
             "b.dReceived AS Received," +
@@ -119,51 +103,6 @@ public interface DNotifications {
             "ON a.sMesgIDxx = b.sTransNox " +
             "WHERE a.sMesgIDxx =:fsMesgID")
     LiveData<ClientNotificationInfo> GetNotificationInfo(String fsMesgID);
-
-    @Query("SELECT a.sMesgIDxx AS MesgIDxx, " +
-            "a.sMsgTitle AS MsgTitle, " +
-            "a.sCreatrID AS CreatrID, " +
-            "a.sCreatrNm AS CreatrNm, " +
-            "a.sMessagex AS Messagex, " +
-            "b.dReceived AS Received " +
-            "FROM Notification_Info_Master a " +
-            "LEFT JOIN Notification_Info_Recepient b " +
-            "ON a.sMesgIDxx = b.sTransNox " +
-            "WHERE b.cMesgStat <> '5' " +
-            "AND a.sMsgTypex == '00000' " +
-            "AND b.sRecpntID = (SELECT sUserIDxx FROM Client_Profile_Info)")
-    LiveData<List<UserNotificationInfo>> getUserMessageList();
-
-    @Query("SELECT a.sMesgIDxx AS MesgIDxx, " +
-            "a.sMsgTitle AS MsgTitle, " +
-            "a.sCreatrID AS CreatrID, " +
-            "a.sCreatrNm AS CreatrNm, " +
-            "a.sMessagex AS Messagex, " +
-            "b.dReceived AS Received " +
-            "FROM Notification_Info_Master a " +
-            "LEFT JOIN Notification_Info_Recepient b " +
-            "ON a.sMesgIDxx = b.sTransNox " +
-            "WHERE b.cMesgStat <> '5' " +
-            "AND a.sMsgTypex == '00000' " +
-            "AND b.sRecpntID = (SELECT sUserIDxx FROM Client_Profile_Info) " +
-            "AND a.sCreatrID=:SenderID")
-    LiveData<List<UserNotificationInfo>> getUserMessageListFromSender(String SenderID);
-
-    @Query("SELECT a.sMesgIDxx AS MesgIDxx, " +
-            "a.sMsgTitle AS MsgTitle, " +
-            "a.sCreatrID AS CreatrID, " +
-            "a.sCreatrNm AS CreatrNm, " +
-            "a.sMessagex AS Messagex, " +
-            "b.dReceived AS Received " +
-            "FROM Notification_Info_Master a " +
-            "LEFT JOIN Notification_Info_Recepient b " +
-            "ON a.sMesgIDxx = b.sTransNox " +
-            "WHERE b.cMesgStat <> '5'" +
-            "AND a.sMsgTypex == '00000' " +
-            "AND a.sMsgTypex == '00000' " +
-            "AND b.sRecpntID = (SELECT sUserIDxx FROM Client_Profile_Info) " +
-            "GROUP BY a.sCreatrID")
-    LiveData<List<UserNotificationInfo>> getUserMessageListGroupByUser();
 
     @Query("SELECT COUNT(*) FROM Notification_Info_Recepient a " +
             "LEFT JOIN Notification_Info_Master b " +
@@ -229,37 +168,6 @@ public interface DNotifications {
             "AND a.sMsgTypex == '00008' " +
             "AND b.sRecpntID = (SELECT sUserIDxx FROM Client_Profile_Info)")
     LiveData<List<UserNotificationInfo>> getPanaloNotifications();
-
-    @Query("SELECT a.sMesgIDxx FROM Notification_Info_Master a " +
-            "LEFT JOIN Notification_Info_Recepient b " +
-            "ON a.sMesgIDxx = b.sTransNox WHERE a.sCreatrID =:SenderID " +
-            "AND b.cMesgStat == 2 AND a.sMsgTypex == '00000'")
-    List<String> getReadMessagesIDFromSender(String SenderID);
-
-    @Query("UPDATE Notification_Info_Recepient SET " +
-            "dReadxxxx =:DateTime, " +
-            "cMesgStat = '3', " +
-            "cStatSent = '0' " +
-            "WHERE sTransNox =:MessageID")
-    void updateRecipientReadStatus(String MessageID, String DateTime);
-
-    @Query("SELECT dReadxxxx FROM Notification_Info_Recepient WHERE sTransNox =:MessageID")
-    String getReadMessageTimeStamp(String MessageID);
-
-    @Query("UPDATE Notification_Info_Recepient SET " +
-            "dReadxxxx =:DateTime, " +
-            "cMesgStat = '3', " +
-            "cStatSent = '0' " +
-            "WHERE sTransNox =(SELECT sMesgIDxx FROM Notification_Info_Master WHERE sCreatrID=:SenderID) " +
-            "AND cMesgStat == '2'")
-    void updateMessageReadStatus(String SenderID, String DateTime);
-
-    @Query("SELECT COUNT(*) FROM Notification_Info_Master a " +
-            "LEFT JOIN Notification_Info_Recepient b " +
-            "ON a.sMesgIDxx = b.sTransNox " +
-            "WHERE b.sRecpntID = (SELECT sUserIDxx FROM Client_Profile_Info) " +
-            "AND cMesgStat = '2'")
-    int GetNotificationCount();
 
     @Query("SELECT COUNT(*) FROM Notification_Info_Master")
     int GetNotificationCountForID();

@@ -1,0 +1,391 @@
+package org.rmj.guanzongroup.gconnect.Fragment;
+
+import android.annotation.SuppressLint;
+import android.os.Build;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputEditText;
+
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DVoteLogs;
+import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
+import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
+import org.rmj.guanzongroup.gconnect.Activity.Activity_Dashboard;
+import org.rmj.guanzongroup.gconnect.Adapter.Adapter_Candidates;
+import org.rmj.guanzongroup.gconnect.R;
+import org.rmj.guanzongroup.gconnect.ViewModel.VMPoll;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+public class Fragment_Poll extends Fragment {
+
+    private VMPoll mViewModel;
+    private TabLayout tab_candidates;
+    private TextInputEditText tv_search;
+    private RecyclerView rv_candidates;
+    private Adapter_Candidates adapter_candidates;
+
+    private Bundle argsParams;
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_poll, container, false);
+
+        mViewModel = new ViewModelProvider(requireActivity()).get(VMPoll.class);
+
+        initViews(view);
+        initObservables();
+        initListener();
+        initArguments(); //todo: trigger on first view initialization
+
+        return view;
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        initKayMessage("Hi! Welcome to the pageant section.\n\nSelect your favorite contestant.");
+    }
+
+    @Override
+    public void setArguments(@Nullable Bundle args) {
+        super.setArguments(args);
+
+        argsParams = args;
+
+        initArguments(); //todo: trigger on every argument passed
+
+    }
+
+    private void initViews(View view){
+        tab_candidates = view.findViewById(R.id.tab_candidates);
+        tv_search = view.findViewById(R.id.tv_search);
+        rv_candidates = view.findViewById(R.id.rv_candidates);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void initListener(){
+
+        //TODO: CHANGE TAB INDICATOR ON SELECTION
+        tab_candidates.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                if (argsParams == null){
+                    initCandidates(tab.getTag().toString());
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+        tv_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                try {
+
+                    adapter_candidates.getFilter().filter(s.toString());
+                    adapter_candidates.notifyDataSetChanged();
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                try {
+
+                    adapter_candidates.getFilter().filter(s.toString());
+                    adapter_candidates.notifyDataSetChanged();
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
+
+    private void initArguments(){
+
+        if (argsParams != null){
+
+            if (argsParams.containsKey("eventID")){
+                String eventID = argsParams.getString("eventID");
+                initCandidates(eventID);
+            }
+
+        }
+
+    }
+
+    private void initObservables(){
+
+        mViewModel.GetCategories().observe(getViewLifecycleOwner(), new Observer<List<ESub_Events>>() {
+            @Override
+            public void onChanged(List<ESub_Events> eSubEvents) {
+
+                try {
+
+                    if (eSubEvents != null){
+
+                        tab_candidates.removeAllTabs();
+
+                        List<ESub_Events> laActiveCategories = new ArrayList<>();
+                        for (int x = 0; x < eSubEvents.size(); x++){
+
+                            if (isEventValid(eSubEvents.get(x).getdVoteStart(), eSubEvents.get(x).getdVoteEnd())){
+
+                                tab_candidates.addTab(
+                                        tab_candidates
+                                                .newTab() //todo add tab
+                                                .setTag(eSubEvents.get(x).getsSubEventIDxx()) //todo set tag event id
+                                                .setText(eSubEvents.get(x).getsDescript()) //todo set tab display
+                                );
+
+                                laActiveCategories.add(eSubEvents.get(x)); //todo add to active events on list
+                            }
+
+                        }
+
+                        //todo initialize candidates, if no arguments passed. load first event
+                        if (argsParams != null) {
+
+                            if (argsParams.containsKey("eventID")) {
+                                initCandidates(argsParams.getString("eventID"));
+                                return;
+                            }
+
+                        }
+
+                        initCandidates(laActiveCategories.get(0).getsSubEventIDxx());
+
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    private void initCandidates(String eventIDxx){
+
+        if (getView() == null){
+            return;
+        }
+
+        //todo clear fragment parameters
+        argsParams = null;
+
+        //todo iterate tabs
+        if (tab_candidates != null){
+
+            for (int ctr = 0; ctr < tab_candidates.getTabCount(); ctr++){
+
+                if (tab_candidates.getTabAt(ctr).getTag() != null){
+
+                    //todo select tab index if tagged value match event id
+                    String loTabID = (String) tab_candidates.getTabAt(ctr).getTag();
+                    if (loTabID.equalsIgnoreCase(eventIDxx)) {
+
+                        tab_candidates.selectTab(tab_candidates.getTabAt(ctr), true);
+
+                        //todo load candidates
+                        mViewModel.GetCandidates(eventIDxx).observe(getViewLifecycleOwner(), new Observer<List<ECandidates>>() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onChanged(List<ECandidates> eCandidates) {
+
+                                try {
+
+                                    if (eCandidates == null){
+                                        initKayMessage("Oops! Sorry, No candidates found for this event. \n\nCheck your connection or try refreshing the app");
+                                        return;
+                                    }
+
+                                    //todo if not empty, initialize adapter
+                                    adapter_candidates = new Adapter_Candidates(requireContext(), getParentFragment(), eCandidates, mViewModel);
+                                    adapter_candidates.notifyDataSetChanged();
+
+                                    rv_candidates.setLayoutManager(new GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false));
+                                    rv_candidates.setAdapter(adapter_candidates);
+
+                                    if (eCandidates.size() <= 0){
+                                        initKayMessage("Oops!\n\n Sorry, no candidates found for this event. \n\nCheck your connection or try refreshing the app");
+                                        return;
+                                    }
+
+                                    //todo observe vote counts
+                                    mViewModel.ObserveVoteCounts(eventIDxx).observe(getViewLifecycleOwner(), new Observer<DVoteLogs.LatestVote>() {
+                                        @Override
+                                        public void onChanged(DVoteLogs.LatestVote lastVote) {
+
+                                            try {
+
+                                                if (lastVote != null){
+
+                                                    if (hasVotedToday(lastVote)){ //todo if voted today, notify user to choose another event on toolbar
+                                                        initKayMessage("You have consumed your vote(s) on this day.\n\nChoose another event.");
+                                                    } else { //todo if not, display vote balance on toolbar
+                                                        initKayMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
+                                                    }
+
+                                                }else {
+                                                    initKayMessage("Hi! You only have " + 1 + " vote for this event.\n\nChoose your candidate wisely.");
+                                                }
+
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                        break;
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    private void initKayMessage(String message){
+
+        //todo if not empty, initialize toolbar message displaying vote balance
+        Activity_Dashboard loParent = (Activity_Dashboard) getActivity();
+        if (loParent != null){
+            loParent.initToolbarMessage(message);
+        }
+
+    }
+
+    private Boolean isEventValid(String dtFrom, String dtThru) throws ParseException {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            LocalDate currentDt = LocalDateTime.now().toLocalDate();
+            LocalDate eventFrom = LocalDateTime.parse(dtFrom, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
+            LocalDate eventThru = LocalDateTime.parse(dtThru, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
+
+            //todo: current date is equal to event date
+            if (currentDt.isEqual(eventFrom) || currentDt.isEqual(eventThru)){
+                return true;
+            }else {
+
+                //todo: current date is between event date
+                if (currentDt.isAfter(eventFrom) && currentDt.isBefore(eventThru)){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+
+        }else {
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date loToday = dtFormat.parse(dtFormat.format(Calendar.getInstance().getTime()));
+            Date loEvntFrom = dtFormat.parse(dtFormat.format(dtFormat.parse(dtFrom)));
+            Date loEvntThru = dtFormat.parse(dtFormat.format(dtFormat.parse(dtThru)));
+
+            if (loToday.equals(loEvntFrom) || loToday.equals(loEvntThru)){
+                return true;
+            }else {
+
+                if (loToday.after(loEvntFrom) && loToday.before(loEvntThru)){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+        }
+
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private Boolean hasVotedToday(DVoteLogs.LatestVote lastVote) throws ParseException {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            if (lastVote.getdTimeStmp() != null){
+
+                LocalDate loLastVote = LocalDate.parse(lastVote.getdTimeStmp(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                LocalDate loToday = LocalDateTime.now().toLocalDate();
+
+                return loLastVote.isEqual(loToday) && lastVote.getTotal() > 0;
+
+            }else {
+                return false;
+            }
+
+        }else {
+
+            if (lastVote.getdTimeStmp() != null){
+
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                Date loLastVote = dtFormat.parse(dtFormat.format(dtFormat.parse(lastVote.getdTimeStmp())));
+                Date loToday = dtFormat.parse(dtFormat.format(Calendar.getInstance().getTime()));
+
+                return loLastVote.equals(loToday) && lastVote.getTotal() > 0;
+
+            }else {
+                return false;
+            }
+
+        }
+
+    }
+
+}

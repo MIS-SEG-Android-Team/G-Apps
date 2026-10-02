@@ -3,9 +3,9 @@ package org.rmj.guanzongroup.useraccount.Activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,18 +15,14 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-
-import org.rmj.g3appdriver.dev.Database.DataAccessObject.DAddress;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DClientInfo;
-import org.rmj.g3appdriver.dev.Database.Entities.EBarangayInfo;
 import org.rmj.g3appdriver.etc.InputFieldController;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.R;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMShippingAddress;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Activity_AddressUpdate extends AppCompatActivity {
@@ -39,7 +35,7 @@ public class Activity_AddressUpdate extends AppCompatActivity {
     private MaterialButton btnUpdate;
 
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
 
     private VMShippingAddress mViewModel;
 
@@ -64,8 +60,10 @@ public class Activity_AddressUpdate extends AppCompatActivity {
         tieBrgy = findViewById(R.id.tie_barangay);
         btnUpdate = findViewById(R.id.btnUpdate);
 
-        poDialogx = new Dialog_SingleButton(Activity_AddressUpdate.this);
+        poDialogx = new MessageBox(Activity_AddressUpdate.this);
         poLoading = new Dialog_Loading(Activity_AddressUpdate.this);
+
+        poDialogx.initDialog();
 
         mViewModel.getTownCityList().observe(Activity_AddressUpdate.this, oTownObjs -> {
             try {
@@ -160,22 +158,36 @@ public class Activity_AddressUpdate extends AppCompatActivity {
                         @Override
                         public void onSuccess(String fsMessage) {
                             poLoading.dismiss();
-                            poDialogx.setButtonText("Okay");
-                            poDialogx.initDialog("Address Update", fsMessage, () -> {
-                                isClicked = false;
-                                poDialogx.dismiss();
+
+                            poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                            poDialogx.setTitle("Address Update");
+                            poDialogx.setMessage(fsMessage);
+                            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                @Override
+                                public void OnButtonClick(View view, AlertDialog dialog) {
+                                    isClicked = false;
+                                    poDialogx.dismiss();
+                                }
                             });
+
                             poDialogx.show();
                         }
 
                         @Override
                         public void onFailed(String fsMessage) {
                             poLoading.dismiss();
-                            poDialogx.setButtonText("Okay");
-                            poDialogx.initDialog("Address Update", fsMessage, () -> {
-                                isClicked = false;
-                                poDialogx.dismiss();
+
+                            poDialogx.setIcon(R.drawable.baseline_error_24);
+                            poDialogx.setTitle("Address Update");
+                            poDialogx.setMessage(fsMessage);
+                            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                                @Override
+                                public void OnButtonClick(View view, AlertDialog dialog) {
+                                    isClicked = false;
+                                    poDialogx.dismiss();
+                                }
                             });
+
                             poDialogx.show();
                         }
                     };

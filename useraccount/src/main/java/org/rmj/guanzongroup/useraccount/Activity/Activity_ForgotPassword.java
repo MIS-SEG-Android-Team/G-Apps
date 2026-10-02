@@ -2,24 +2,19 @@ package org.rmj.guanzongroup.useraccount.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-
-import org.rmj.g3appdriver.lib.Account.AccountAuthentication;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.Etc.LogType;
 import org.rmj.guanzongroup.useraccount.Model.ForgotPasswordInfoModel;
 import org.rmj.guanzongroup.useraccount.R;
@@ -30,13 +25,10 @@ import java.util.Objects;
 public class Activity_ForgotPassword extends AppCompatActivity {
 
     private VMAccountAuthentication mViewModel;
-    private Toolbar toolbar;
+    private MaterialToolbar toolbar;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
-    private TabLayout tabLayout;
-    private TextView lblUser;
-    private TextInputLayout tilEmail, tilMobile;
-    private TextInputEditText tieEmail, tieMobile;
+    private MessageBox poDialogx;
+    private TextInputEditText tieEmail;
     private MaterialButton btnResend;
 
     public boolean isClicked = false;
@@ -44,13 +36,16 @@ public class Activity_ForgotPassword extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_forgot_password);
+
         mViewModel = new ViewModelProvider(Activity_ForgotPassword.this)
                 .get(VMAccountAuthentication.class);
 
         initViews();
         setUpToolbar();
-        setTabLayout();
+
+        poDialogx.initDialog();
 
         btnResend.setOnClickListener(v -> {
             if(!isClicked) {
@@ -77,17 +72,12 @@ public class Activity_ForgotPassword extends AppCompatActivity {
 
     // Initialize this first before anything else.
     private void initViews() {
-        toolbar = findViewById(R.id.toolbar);
-        tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Email"));
-        tabLayout.addTab(tabLayout.newTab().setText("Mobile"));
 
-        lblUser = findViewById(R.id.lblUser);
-        tilEmail = findViewById(R.id.til_email);
-        tilMobile = findViewById(R.id.til_mobile);
+        poDialogx = new MessageBox(Activity_ForgotPassword.this);
+
+        toolbar = findViewById(R.id.toolbar);
 
         tieEmail = findViewById(R.id.tie_email);
-        tieMobile = findViewById(R.id.tie_mobile);
         btnResend = findViewById(R.id.btnResend);
     }
 
@@ -95,13 +85,13 @@ public class Activity_ForgotPassword extends AppCompatActivity {
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Forgot Password");
+        getSupportActionBar().setTitle("");
     }
 
     private void retrievePassword() {
         String lsEmailxx = Objects.requireNonNull(tieEmail.getText().toString().trim());
-        String lsMobilex = Objects.requireNonNull(tieMobile.getText().toString().trim());
         ForgotPasswordInfoModel infoModel = new ForgotPasswordInfoModel(LogType.EMAIL, lsEmailxx);
+
         if(infoModel.isDataNotEmpty()) {
             try {
                 mViewModel.RetrievePassword(infoModel.getLogUser(), new VMAccountAuthentication.AuthTransactionCallback() {
@@ -115,26 +105,39 @@ public class Activity_ForgotPassword extends AppCompatActivity {
                     @Override
                     public void onSuccess(String fsMessage) {
                         poLoading.dismiss();
-                        poDialogx = new Dialog_SingleButton(Activity_ForgotPassword.this);
-                        poDialogx.setButtonText("Okay");
-                        poDialogx.initDialog("Forgot Password", fsMessage, () -> {
-                            isClicked = false;
-                            poDialogx.dismiss();
-                            finish();
+
+                        poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                        poDialogx.setTitle("Forgot Password");
+                        poDialogx.setMessage(fsMessage);
+                        poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                            @Override
+                            public void OnButtonClick(View view, AlertDialog dialog) {
+                                isClicked = false;
+                                dialog.dismiss();
+                                finish();
+                            }
                         });
+
                         poDialogx.show();
                     }
 
                     @Override
                     public void onFailed(String fsMessage) {
                         poLoading.dismiss();
-                        poDialogx = new Dialog_SingleButton(Activity_ForgotPassword.this);
-                        poDialogx.setButtonText("Okay");
-                        poDialogx.initDialog("Retrieving Password Failed", fsMessage, () -> {
-                            isClicked = false;
-                            poDialogx.dismiss();
+
+                        poDialogx.setIcon(R.drawable.baseline_error_24);
+                        poDialogx.setTitle("Forgot Password");
+                        poDialogx.setMessage(fsMessage);
+                        poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                            @Override
+                            public void OnButtonClick(View view, AlertDialog dialog) {
+                                isClicked = false;
+                                dialog.dismiss();
+                            }
                         });
+
                         poDialogx.show();
+
                     }
                 });
             } catch (Exception e) {
@@ -142,44 +145,21 @@ public class Activity_ForgotPassword extends AppCompatActivity {
                 isClicked = false;
             }
         } else {
-            poDialogx = new Dialog_SingleButton(Activity_ForgotPassword.this);
-            poDialogx.setButtonText("Okay");
-            poDialogx.initDialog("Retrieving Password Failed", infoModel.getMessage(), () -> {
-                isClicked = false;
-                poDialogx.dismiss();
-            });
-            poDialogx.show();
-        }
-    }
 
-    private void setTabLayout(){
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                switch(tab.getPosition()) {
-                    case 1:
-                        tilEmail.setVisibility(View.INVISIBLE);
-                        tilMobile.setVisibility(View.VISIBLE);
-                        lblUser.setText(R.string.lblMobileNumber);
-                        break;
-                    default:
-                        tilEmail.setVisibility(View.VISIBLE);
-                        tilMobile.setVisibility(View.INVISIBLE);
-                        lblUser.setText(R.string.lblEmailAddress);
-                        break;
+            poDialogx.setIcon(R.drawable.baseline_error_24);
+            poDialogx.setTitle("Forgot Password");
+            poDialogx.setMessage(infoModel.getMessage());
+            poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                @Override
+                public void OnButtonClick(View view, AlertDialog dialog) {
+                    isClicked = false;
+                    dialog.dismiss();
                 }
-            }
+            });
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            poDialogx.show();
 
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        }
     }
 
 }

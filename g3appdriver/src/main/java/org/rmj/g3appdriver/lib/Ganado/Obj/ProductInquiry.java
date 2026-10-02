@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DClientInfo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGanadoOnline;
 import org.rmj.g3appdriver.dev.Database.Entities.EGanadoOnline;
 import org.rmj.g3appdriver.dev.Database.Entities.EMCColor;
@@ -26,21 +27,18 @@ public class ProductInquiry {
     private final Context instance;
     private final DGanadoOnline poDao;
     private final Pricelist poPrice;
-
+    private DClientInfo clientInfo;
     private String message;
 
     public ProductInquiry(Context instance) {
         this.instance = instance;
         this.poDao = GGC_GuanzonAppDB.getInstance(instance).ganadoDao();
         this.poPrice = PriceFactory.make(PriceFactory.ProductType.MOTORCYCLE);
-//        this.poPrice = new MCPricelist();
+        this.clientInfo = GGC_GuanzonAppDB.getInstance(instance).EClientDao();
     }
 
     public String getMessage() {
         return message;
-    }
-    public static String[] getPaymentForm(){
-        return new String[]{"Cash", "Installment"};
     }
 
     public LiveData<List<EMcBrand>> GetMotorcycleBrands(){
@@ -50,6 +48,7 @@ public class ProductInquiry {
     public LiveData<List<EMcModel>> GetModelsList(String BrandID){
         return poDao.getAllModeFromBrand(BrandID);
     }
+
     public LiveData<EMcModel> GetModel(String BrandID, String ModelID){
         return poDao.getModeFromBrand(BrandID,ModelID);
     }
@@ -57,9 +56,11 @@ public class ProductInquiry {
     public LiveData<List<EMCColor>> GetModelColor(String ModelID){
         return poDao.GetModelColors(ModelID);
     }
+
     public DGanadoOnline.McInfo GetMCInfo(String ModelID, String BrandID, String ColorID){
         return poDao.GetMCInfo(ModelID, BrandID, ColorID);
     }
+
     public DGanadoOnline.CashPrice GetCashInfo(String ModelID){
         return poDao.GetCashInfo(ModelID);
     }
@@ -78,6 +79,10 @@ public class ProductInquiry {
 
     public LiveData<EGanadoOnline> GetInquiryDetail(String TransNox){
         return poDao.GetLatestInquiries(TransNox);
+    }
+
+    public String GetGcashNo(){
+        return clientInfo.GetGCashNo();
     }
 
     /**

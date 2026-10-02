@@ -1,5 +1,7 @@
 package org.rmj.g3appdriver.lib.GCardCore.Obj;
 
+import android.util.Log;
+
 import org.json.JSONObject;
 import org.rmj.g3appdriver.lib.GCardCore.CodeGenerator;
 
@@ -43,6 +45,7 @@ public class GcardCredentials {
         params.put("secureno", poCode.generateSecureNo(sGcrdNmbr));
         params.put("bday", sBirthDte);
         params.put("newdevce", sConfirmx);
+
         return params.toString();
     }
 }

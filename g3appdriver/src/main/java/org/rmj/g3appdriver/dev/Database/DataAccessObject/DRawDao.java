@@ -30,10 +30,4 @@ public interface DRawDao {
 
     @Query("SELECT sAppToken FROM App_Token_Info")
     String getTokenInfo();
-
-    @Query("SELECT sUserIDxx FROM Client_Profile_Info")
-    String GetUserID();
-
-    @Query("SELECT sTransNox FROM Notification_Info_Recepient ORDER BY sTransNox DESC LIMIT 1")
-    String GetNotificationRcptID();
 }

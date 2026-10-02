@@ -1,53 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="15dp"
     app:cardPreventCornerOverlap="true"
-    app:cardCornerRadius="10dp"
-    app:cardMaxElevation="5dp"
-    app:cardElevation="30dp">
+    app:cardUseCompatPadding="true"
+    android:theme="@style/GuanzonMarketplace.Theme"
+    android:layout_marginHorizontal="25dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        android:background="@color/white"
-        android:layout_margin="15dp"
-        android:paddingTop="8dp">
+        android:paddingVertical="5dp">
 
-        <TextView
-            android:id="@+id/lbl_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textSize="20sp"
-            android:textColor="@color/font_regular"
-            android:fontFamily="@font/roboto_bold"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/data_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/msg_icon"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_baseline_message_24"
+                android:paddingHorizontal="3dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/lbl_title"
+                app:layout_constraintBottom_toBottomOf="@+id/lbl_title"
+                app:layout_constraintWidth_percent="0.09"/>
 
-        <TextView
-            android:id="@+id/lbl_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="message"
-            android:textSize="18sp"
-            android:textColor="@color/font_regular"
-            android:paddingVertical="10dp"
-            android:fontFamily="@font/roboto"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="30dp"
-            android:gravity="center_horizontal"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/lbl_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Title"
+                android:textSize="18sp"
+                android:fontFamily="@font/roboto_bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/msg_icon"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-        <Button
+            <ScrollView
+                android:id="@+id/message_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/msg_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lbl_title">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/lbl_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Message"
+                    android:paddingVertical="5dp"
+                    android:fontFamily="@font/roboto"
+                    android:textSize="15sp"/>
+            </ScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="@color/marketplace_orange"/>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/ButtonStyle.Orange.Small"
-            android:paddingHorizontal="0dp"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Dismiss"
+            android:fontFamily="@font/roboto_medium"
+            android:visibility="visible"
+            android:layout_marginStart="2dp"/>
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

@@ -23,7 +23,6 @@ public class VMInquiry extends AndroidViewModel {
 
     private final Ganado poSys;
     private final ConnectionUtil poConn;
-    private final ProductInquiry poApp;
 
     private String message;
 
@@ -38,7 +37,6 @@ public class VMInquiry extends AndroidViewModel {
 
         poSys = new Ganado(application);
         poConn = new ConnectionUtil(application);
-        poApp = new ProductInquiry(application);
     }
     public EGanadoOnline GetInQuiry(String TransNox){
         return poSys.GetInquiry(TransNox);

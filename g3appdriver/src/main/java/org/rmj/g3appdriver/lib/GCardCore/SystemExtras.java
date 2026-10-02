@@ -2,25 +2,27 @@ package org.rmj.g3appdriver.lib.GCardCore;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.util.Log;
-
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.rmj.apprdiver.util.SQLUtil;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DBranchInfo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DCandidates;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DEvents;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPromo;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRedeemItemInfo;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DSubEvents;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DVoteLogs;
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ECandidates;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.EGCardTransactionLedger;
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
+import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
 import org.rmj.g3appdriver.dev.Database.Entities.ERedeemablesInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
+import org.rmj.g3appdriver.dev.Database.Entities.EVoteLogs;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 import org.rmj.g3appdriver.dev.ServerRequest.ServerAPIs;
 import org.rmj.g3appdriver.dev.ServerRequest.HttpHeaders;
@@ -30,7 +32,8 @@ import org.rmj.g3appdriver.etc.GuanzonAppConfig;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SystemExtras implements iGCardSystem{
@@ -41,15 +44,24 @@ public class SystemExtras implements iGCardSystem{
     private final DBranchInfo poBranch;
     private final DPromo poPromo;
     private final DEvents poEvents;
+    private final DSubEvents poSubEvnts;
+    private final DCandidates poCandidates;
+    private final DVoteLogs poVoteLogs;
     private final HttpHeaders poHeaders;
     private final GuanzonAppConfig poConfig;
     private final ServerAPIs poAPI;
+
+    private String message;
 
     public SystemExtras(Context context) {
         this.mContext = context;
         this.poBranch = GGC_GuanzonAppDB.getInstance(mContext).EBranchDao();
         this.poPromo = GGC_GuanzonAppDB.getInstance(mContext).EPromoDao();
         this.poEvents = GGC_GuanzonAppDB.getInstance(mContext).EventDao();
+        this.poSubEvnts = GGC_GuanzonAppDB.getInstance(mContext).SubEvntsDao();
+        this.poCandidates = GGC_GuanzonAppDB.getInstance(mContext).CandidatesDao();
+        this.poVoteLogs = GGC_GuanzonAppDB.getInstance(mContext).VoteLogsDao();
+
         this.poHeaders = new HttpHeaders(mContext);
         this.poConfig = new GuanzonAppConfig(mContext);
         this.poAPI = new ServerAPIs(poConfig.getTestCase());
@@ -61,7 +73,28 @@ public class SystemExtras implements iGCardSystem{
     }
 
     @Override
+    public List<EGcardApp> hasActiveGcard() {
+        return null;
+    }
+
+    @Override
     public LiveData<List<EGcardApp>> GetGCardList() {
+        return null;
+    }
+    @Override
+    public LiveData<EGcardApp> hasNoGcard() {
+        return null;
+    }
+    @Override
+    public LiveData<List<EGcardApp>> hasUnCheckGCard() {
+        return null;
+    }
+    @Override
+    public LiveData<EGcardApp> getGCardInfo() {
+        return null;
+    }
+    @Override
+    public LiveData<List<EPointsRequest>> GetPointsRqsts() {
         return null;
     }
 
@@ -71,230 +104,152 @@ public class SystemExtras implements iGCardSystem{
     }
 
     @Override
-    public List<EGcardApp> hasGcard() {
-        return null;
-    }
-
-    @Override
-    public LiveData<EGcardApp> hasNoGcard() {
-        return null;
-    }
-
-    @Override
-    public LiveData<List<EGcardApp>> hasUnCheckGCard() {
-        return null;
-    }
-
-    @Override
-    public List<EGcardApp> hasActiveGcard() {
-        return null;
-    }
-
-    @Override
-    public List<EGcardApp> hasMultipleGCard() {
-        return null;
-    }
-
-    @Override
-    public LiveData<EGcardApp> getGCardInfo() {
-        return null;
-    }
-
-    @Override
-    public List<EGcardApp> getAllGCard() {
-        return null;
-    }
-
-    @Override
-    public void updateAvailablePoints(String fsGcardNo, String fsNewPts) {
-        throw new NullPointerException();
-    }
-
-    @Override
-    public LiveData<String> getActiveGcardNo() {
-        return null;
-    }
-
-    @Override
-    public LiveData<String> getActiveGcardAvlPoints() {
-        return null;
-    }
-
-    @Override
     public double getRemainingActiveCardPoints() {
         return 0;
     }
-
-    @Override
-    public double getAvailableGcardPoints() {
-        return 0;
-    }
-
-    @Override
-    public double getRedeemItemPoints() {
-        return 0;
-    }
-
     @Override
     public void updateGCardDeactiveStatus() {
         throw new NullPointerException();
+    }
+    @Override
+    public void SavePointsRqst(EPointsRequest loRqst) {
+    }
+    @Override
+    public void UpdateSendPointsRqst(String sTransNoxx) {
     }
 
     @Override
     public void AddGCardQrCode(String GcardNo, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void ConfirmAddGCard(GcardCredentials gcardInfo, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void DownloadGcardNumbers(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveGCardInfo(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void ActivateGcard(String GcardNo) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public Bitmap GenerateGCardQrCode() throws Exception {
         return null;
     }
-
     @Override
     public void ParseQrCode(String val, GCardSystem.ParseQrCodeCallback callback) throws Exception {
 
     }
-
+    @Override
+    public HashMap<String, String> ScanTDS() {
+        return null;
+    }
+    @Override
+    public Boolean DownloadGcardPoints(HashMap<String, String> params) {
+        return true;
+    }
     @Override
     public void DownloadRedeemables(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveRedeemables(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public LiveData<List<Double>> GetRedeemablePointsFilter() {
         return null;
     }
-
     @Override
     public LiveData<List<ERedeemablesInfo>> GetRedeemablesList() {
         return null;
     }
-
     @Override
     public LiveData<List<ERedeemablesInfo>> GetRedeemablesList(String fsVal) {
         return null;
     }
-
     @Override
     public void AddToCart(CartItem item, GCardSystem.GCardSystemCallback callback) {
         throw new NullPointerException();
     }
-
     @Override
     public void UpdateCartItem(CartItem item, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public LiveData<List<DRedeemItemInfo.GCardCartItem>> GetCartItems() {
         return null;
     }
-
     @Override
     public List<EBranchInfo> GetMCBranchesForRedemption() {
         return null;
     }
-
     @Override
     public LiveData<Integer> GetGcardCartItemCount() {
         return null;
     }
-
     @Override
     public LiveData<Double> GetGCardCartItemTotalPoints() {
         return null;
     }
-
     @Override
     public void DeleteItemCart(String fsVal) {
         throw new NullPointerException();
     }
-
     @Override
     public void PlaceOrder(List<DRedeemItemInfo.GCardCartItem> redeemables, String BranchCD, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public Bitmap GenerateGCardOrderQrCode(String BatchNox) throws Exception {
         return null;
     }
-
     @Override
     public void DownloadTransactions(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveTransactions(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public LiveData<List<EGCardTransactionLedger>> GetGcardTransactions() {
         return null;
     }
-
     @Override
     public LiveData<List<EGCardTransactionLedger>> GetPointsEntryTransactions() {
         return null;
     }
-
     @Override
     public LiveData<List<EGCardTransactionLedger>> GetRedemptionTransactions() {
         return null;
     }
-
     @Override
     public void DownloadMCServiceInfo(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void DownloadRegistrationInfo(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveMcServiceInfo(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveRegistrationInfo(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void ScheduleNextServiceDate(String date, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void DownloadBranchesList(GCardSystem.GCardSystemCallback callback) throws Exception {
         JSONObject params = new JSONObject();
@@ -317,17 +272,16 @@ public class SystemExtras implements iGCardSystem{
             }
         }
     }
-
     @Override
     public void SaveBranchesList(JSONObject detail) throws Exception {
         JSONArray laDetail = detail.getJSONArray("detail");
+
         for(int x = 0; x < laDetail.length(); x++){
             JSONObject loJson = laDetail.getJSONObject(x);
+
             EBranchInfo loBranch = poBranch.getBranchIfExist(loJson.getString("sBranchCD"));
-            //Insert new record if not exist
             if(loBranch == null){
                 //check the records from API, if record status is not equal to 1, record is inactive, do not insert
-//                if(!"1".equalsIgnoreCase(loJson.getString("cRecdStat"))){
                     // insert saving method inside...
                     EBranchInfo info = new EBranchInfo();
                     info.setBranchCd(loJson.getString("sBranchCD"));
@@ -335,6 +289,7 @@ public class SystemExtras implements iGCardSystem{
                     info.setDescript(loJson.getString("sDescript"));
                     info.setAddressx(loJson.getString("sAddressx"));
                     info.setTownIDxx(loJson.getString("sTownIDxx"));
+
                     if(loJson.has("nLatitude") &&
                     loJson.has("nLongtude") &&
                     !loJson.getString("nLatitude").isEmpty() &&
@@ -343,29 +298,10 @@ public class SystemExtras implements iGCardSystem{
                         info.setLongtude(Double.parseDouble(loJson.getString("nLongtude")));
                     }
 
-//                    info.setContactx(loJson.getString("sContactx"));
                     info.setTelNumbr(loJson.getString("sTelNumbr"));
                     info.setEmailAdd(loJson.getString("sEMailAdd"));
-//                    info.setRecdStat(loJson.getString("cRecdStat"));
-//                    info.setTimeStmp(loJson.getString("dTimeStmp"));
                     poBranch.insert(info);
                     Log.d(TAG, "New record save!");
-//                }
-            } else {
-                // if exist check timestamp for latest record and replace current record on local
-//                Date ldDate1 = SQLUtil.toDate(loBranch.getTimeStmp(), SQLUtil.FORMAT_TIMESTAMP);
-//                Date ldDate2 = SQLUtil.toDate((String) loJson.get("dTimeStmp"), SQLUtil.FORMAT_TIMESTAMP);
-//                if(!ldDate1.equals(ldDate2)){
-//                    poBranch.UpdateBranchInfo(
-//                            loJson.getString("sBranchCD"),
-//                            loJson.getString("sBranchNm"),
-//                            loJson.getString("sDescript"),
-//                            loJson.getString("sAddressx"),
-//                            loJson.getString("sContactx"),
-//                            loJson.getString("sTelNumbr"),
-//                            loJson.getString("sEMailAdd"));
-//                    Log.d(TAG, "A record has been updated!");
-//                }
             }
         }
     }
@@ -374,7 +310,6 @@ public class SystemExtras implements iGCardSystem{
     public LiveData<List<EBranchInfo>> GetMobileBranchList() {
         return poBranch.getMobileBranches();
     }
-
     @Override
     public LiveData<List<EBranchInfo>> GetMotorcycleBranchList() {
         return poBranch.getMotorBranches();
@@ -382,19 +317,25 @@ public class SystemExtras implements iGCardSystem{
 
     @Override
     public void DownloadPromotions(GCardSystem.GCardSystemCallback callback) throws Exception {
+
         JSONObject params = new JSONObject();
         String lsResponse = WebClient.httpsPostJSon(poAPI.getImportPromosAPI(), params.toString(), poHeaders.getHeaders());
+
         if(lsResponse == null){
             callback.OnFailed("Server no response.");
             Log.d(TAG, "Unable to retrieve data from server. Server no response.");
         } else {
+
             JSONObject loResponse = new JSONObject(lsResponse);
             String lsResult = loResponse.getString("result");
+
             if(lsResult.equalsIgnoreCase("success")){
+
                 callback.OnSuccess(loResponse.toString());
                 SavePromotions(loResponse);
                 Log.d(TAG, "Promo records retrieve successfully.");
             } else {
+
                 JSONObject loError = loResponse.getJSONObject("error");
                 String lsMessage = loError.getString("message");
                 callback.OnFailed(lsMessage);
@@ -405,13 +346,15 @@ public class SystemExtras implements iGCardSystem{
 
     @Override
     public void SavePromotions(JSONObject detail) throws Exception {
+
         JSONArray laDetail = detail.getJSONArray("detail");
+
         for(int x = 0; x < laDetail.length(); x++){
             JSONObject loJson = laDetail.getJSONObject(x);
+
             EPromo loPromo = poPromo.getPromoInfoIfExist(loJson.getString("sTransNox"));
             if(loPromo == null) {
                 //check the records from API, if record status is not equal to 1, record is inactive, do not insert
-//                if(!"1".equalsIgnoreCase(loJson.getString("cRecdStat"))){
                     // insert saving method inside...
                     EPromo info = new EPromo();
                     info.setTransNox(loJson.getString("sTransNox"));
@@ -423,29 +366,9 @@ public class SystemExtras implements iGCardSystem{
                     info.setCaptionx(loJson.getString("sCaptionx"));
                     info.setDateFrom(loJson.getString("dDateFrom"));
                     info.setDateThru(loJson.getString("dDateThru"));
-//                    info.setRecdStat(loJson.getString("cRecdStat"));
-//                    info.setTimeStmp(loJson.getString("dTimeStmp"));
+
                     poPromo.insert(info);
                     Log.d(TAG, "New record save!");
-//                }
-//            } else {
-//                Date ldDate1 = SQLUtil.toDate(loPromo.getTimeStmp(), SQLUtil.FORMAT_TIMESTAMP);
-//                Date ldDate2 = SQLUtil.toDate((String) loJson.get("dTimeStmp"), SQLUtil.FORMAT_TIMESTAMP);
-//
-//                if(!ldDate1.equals(ldDate2)){
-//                    poPromo.UpdatePromoInfo(loJson.getString("dTransact"),
-//                            loJson.getString("dDateFrom"),
-//                            loJson.getString("dDateThru"),
-//                            loJson.getString("sCaptionx"),
-//                            loJson.getString("sImageURL"),
-//                            loJson.getString("cRecdStat"),
-//                            loJson.getString("sImageNme"),
-//                            loJson.getString("dTimeStmp"),
-//                            loJson.getString("sPromoUrl"),
-//                            loJson.getString("cDivision"),
-//                            loJson.getString("sTransNox"));
-//                    Log.d(TAG, "A record has been updated!");
-//                }
             }
         }
     }
@@ -462,44 +385,273 @@ public class SystemExtras implements iGCardSystem{
 
     @Override
     public void DownloadNewsEvents(GCardSystem.GCardSystemCallback callback) throws Exception {
-        JSONObject params = new JSONObject();
-        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportEventsAPI(), params.toString(), poHeaders.getHeaders());
-        if(lsResponse == null){
-            callback.OnFailed("Server no response.");
-        } else {
-            JSONObject loResponse = new JSONObject(lsResponse);
-            String lsResult = loResponse.getString("result");
-            if(lsResult.equalsIgnoreCase("success")){
-                callback.OnSuccess(loResponse.toString());
-                SaveNewsEvents(loResponse);
-            } else {
-                JSONObject loError = loResponse.getJSONObject("error");
-                String lsMessage = loError.getString("message");
-                callback.OnFailed(lsMessage);
+
+        try {
+
+            JSONObject params = new JSONObject();
+            List<String> laResponse = List.of(
+                    poAPI.getImportEventsAPI(),
+                    poAPI.getImportSubEvents()
+            );
+
+            for (String url: laResponse){
+
+                String lsResponse = WebClient.httpsPostJSon(url, params.toString(), poHeaders.getHeaders());
+
+                if(lsResponse == null){
+                    callback.OnFailed("Server no response.");
+                } else {
+
+                    JSONObject loResponse = new JSONObject(lsResponse);
+                    String lsResult = loResponse.getString("result");
+
+                    if(lsResult.equalsIgnoreCase("success")){
+                        SaveNewsEvents(loResponse);
+                        callback.OnSuccess(loResponse.toString());
+                    } else {
+                        JSONObject loError = loResponse.getJSONObject("error");
+                        String lsMessage = loError.getString("message");
+                        callback.OnFailed(lsMessage);
+                    }
+                }
+
+                Thread.sleep(1000);
+
             }
+
+            ImportSubEvents();
+
+            Thread.sleep(1000);
+
+            ImportCandidates();
+
+            Thread.sleep(1000);
+
+            ImportVoteLogs();
+
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
     @Override
     public void SaveNewsEvents(JSONObject detail) throws Exception {
+
         JSONArray laDetail = detail.getJSONArray("detail");
+
         for(int x = 0; x < laDetail.length(); x++){
+
             JSONObject loJson = laDetail.getJSONObject(x);
 
             EEvents info = new EEvents();
             info.setTransNox(loJson.getString("sTransNox"));
-            info.setBranchNm(loJson.getString("sBranchNm"));
+            info.setEventTle(loJson.getString("sEventTle"));
             info.setEvntFrom(loJson.getString("dEvntFrom"));
             info.setEvntThru(loJson.getString("dEvntThru"));
-            info.setEventTle(loJson.getString("sEventTle"));
+            info.setBranchNm(loJson.getString("sBranchNm"));
             info.setAddressx(loJson.getString("sAddressx"));
             info.setEventURL(loJson.getString("sEventURL"));
             info.setImageURL(loJson.getString("sImageURL"));
             info.setNotified("0");
             info.setModified(new AppConstants().DATE_MODIFIED);
             info.setDirectoryFolder("Events");
+
             poEvents.insert(info);
         }
+    }
+
+    @Override
+    public void ImportSubEvents() throws Exception {
+
+        JSONObject params = new JSONObject();
+
+        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportTabulationEventsAPI(), params.toString(), poHeaders.getHeaders());
+
+        if (lsResponse != null){
+
+            JSONObject loResponse = new JSONObject(lsResponse);
+            String lsResult = loResponse.getString("result");
+
+            if(lsResult.equalsIgnoreCase("success")){
+
+                JSONArray laArr = loResponse.getJSONArray("payload");
+
+                poSubEvnts.deleteall();
+
+                for (int i = 0; i < laArr.length(); i++){
+
+                    JSONObject loJson = laArr.getJSONObject(i);
+
+                    ESub_Events loData = new ESub_Events();
+                    loData.setsSubEventIDxx(loJson.getString("sContstID"));
+                    loData.setsDescript(loJson.getString("sDescript"));
+                    loData.setsImageURL(loJson.getString("sImageURL"));
+                    loData.setsEventIDx(loJson.getString("sEventIDx"));
+                    loData.setnEntryNox(loJson.getString("nEntryNox"));
+                    loData.setcOnlineVt(loJson.getString("cOnlineVt"));
+                    loData.setdVoteStart(loJson.getString("dVoteStrt"));
+                    loData.setdVoteEnd(loJson.getString("dVoteEndx"));
+
+                    poSubEvnts.save(loData);
+                }
+
+            } else {
+                JSONObject loError = loResponse.getJSONObject("error");
+                String lsMessage = loError.getString("message");
+
+                Log.d(TAG, lsMessage);
+            }
+
+        }
+    }
+
+    @Override
+    public void ImportCandidates() throws Exception {
+
+        JSONObject params = new JSONObject();
+
+        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportCandidatesAPI(), params.toString(), poHeaders.getHeaders());
+
+        if (lsResponse != null){
+
+            JSONObject loResponse = new JSONObject(lsResponse);
+            String lsResult = loResponse.getString("result");
+
+            if(lsResult.equalsIgnoreCase("success")){
+
+                JSONArray laArr = loResponse.getJSONArray("payload");
+
+                //todo reset data to local
+                poCandidates.deleteAll();
+
+                for (int i = 0; i < laArr.length(); i++){
+
+                    JSONObject loJson = laArr.getJSONObject(i);
+
+                    ECandidates candidates = new ECandidates();
+                    candidates.setsGroupIDx(loJson.getString("sGroupIDx"));
+                    candidates.setsEvntIDxx(loJson.getString("contstIDxx"));
+
+                    JSONObject loDetails = new JSONObject(laArr.getJSONObject(i).getString("sDetails"));
+
+                    candidates.setsEntryNme(loDetails.getString("00001"));
+                    candidates.setsSchoolNm(loDetails.getString("00002"));
+
+                    //todo convert to list of string the urls for image details
+                    List<String> laDetails = new ArrayList<>();
+
+                    //todo iterate based on retrieved size of api result
+                    for (int x = 0; x < loDetails.length(); x++) {
+
+                        if (x > 2){
+                            String imgKey = "0000" + String.valueOf(x + 1);
+                            laDetails.add('"'+loDetails.get(imgKey).toString()+'"');
+                        }
+                    }
+
+                    //todo put all urls to json object
+                    JSONObject loImg = new JSONObject();
+                    loImg.put("master", loDetails.get("00003"));
+                    loImg.put("details", laDetails);
+
+                    candidates.setUrlImgs(loImg.toString());
+
+                    poCandidates.insert(candidates);
+                }
+
+            }else {
+
+                JSONObject loError = loResponse.getJSONObject("error");
+                String lsMessage = loError.getString("message");
+
+                Log.d(TAG, lsMessage);
+
+            }
+
+        }
+    }
+
+    @Override
+    public void ImportVoteLogs() throws Exception {
+
+        JSONObject params = new JSONObject();
+
+        String lsResponse = WebClient.httpsPostJSon(poAPI.getImportVoteLogsAPI(), params.toString(), poHeaders.getHeaders());
+
+        if (lsResponse != null) {
+
+            JSONObject loResponse = new JSONObject(lsResponse);
+            String lsResult = loResponse.getString("result");
+
+            if (lsResult.equalsIgnoreCase("success")) {
+
+                String lsDetails = loResponse.getString("payload");
+                JSONArray laVotes = new JSONArray(lsDetails);
+
+                poVoteLogs.deleteAll();
+
+                for (int i = 0; i < laVotes.length(); i++){
+
+                    JSONObject loJson = laVotes.getJSONObject(i);
+
+                    EVoteLogs loVote = new EVoteLogs();
+                    loVote.setsTransNoxx(loJson.getString("sTransNox"));
+                    loVote.setsSubEventIDxx(loJson.getString("sContstID"));
+                    loVote.setsGroupIDx(loJson.getString("sGroupIDx"));
+                    loVote.setsUserIDxx(loJson.getString("sUserIDxx"));
+                    loVote.setnNoVotesx(loJson.getString("nNoVotesx"));
+                    loVote.setdVoted(loJson.getString("dLastVoted"));
+
+                    poVoteLogs.save(loVote);
+                }
+
+            }else {
+
+                JSONObject loError = loResponse.getJSONObject("error");
+                String lsMessage = loError.getString("message");
+
+                Log.d(TAG, lsMessage);
+
+            }
+
+        }
+    }
+
+    @Override
+    public Boolean SubmitVote(String sGroupIDxx) throws Exception {
+
+        JSONObject params = new JSONObject();
+        params.put("sGroupIDx", sGroupIDxx);
+
+        String lsResponse = WebClient.httpsPostJSon(poAPI.getSubmitVotesAPI(), params.toString(), poHeaders.getHeaders());
+
+        if (lsResponse != null) {
+
+            JSONObject loResponse = new JSONObject(lsResponse);
+            String lsResult = loResponse.getString("result");
+
+            if (lsResult.equalsIgnoreCase("error")) {
+
+                JSONObject loError = loResponse.getJSONObject("error");
+                message = loError.getString("message");
+                Log.d(TAG, loError.getString("message"));
+
+                Thread.sleep(1000);
+                ImportVoteLogs();
+
+                return false;
+            }
+
+            Thread.sleep(1000);
+            ImportVoteLogs();
+
+            return true;
+
+        }
+
+        return false;
+
     }
 
     @Override
@@ -508,8 +660,27 @@ public class SystemExtras implements iGCardSystem{
     }
 
     @Override
-    public EEvents CheckEvents() {
+    public String GetMessage() {
+        return message;
+    }
+
+    @Override
+    public Boolean ValidateQR(String sUserIDxx, String sMobileNoxx) {
+        return null;
+    }
+
+    @Override
+    public Boolean ValidateGCardInfo(String sFrstnm, String sLstnm, String sMdnm, String sSuffix, String dBirthdt, String sGCardNox) {
+        return null;
+    }
+
+    @Override
+    public List<EEvents> CheckEvents() {
         return poEvents.CheckEvent();
     }
 
+    @Override
+    public LiveData<List<ESub_Events>> GetEventCategories() {
+        return poSubEvnts.getEventCategories();
+    }
 }

@@ -28,16 +28,6 @@ public interface DItemCart {
     @Query("SELECT dTimeStmp FROM MarketPlace_Cart ORDER BY dTimeStmp DESC LIMIT 1")
     String GetLatestCartTimeStamp();
 
-    @Query("SELECT * FROM MarketPlace_Cart WHERE cBuyNowxx = '1' AND cCheckOut = '1'")
-    LiveData<List<oMarketplaceCartItem>> CheckCartIfHasForPlaceOrder();
-
-    @Query("SELECT COUNT(*) FROM MarketPlace_Cart " +
-            "WHERE sListIDxx =:fsListID " +
-            "AND sUserIDxx = (SELECT sUserIDxx FROM Client_Profile_Info) " +
-            "AND cBuyNowxx = '1' " +
-            "AND cCheckOut = '1'")
-    int CheckIfItemForBuyNowExist(String fsListID);
-
     @Query("SELECT * FROM MarketPlace_Cart WHERE sListIDxx=:fsListID")
     EItemCart CheckIFItemExist(String fsListID);
 
@@ -114,6 +104,7 @@ public interface DItemCart {
 
     @Query("SELECT a.sListIDxx AS sListIDxx, " +
             "a.nQuantity AS nQuantity, " +
+            "'' AS cCheckOut, " +
             "b.xModelNme AS xModelNme, " +
             "b.xDescript AS xDescript," +
             "b.sImagesxx," +
@@ -144,10 +135,10 @@ public interface DItemCart {
     class oMarketplaceCartItem{
         public String sListIDxx;
         public String nQuantity;
+        public String cCheckOut;
         public String xModelNme;
         public String xDescript;
         public String sImagesxx;
         public String nUnitPrce;
-        public String cCheckOut;
     }
 }

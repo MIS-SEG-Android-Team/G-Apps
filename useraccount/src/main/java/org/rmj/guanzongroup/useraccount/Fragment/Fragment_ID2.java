@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,10 +38,9 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.rmj.g3appdriver.etc.AppConstants;
-import org.rmj.g3appdriver.etc.ImageFileHandler;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.Account.Obj.UserIdentification;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.documentscanner.DocScanner;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_DocumentScan;
 import org.rmj.guanzongroup.useraccount.Activity.Activity_IDVerification;
@@ -69,7 +69,7 @@ public class Fragment_ID2 extends Fragment {
     private TextInputEditText txtExpire,
             txtIDNmbr;
 
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
     private Dialog_Loading poLoad;
 
     private boolean cFront;
@@ -133,7 +133,7 @@ public class Fragment_ID2 extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(VMID2Verification.class);
         View view = inflater.inflate(R.layout.fragment_i_d2, container, false);
-        poDialogx = new Dialog_SingleButton(requireActivity());
+        poDialogx = new MessageBox(requireActivity());
         poLoad = new Dialog_Loading(requireActivity());
 
         spnIDType = view.findViewById(R.id.tie_validIDNames);
@@ -143,6 +143,8 @@ public class Fragment_ID2 extends Fragment {
 
         imageFront = view.findViewById(R.id.img_frontID);
         imageBack = view.findViewById(R.id.img_backID);
+
+        poDialogx.initDialog();
 
         List<UserIdentification> loList = Activity_IDVerification.getInstance().getIDList();
 
@@ -314,9 +316,19 @@ public class Fragment_ID2 extends Fragment {
             @Override
             public void OnFailed(String message) {
                 poLoad.dismiss();
-                poDialogx.setButtonText("Okay");
-                poDialogx.initDialog("ID Verification", message, () -> poDialogx.dismiss());
+
+                poDialogx.setIcon(R.drawable.baseline_error_24);
+                poDialogx.setTitle("ID Verification");
+                poDialogx.setMessage(message);
+                poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                    @Override
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
+                });
+
                 poDialogx.show();
+
             }
         });
     }

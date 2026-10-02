@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import java.util.Random;
+
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -11,7 +13,14 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+    public void GenerateRandom() {
+        StringBuilder sBuilder = new StringBuilder();
+
+        do {
+            int randomNumber = new Random().nextInt(9);
+            sBuilder.append(randomNumber);
+        }while (sBuilder.toString().length() < 6);
+
+        System.out.println(sBuilder);
     }
 }

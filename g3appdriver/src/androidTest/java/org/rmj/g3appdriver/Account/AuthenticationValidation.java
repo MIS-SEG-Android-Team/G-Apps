@@ -41,35 +41,35 @@ public class AuthenticationValidation {
 
     @Test
     public void test01credentialsValidationTest() {
-        poCredentials = new AccountAuthentication.LoginCredentials("", "", "09171870011");
+        poCredentials = new AccountAuthentication.LoginCredentials("", "");
         assertFalse(poCredentials.isDataValid());
         assertEquals("Please enter email", poCredentials.getMessage());
     }
 
     @Test
     public void test02credentialsValidationTestNoEmail() {
-        poCredentials = new AccountAuthentication.LoginCredentials("", "123456", "09171870011");
+        poCredentials = new AccountAuthentication.LoginCredentials("", "123456");
         assertFalse(poCredentials.isDataValid());
         assertEquals("Please enter email", poCredentials.getMessage());
     }
 
     @Test
     public void test03credentialsValidationTestNoPassword() {
-        poCredentials = new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "", "09171870011");
+        poCredentials = new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "");
         assertFalse(poCredentials.isDataValid());
         assertEquals("Please enter password", poCredentials.getMessage());
     }
 
     @Test
     public void test04credentialsValidationTestInvalidMobileNo() {
-        poCredentials = new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "123456", "+639171870011");
+        poCredentials = new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "123456");
         assertFalse(poCredentials.isDataValid());
         assertEquals("Mobile number must start with '09'", poCredentials.getMessage());
     }
 
     @Test
     public void test05credentialsValidationTestLessMobileNo() {
-        poCredentials = new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "123456", "0917187001");
+        poCredentials = new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "123456");
         assertFalse(poCredentials.isDataValid());
         assertEquals("Mobile number must be 11 characters", poCredentials.getMessage());
     }
@@ -78,7 +78,7 @@ public class AuthenticationValidation {
     @Test
     public void test06LoginAccountTest() throws Exception{
         AccountAuthentication loAuth = new AccountAuthentication(mContext);
-        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "12345678", "09270359402"), new AccountAuthentication.OnLoginCallback() {
+        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "12345678"), new AccountAuthentication.OnLoginCallback() {
             @Override
             public void OnSuccessLogin(String message) {
                 isSucccess = true;
@@ -100,7 +100,7 @@ public class AuthenticationValidation {
     @Test
     public void test07LoginAccountTestIncorrectPassword() throws Exception{
         AccountAuthentication loAuth = new AccountAuthentication(mContext);
-        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "qwerty123", "09270359402"), new AccountAuthentication.OnLoginCallback() {
+        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "qwerty123"), new AccountAuthentication.OnLoginCallback() {
             @Override
             public void OnSuccessLogin(String message) {
                 isSucccess = true;
@@ -124,7 +124,7 @@ public class AuthenticationValidation {
     @Test
     public void test08LoginAccountTest() throws Exception{
         AccountAuthentication loAuth = new AccountAuthentication(mContext);
-        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "12345678", "09270359402"), new AccountAuthentication.OnLoginCallback() {
+        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("garciamike8748@gmail.com", "12345678"), new AccountAuthentication.OnLoginCallback() {
             @Override
             public void OnSuccessLogin(String message) {
                 isSucccess = true;
@@ -160,7 +160,7 @@ public class AuthenticationValidation {
     @Test
     public void test10LoginAccountTestInvalidEmail() throws Exception{
         AccountAuthentication loAuth = new AccountAuthentication(mContext);
-        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("mikegarcia87@gmail.com", "qwerty123", "09270359402"), new AccountAuthentication.OnLoginCallback() {
+        loAuth.LoginAccount(new AccountAuthentication.LoginCredentials("mikegarcia87@gmail.com", "qwerty123"), new AccountAuthentication.OnLoginCallback() {
             @Override
             public void OnSuccessLogin(String message) {
                 isSucccess = true;

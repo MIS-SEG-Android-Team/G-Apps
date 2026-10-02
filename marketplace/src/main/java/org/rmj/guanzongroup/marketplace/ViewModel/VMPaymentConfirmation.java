@@ -1,21 +1,19 @@
 package org.rmj.guanzongroup.marketplace.ViewModel;
 
 import android.app.Application;
-import android.content.Context;
-import android.os.AsyncTask;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-
 import org.rmj.g3appdriver.dev.Repositories.ROrder;
 import org.rmj.g3appdriver.etc.ConnectionUtil;
 import org.rmj.g3appdriver.etc.PaymentMethod;
+import org.rmj.g3appdriver.utils.Task.OnTaskExecuteListener;
+import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 import org.rmj.guanzongroup.marketplace.Etc.OnTransactionsCallback;
 
 public class VMPaymentConfirmation extends AndroidViewModel {
-
     private final ROrder poOrder;
     private final ConnectionUtil poConn;
+    private String lomessage;
 
     public VMPaymentConfirmation(@NonNull Application application) {
         super(application);
@@ -24,103 +22,79 @@ public class VMPaymentConfirmation extends AndroidViewModel {
     }
 
     public void CheckPaymentMethods(OnTransactionsCallback callback){
-        new CheckPaymentMethodTask(callback).execute();
-    }
-
-    private class CheckPaymentMethodTask extends AsyncTask<String, Void, Boolean>{
-
-        private final OnTransactionsCallback callback;
-        private String message;
-
-        public CheckPaymentMethodTask(OnTransactionsCallback callback) {
-            this.callback = callback;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            callback.onLoading();
-        }
-
-        @Override
-        protected Boolean doInBackground(String... strings) {
-            try{
-                if(poOrder.DownloadBankAccounts()){
-                    message = poOrder.getData().toString();
-                    return true;
-                } else {
-                    message = poOrder.getMessage();
+        TaskExecutor.Execute(null, new OnTaskExecuteListener() {
+            @Override
+            public void OnPreExecute() {
+                callback.onLoading();
+            }
+            @Override
+            public Object DoInBackground(Object args) {
+                try{
+                    if(poOrder.DownloadBankAccounts()){
+                        lomessage = poOrder.getData().toString();
+                        return true;
+                    } else {
+                        lomessage = poOrder.getMessage();
+                        return false;
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                    lomessage = e.getMessage();
                     return false;
                 }
-            } catch (Exception e){
-                e.printStackTrace();
-                return false;
             }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if(aBoolean){
-                callback.onSuccess(message);
-            } else {
-                callback.onFailed(message);
+            @Override
+            public void OnPostExecute(Object object) {
+                Boolean aBoolean = (Boolean) object;
+                if(aBoolean){
+                    callback.onSuccess(lomessage);
+                } else {
+                    callback.onFailed(lomessage);
+                }
             }
-        }
+        });
     }
-
     public void payOrder(String fsTransNo, PaymentMethod foPayMeth, String fsReferNo,
                          OnTransactionsCallback foCallBck) {
-        new PayOrderTask(foPayMeth, foCallBck).execute(fsTransNo, fsReferNo);
-    }
+        String[] params = {fsTransNo, fsReferNo};
+        TaskExecutor.Execute(params, new OnTaskExecuteListener() {
+            @Override
+            public void OnPreExecute() {
+                foCallBck.onLoading();
+            }
+            @Override
+            public Object DoInBackground(Object args) {
+                try{
+                    if(!poConn.isDeviceConnected()){
+                        lomessage = "Server no response";
+                        return false;
+                    }
 
-    private class PayOrderTask extends AsyncTask<String, Void, Boolean>{
+                    String[] params = (String[]) args;
 
-        private final PaymentMethod poMethod;
-        private final OnTransactionsCallback callback;
+                    String lsTransNo = params[0];
+                    String lsReferNo = params[1];
 
-        private String message;
+                    boolean isSuccess = poOrder.PayOrder(lsTransNo, foPayMeth, lsReferNo);
+                    lomessage = (isSuccess) ? "Order Completed. \nThank you for your purchase." : poOrder.getMessage();
 
-        public PayOrderTask(PaymentMethod poMethod, OnTransactionsCallback foCallBck) {
-            this.poMethod = poMethod;
-            this.callback = foCallBck;
-        }
+                    return isSuccess;
+                } catch (Exception e){
+                    e.printStackTrace();
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            callback.onLoading();
-        }
-
-        @Override
-        protected Boolean doInBackground(String... strings) {
-            try{
-                if(!poConn.isDeviceConnected()){
-                    message = "Unable to connect.";
+                    lomessage = e.getMessage();
                     return false;
                 }
-
-                String lsTransNo = strings[0];
-                String lsReferNo = strings[1];
-
-                boolean isSuccess = poOrder.PayOrder(lsTransNo, poMethod, lsReferNo);
-                message = (isSuccess) ? "Order Completed. \nThank you for your purchase." : poOrder.getMessage();
-                return isSuccess;
-            } catch (Exception e){
-                e.printStackTrace();
-                message = e.getMessage();
-                return false;
             }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean isSuccess) {
-            super.onPostExecute(isSuccess);
-            if(isSuccess) {
-                callback.onSuccess(message);
-            } else {
-                callback.onFailed(message);
+            @Override
+            public void OnPostExecute(Object object) {
+                Boolean isSuccess = (Boolean) object;
+                if(isSuccess) {
+                    foCallBck.onSuccess(lomessage);
+                } else {
+                    foCallBck.onFailed(lomessage);
+                }
             }
-        }
+        });
     }
 }

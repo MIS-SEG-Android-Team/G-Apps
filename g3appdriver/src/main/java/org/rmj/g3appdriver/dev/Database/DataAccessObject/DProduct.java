@@ -67,7 +67,9 @@ public interface DProduct {
             "xBrandNme|| ' ' ||xModelNme  AS sProdctNm, " +
             "nUnitPrce AS sPricexxx, " +
             "sImagesxx, " +
-            "nSoldQtyx AS sUntsSold " +
+            "nSoldQtyx AS sUntsSold, " +
+            "'' AS xBrandNme, " +
+            "'' AS sModelIDx " +
             "FROM Product_Inventory " +
             "WHERE strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
             "AND nQtyOnHnd > 0 " +
@@ -80,7 +82,9 @@ public interface DProduct {
             "xBrandNme|| ' ' ||xModelNme  AS sProdctNm, " +
             "nUnitPrce AS sPricexxx, " +
             "sImagesxx, " +
-            "nSoldQtyx AS sUntsSold " +
+            "nSoldQtyx AS sUntsSold, " +
+            "'' AS xBrandNme, " +
+            "'' AS sModelIDx " +
             "FROM Product_Inventory " +
             "WHERE strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
             "AND nQtyOnHnd > 0 " +
@@ -93,7 +97,9 @@ public interface DProduct {
             "xBrandNme|| ' ' ||xModelNme  AS sProdctNm, " +
             "nUnitPrce AS sPricexxx, " +
             "sImagesxx, " +
-            "nSoldQtyx AS sUntsSold " +
+            "nSoldQtyx AS sUntsSold, " +
+            "'' AS xBrandNme, " +
+            "'' AS sModelIDx " +
             "FROM Product_Inventory " +
             "WHERE strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
             "AND nQtyOnHnd > 0 " +
@@ -106,7 +112,9 @@ public interface DProduct {
             "xBrandNme|| ' ' ||xModelNme  AS sProdctNm, " +
             "nUnitPrce AS sPricexxx," +
             "sImagesxx, " +
-            "nSoldQtyx AS sUntsSold " +
+            "nSoldQtyx AS sUntsSold, " +
+            "'' AS xBrandNme, " +
+            "'' AS sModelIDx " +
             "FROM Product_Inventory " +
             "WHERE xCategrNm =:fsCategory " +
             "AND strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
@@ -119,7 +127,9 @@ public interface DProduct {
             "xBrandNme|| ' ' ||xModelNme  AS sProdctNm, " +
             "nUnitPrce AS sPricexxx," +
             "sImagesxx, " +
-            "nSoldQtyx AS sUntsSold " +
+            "nSoldQtyx AS sUntsSold, " +
+            "'' AS xBrandNme, " +
+            "'' AS sModelIDx " +
             "FROM Product_Inventory " +
             "WHERE xBrandNme LIKE '%' || :fsName || '%' " +
             "AND strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
@@ -132,7 +142,9 @@ public interface DProduct {
             "xBrandNme|| ' ' ||xModelNme  AS sProdctNm, " +
             "nUnitPrce AS sPricexxx," +
             "sImagesxx, " +
-            "nSoldQtyx AS sUntsSold " +
+            "nSoldQtyx AS sUntsSold, " +
+            "'' AS xBrandNme, " +
+            "'' AS sModelIDx " +
             "FROM Product_Inventory " +
             "WHERE nUnitPrce BETWEEN :fnFrom AND :fnToxx " +
             "AND strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
@@ -146,21 +158,9 @@ public interface DProduct {
             "xBrandNme|| ' ' ||xModelNme  AS sProdctNm, " +
             "nUnitPrce AS sPricexxx," +
             "sImagesxx, " +
-            "nSoldQtyx AS sUntsSold " +
-            "FROM Product_Inventory " +
-            "WHERE xBrandNme LIKE '%' || :fsArgs || '%' " +
-            "AND sListngID !=:fsArgs1 " +
-            "AND strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
-            "AND nQtyOnHnd > 0 " +
-            "AND cTranStat = '1'" +
-            "LIMIT 10")
-    LiveData<List<oProduct>> GetProductListSameBrandSuggestions(String fsArgs, String fsArgs1);
-
-    @Query("SELECT sListngID AS sProdctID, " +
-            "xBrandNme|| ' ' ||xModelNme  AS sProdctNm, " +
-            "nUnitPrce AS sPricexxx," +
-            "sImagesxx, " +
-            "nSoldQtyx AS sUntsSold " +
+            "nSoldQtyx AS sUntsSold, " +
+            "'' AS xBrandNme, " +
+            "'' AS sModelIDx " +
             "FROM Product_Inventory " +
             "WHERE sProdctNm LIKE '%' || :fsVal || '%' " +
             "AND strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
@@ -169,23 +169,13 @@ public interface DProduct {
             "ORDER BY nUnitPrce ASC")
     LiveData<List<oProduct>> SearchProducts(String fsVal);
 
-    @Query("SELECT xBrandNme FROM Product_Inventory GROUP BY xBrandNme")
-    LiveData<List<String>> GetBrandNames();
-
-    @Query("SELECT nUnitPrce " +
-            "FROM Product_Inventory " +
-            "WHERE xBrandNme LIKE '%' || :fsArgs || '%' " +
-            "AND strftime('%Y-%m-%d %H:%H:%S', datetime('now', 'localtime'))  BETWEEN dListStrt AND dListEndx " +
-            "AND nQtyOnHnd > 0 " +
-            "AND cTranStat = '1'" +
-            "GROUP BY nUnitPrce")
-    LiveData<List<String>> GetPriceFilterForBrand(String fsArgs);
-
     @Query("SELECT sListngID AS sProdctID, " +
             "xBrandNme|| ' ' ||xModelNme  AS sProdctNm, " +
             "nUnitPrce AS sPricexxx," +
             "sImagesxx, " +
-            "nSoldQtyx AS sUntsSold " +
+            "nSoldQtyx AS sUntsSold, " +
+            "'' AS xBrandNme, " +
+            "'' AS sModelIDx " +
             "FROM Product_Inventory " +
             "WHERE sProdctNm LIKE '%' || :fsArgs || '%' " +
             "AND xBrandNme LIKE '%' || :fsArgs1 || '%' " +
@@ -230,8 +220,8 @@ public interface DProduct {
         public String sProdctID;
         public String sProdctNm;
         public String sPricexxx;
-        public String sUntsSold;
         public String sImagesxx;
+        public String sUntsSold;
         public String xBrandNme;
         public String sModelIDx;
     }

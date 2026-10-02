@@ -1,24 +1,25 @@
 package org.rmj.guanzongroup.notifications.ViewModel;
 
 import android.app.Application;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
-
 import org.rmj.g3appdriver.lib.GCardCore.GCardSystem;
 import org.rmj.g3appdriver.lib.GCardCore.iGCardSystem;
+import org.rmj.g3appdriver.utils.Task.OnDoBackgroundTaskListener;
+import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 
 import java.util.List;
 
 public class VMEventsPromos extends AndroidViewModel {
+    private String TAG = getClass().getSimpleName();
     private final iGCardSystem poSystem;
     private final Application instance;
+    private String lomessage;
 
     public VMEventsPromos(@NonNull Application application) {
         super(application);
@@ -33,61 +34,62 @@ public class VMEventsPromos extends AndroidViewModel {
         return poSystem.GetPromotions();
     }
 
-
     public void DownloadPromos(){
-        new DownloadPromos().execute();
+        TaskExecutor.Execute(null, new OnDoBackgroundTaskListener() {
+            @Override
+            public Object DoInBackground(Object args) {
+                try {
+                    iGCardSystem loGcard = new GCardSystem(instance).getInstance(GCardSystem.CoreFunctions.EXTRAS);
+                    loGcard.DownloadPromotions(new GCardSystem.GCardSystemCallback() {
+                        @Override
+                        public void OnSuccess(String args) {
+                            lomessage = args;
+                        }
+                        @Override
+                        public void OnFailed(String message) {
+                            lomessage = message;
+                        }
+                    });
+                } catch (Exception e) {
+                    lomessage = e.getMessage();
+                }
+
+                return lomessage;
+            }
+            @Override
+            public void OnPostExecute(Object object) {
+                Log.d(TAG, object.toString());
+            }
+        });
     }
     public void DownloadEvents(){
-        new DownloadEvents().execute();
-    }
+        TaskExecutor.Execute(null, new OnDoBackgroundTaskListener() {
+            @Override
+            public Object DoInBackground(Object args) {
+                try {
+                    iGCardSystem loGcard = new GCardSystem(instance).getInstance(GCardSystem.CoreFunctions.EXTRAS);
+                    loGcard.DownloadNewsEvents(new GCardSystem.GCardSystemCallback() {
+                        @Override
+                        public void OnSuccess(String args) {
+                            lomessage = args;
+                        }
 
-    private class DownloadPromos extends AsyncTask<String, Void, String> {
+                        @Override
+                        public void OnFailed(String message) {
+                            lomessage = message;
 
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                iGCardSystem loGcard = new GCardSystem(instance).getInstance(GCardSystem.CoreFunctions.EXTRAS);
-                loGcard.DownloadPromotions(new GCardSystem.GCardSystemCallback() {
-                    @Override
-                    public void OnSuccess(String args) {
-//                        Log.e("promos OnSuccess", args);
-                    }
+                        }
+                    });
+                } catch (Exception e) {
+                    lomessage = e.getMessage();
+                }
 
-                    @Override
-                    public void OnFailed(String message) {
-                        Log.e("promos OnFailed", message);
-
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
+                return lomessage;
             }
-            return null;
-        }
-    }
-    private class DownloadEvents extends AsyncTask<String, Void, String> {
-
-        @Override
-
-        protected String doInBackground(String... strings) {
-            try {
-                iGCardSystem loGcard = new GCardSystem(instance).getInstance(GCardSystem.CoreFunctions.EXTRAS);
-                loGcard.DownloadNewsEvents(new GCardSystem.GCardSystemCallback() {
-                    @Override
-                    public void OnSuccess(String args) {
-                        Log.e("events OnSuccess", args);
-                    }
-
-                    @Override
-                    public void OnFailed(String message) {
-                        Log.e("events OnFailed", message);
-
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
+            @Override
+            public void OnPostExecute(Object object) {
+                Log.d(TAG, object.toString());
             }
-            return null;
-        }
+        });
     }
 }

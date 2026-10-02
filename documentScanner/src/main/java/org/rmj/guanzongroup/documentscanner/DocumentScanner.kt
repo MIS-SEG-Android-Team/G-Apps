@@ -65,7 +65,7 @@ class DocumentScanner(
       when (result.resultCode) {
         Activity.RESULT_OK -> {
           // check for errors
-          val error = result.data?.extras?.get("error") as String?
+          val error = result.data?.extras?.getString("error")
           if (error != null) {
             throw Exception("error - $error")
           }

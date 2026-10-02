@@ -12,10 +12,11 @@
     <string name="menu_apply_loan">Apply For A Loan</string>
     <string name="menu_item_cart">Item Cart</string>
     <string name="menu_my_gcard">My Gcard</string>
-    <string name="menu_scan_gcard">Scan GCard</string>
+    <string name="menu_scan_gcard">Scan Transaction</string>
     <string name="menu_raffle_entry">Raffle Entry</string>
     <string name="menu_redeemables">Redeemables</string>
     <string name="menu_gcard_orders">Orders</string>
+    <string name="menu_gcard_offline">Add Points</string>
     <string name="menu_gcard_transactions">Gcard Transactions</string>
     <string name="menu_pre_termination">Pre Termination</string>
     <string name="menu_account_settings">Account Settings</string>
@@ -116,6 +117,7 @@
     <string name="lblVerifyAccount">Verify Account Request</string>
     <string name="lblReferenceNo">Reference Number</string>
     <string name="lblTransaction">Choose Transaction</string>
+    <string name="lblcompany">Guanzon Group of Companies</string>
 
     <string name="lblInfoPassword">Please provide a password for your account.</string>
     <string name="lblCompleteInfo">Please provide the complete details.</string>
@@ -136,6 +138,9 @@
     <string name="lblSelectPaymentMethod">Please select a payment method for your order.</string>
 
     <string name="descServiceDate">Your next service date:</string>
+
+    <string name="lblmale">Male</string>
+    <string name="lblfemale">Female</string>
 
     <string name="hintReviewProduct">Write product review here…</string>
     <string name="hintProductInquiry">Enter your question(s) here…</string>

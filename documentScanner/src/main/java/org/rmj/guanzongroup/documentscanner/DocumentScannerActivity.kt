@@ -136,22 +136,22 @@ class DocumentScannerActivity : AppCompatActivity() {
     try {
       // validate maxNumDocuments option, and update default if user sets it
       var userSpecifiedMaxImages: Int? = null
-      intent.extras?.get(DocumentScannerExtra.EXTRA_MAX_NUM_DOCUMENTS)?.let {
-        if (it.toString().toIntOrNull() == null) {
+      intent.extras?.getString(DocumentScannerExtra.EXTRA_MAX_NUM_DOCUMENTS)?.let {
+        if (it.toIntOrNull() == null) {
           throw Exception(
             "${DocumentScannerExtra.EXTRA_MAX_NUM_DOCUMENTS} must be a positive number"
           )
         }
-        userSpecifiedMaxImages = it as Int
+        userSpecifiedMaxImages = it.toIntOrNull()
         maxNumDocuments = userSpecifiedMaxImages as Int
       }
 
       // validate letUserAdjustCrop option, and update default if user sets it
-      intent.extras?.get(DocumentScannerExtra.EXTRA_LET_USER_ADJUST_CROP)?.let {
-        if (!arrayOf("true", "false").contains(it.toString())) {
+      intent.extras?.getString(DocumentScannerExtra.EXTRA_LET_USER_ADJUST_CROP)?.let {
+        if (!arrayOf("true", "false").contains(it)) {
           throw Exception("${DocumentScannerExtra.EXTRA_LET_USER_ADJUST_CROP} must true or false")
         }
-        letUserAdjustCrop = it as Boolean
+        letUserAdjustCrop = it.toBoolean()
       }
 
       // if we don't want user to move corners, we can let the user only take 1 photo

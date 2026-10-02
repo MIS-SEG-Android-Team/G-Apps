@@ -30,7 +30,7 @@ public class NonSwipeableViewPager extends ViewPager {
 
     private void setMyScroller() {
         try {
-            Class<?> viewpager = ViewPager.class;
+            Class<ViewPager> viewpager = ViewPager.class;
             Field scroller = viewpager.getDeclaredField("mScroller");
             scroller.setAccessible(true);
             scroller.set(this, new MyScroller(getContext()));

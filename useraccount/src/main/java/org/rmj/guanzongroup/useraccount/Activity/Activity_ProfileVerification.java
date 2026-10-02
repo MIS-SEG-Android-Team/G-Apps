@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -18,13 +19,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.rmj.g3appdriver.dev.Repositories.RClientInfo;
 import org.rmj.g3appdriver.etc.AppConstants;
 import org.rmj.g3appdriver.etc.ImageFileHandler;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.g3appdriver.lib.Account.Obj.PhotoDetail;
 import org.rmj.g3appdriver.utils.Dialogs.Dialog_Loading;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_SingleButton;
 import org.rmj.guanzongroup.useraccount.R;
 import org.rmj.guanzongroup.useraccount.ViewModel.VMUserVerification;
 
@@ -41,7 +41,7 @@ public class Activity_ProfileVerification extends AppCompatActivity {
     private String psPath, psFleNme;
     private PhotoDetail poPhoto;
     private Dialog_Loading poLoading;
-    private Dialog_SingleButton poDialogx;
+    private MessageBox poDialogx;
 
     private final ActivityResultLauncher<Intent> poCamera = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if(result != null) {
@@ -83,11 +83,15 @@ public class Activity_ProfileVerification extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(Activity_ProfileVerification.this).get(VMUserVerification.class);
+
         setContentView(R.layout.activity_profile_verification);
+
+        mViewModel = new ViewModelProvider(Activity_ProfileVerification.this).get(VMUserVerification.class);
         poPhoto = new PhotoDetail();
         poLoading = new Dialog_Loading(Activity_ProfileVerification.this);
-        poDialogx = new Dialog_SingleButton(Activity_ProfileVerification.this);
+        poDialogx = new MessageBox(Activity_ProfileVerification.this);
+
+        poDialogx.initDialog();
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Selfie Verification");
@@ -119,26 +123,37 @@ public class Activity_ProfileVerification extends AppCompatActivity {
                     @Override
                     public void OnSuccess(String message) {
                         poLoading.dismiss();
-                        poDialogx.setButtonText("Okay");
-                        poDialogx.initDialog("Account Details", message, () -> {
-                            poDialogx.dismiss();
-//                            Intent loIntent = new Intent(Activity_ProfileVerification.this, Activity_IDVerification.class);
-//                            Intent loIntent = new Intent(Activity_ProfileVerification.this, Activity_MeansInfo.class);
-//                            loIntent.putExtra("cSkippedx", false);
-//                            startActivity(loIntent);
-//                            finish();
+
+                        poDialogx.setIcon(R.drawable.ic_baseline_message_24);
+                        poDialogx.setTitle("Account Details");
+                        poDialogx.setMessage(message);
+                        poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                            @Override
+                            public void OnButtonClick(View view, AlertDialog dialog) {
+                                dialog.dismiss();
+                            }
                         });
+
                         poDialogx.show();
+
                     }
 
                     @Override
                     public void OnFailed(String message) {
                         poLoading.dismiss();
-                        poDialogx.setButtonText("Okay");
-                        poDialogx.initDialog("Account Details", message, () -> {
-                            poDialogx.dismiss();
+
+                        poDialogx.setIcon(R.drawable.baseline_error_24);
+                        poDialogx.setTitle("Account Details");
+                        poDialogx.setMessage(message);
+                        poDialogx.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
+                            @Override
+                            public void OnButtonClick(View view, AlertDialog dialog) {
+                                dialog.dismiss();
+                            }
                         });
+
                         poDialogx.show();
+
                     }
                 });
             }

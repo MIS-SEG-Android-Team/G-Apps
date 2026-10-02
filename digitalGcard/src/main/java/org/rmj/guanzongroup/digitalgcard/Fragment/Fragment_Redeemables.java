@@ -39,9 +39,12 @@ public class Fragment_Redeemables extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(requireActivity()).get(VMGCardSystem.class);
+
         View view =  inflater.inflate(R.layout.fragment_redeemables, container, false);
+
         initViews(view);
+
+        mViewModel = new ViewModelProvider(requireActivity()).get(VMGCardSystem.class);
         mViewModel.setmContext(GCardSystem.CoreFunctions.REDEMPTION);
         mViewModel.downloadRedeemables(new VMGCardSystem.GcardTransactionCallback() {
             @Override

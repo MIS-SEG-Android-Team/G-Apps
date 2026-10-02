@@ -182,7 +182,7 @@ public class FormatUIText {
     }
 
 
-    public static String FormatSenderMessageDateTime(String date){
+    public static String FormatSenderdMessageDateTime(String date){
         try{
             Date parseDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date);
             return new SimpleDateFormat("MMM dd").format(parseDate);

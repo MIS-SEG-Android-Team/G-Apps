@@ -46,7 +46,7 @@ public class TestGCard {
 
     @Test
     public void test01Login() throws Exception{
-        new AccountAuthentication(mContext).LoginAccount(new AccountAuthentication.LoginCredentials("mikegarcia8748@gmail.com", "12345678", "09171870011"), new AccountAuthentication.OnLoginCallback() {
+        new AccountAuthentication(mContext).LoginAccount(new AccountAuthentication.LoginCredentials("mikegarcia8748@gmail.com", "12345678"), new AccountAuthentication.OnLoginCallback() {
             @Override
             public void OnSuccessLogin(String message) {
                 isSuccess = true;

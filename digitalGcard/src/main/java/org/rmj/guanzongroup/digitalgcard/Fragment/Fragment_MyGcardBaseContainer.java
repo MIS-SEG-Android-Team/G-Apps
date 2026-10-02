@@ -1,27 +1,20 @@
 package org.rmj.guanzongroup.digitalgcard.Fragment;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import org.rmj.guanzongroup.digitalgcard.R;
-import org.rmj.guanzongroup.digitalgcard.ViewModel.VMGCardSystem;
 
 public class Fragment_MyGcardBaseContainer extends Fragment {
-
-    private VMGCardSystem mViewModel;
-
 
     public static Fragment_MyGcardBaseContainer newInstance() {
         return new Fragment_MyGcardBaseContainer();
@@ -30,7 +23,7 @@ public class Fragment_MyGcardBaseContainer extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(requireActivity()).get(VMGCardSystem.class);
+
         View view = inflater.inflate(R.layout.fragment_my_gcard_base_container, container, false);
         setViewPager(view);
         if(getArguments() != null){
@@ -45,47 +38,24 @@ public class Fragment_MyGcardBaseContainer extends Fragment {
     }
 
     private void setViewPager(View view) {
-        ViewPager loViewPgr = view.findViewById(R.id.vp_gcard);
-        loViewPgr.setAdapter(new FragmentAdapter(getChildFragmentManager(), getGcardFragment()));
+        ViewPager2 loViewPgr = view.findViewById(R.id.vp_gcard);
+        loViewPgr.setAdapter(new FragmentAdapter(getChildFragmentManager(), getLifecycle()));
     }
 
-    private Fragment getGcardFragment(){
-        int lnFragArg = (int) getArguments().get("gcardInstance");
-        switch (lnFragArg) {
-            case 1:
-                return new Fragment_MyGcard();
-            case 2:
-                return new Fragment_Redeemables();
-            case 3:
-                return new Fragment_GcardOrders();
-            case 4:
-                return new Fragment_GcardLedger();
-            case 5:
-                return new Fragment_PreTermination();
-            default:
-                return null;
+    private static class FragmentAdapter extends FragmentStateAdapter {
+
+        public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+            super(fragmentManager, lifecycle);
         }
-    }
-
-    private static class FragmentAdapter extends FragmentStatePagerAdapter {
-        private final Fragment fragment;
-
-        public FragmentAdapter(@NonNull FragmentManager fm, Fragment fragment) {
-            super(fm);
-            this.fragment = fragment;
-        }
-
         @NonNull
         @Override
-        public Fragment getItem(int position) {
-            return fragment;
+        public Fragment createFragment(int position) {
+            return new Fragment_MyGcard();
         }
-
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return 1;
         }
-
     }
 
 }

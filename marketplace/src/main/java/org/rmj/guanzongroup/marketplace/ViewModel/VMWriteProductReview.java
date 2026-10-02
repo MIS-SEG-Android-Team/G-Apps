@@ -2,28 +2,31 @@ package org.rmj.guanzongroup.marketplace.ViewModel;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.AsyncTask;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-
 import org.rmj.g3appdriver.dev.Database.Entities.EProducts;
 import org.rmj.g3appdriver.dev.Repositories.ROrder;
 import org.rmj.g3appdriver.dev.Repositories.RProduct;
 import org.rmj.g3appdriver.etc.AppConstants;
 import org.rmj.g3appdriver.etc.ConnectionUtil;
+import org.rmj.g3appdriver.utils.Task.OnTaskExecuteListener;
+import org.rmj.g3appdriver.utils.Task.TaskExecutor;
 import org.rmj.guanzongroup.marketplace.Etc.OnTransactionsCallback;
 
 public class VMWriteProductReview extends AndroidViewModel {
-
     private final Context poApplctn;
     private final RProduct poProdcts;
+    private final ROrder poOrder;
+    private final ConnectionUtil loConnect;
+    private String lomessage;
 
     public VMWriteProductReview(@NonNull Application application) {
         super(application);
         this.poApplctn = application;
+        this.loConnect = new ConnectionUtil(application);
         this.poProdcts = new RProduct(application);
+        this.poOrder = new ROrder(application);
     }
 
     public LiveData<EProducts> getProductInfo(String fsListID){
@@ -35,73 +38,44 @@ public class VMWriteProductReview extends AndroidViewModel {
                            int fnRating,
                            String fsReview,
                            OnTransactionsCallback foCallBck) {
-        new SaveReviewTask(poApplctn, OrderID, fnRating, fsReview, foCallBck).execute(fsListID);
-    }
-
-    private static class SaveReviewTask extends AsyncTask<String, Void, Boolean> {
-
-        private final Context mContext;
-        private final ConnectionUtil loConnect;
-        private final OnTransactionsCallback loCallBck;
-        private final String psOrderID;
-        private final int lnRatings;
-        private final String lsReviews;
-        private RProduct poProdct;
-
-        private String lsMessage = "";
-
-        private SaveReviewTask(Context foAppsxx,String OrderID, int fnRatings, String fsReviews,
-                               OnTransactionsCallback foCallBck) {
-            this.mContext = foAppsxx;
-            this.loConnect = new ConnectionUtil(foAppsxx);
-            this.poProdct = new RProduct(foAppsxx);
-            this.psOrderID = OrderID;
-            this.lnRatings = fnRatings;
-            this.lsReviews = fsReviews;
-            this.loCallBck = foCallBck;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loCallBck.onLoading();
-        }
-
-        @Override
-        protected Boolean doInBackground(String... strings) {
-            try {
-                String lsListIdx = strings[0];
-                if(loConnect.isDeviceConnected()) {
-                    // TODO: Initialize write review here.
-                    if(poProdct.SendProductReview(psOrderID, lsListIdx, lnRatings, lsReviews)){
-                        lsMessage = "Thank you for your review.";
-                        new ROrder(mContext).UpdateReviewedItem(psOrderID, lsListIdx);
-                        return true;
+        TaskExecutor.Execute(fsListID, new OnTaskExecuteListener() {
+            @Override
+            public void OnPreExecute() {
+                foCallBck.onLoading();
+            }
+            @Override
+            public Object DoInBackground(Object args) {
+                try {
+                    String lsListIdx = args.toString();
+                    if(loConnect.isDeviceConnected()) {
+                        // TODO: Initialize write review here.
+                        if(poProdcts.SendProductReview(OrderID, lsListIdx, fnRating, fsReview)){
+                            lomessage = "Thank you for rating this product";
+                            poOrder.UpdateReviewedItem(OrderID, lsListIdx);
+                            return true;
+                        } else {
+                            lomessage = poProdcts.getMessage();
+                            return false;
+                        }
                     } else {
-                        lsMessage = poProdct.getMessage();
+                        lomessage = AppConstants.SERVER_NO_RESPONSE();
                         return false;
                     }
-                } else {
-                    lsMessage = AppConstants.SERVER_NO_RESPONSE();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    lomessage = e.getMessage();
                     return false;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                lsMessage = e.getMessage();
-                return false;
             }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if(aBoolean) {
-                loCallBck.onSuccess(lsMessage);
-            } else {
-                loCallBck.onFailed(lsMessage);
+            @Override
+            public void OnPostExecute(Object object) {
+                Boolean aBoolean = (Boolean) object;
+                if(aBoolean) {
+                    foCallBck.onSuccess(lomessage);
+                } else {
+                    foCallBck.onFailed(lomessage);
+                }
             }
-        }
-
+        });
     }
-
 }

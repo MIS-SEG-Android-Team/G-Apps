@@ -15,7 +15,6 @@ import org.rmj.g3appdriver.utils.MySQLAESCrypt;
 import java.util.ArrayList;
 
 public class CodeGenerator {
-
     private static final String EncryptionKEY = "20190625";
     MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
     MySQLAESCrypt poEncrypt = new MySQLAESCrypt();
@@ -23,16 +22,22 @@ public class CodeGenerator {
     static String EncryptedQrCode = "";
     static String scanType = "";
 
-    public void setEncryptedQrCode(String encryptedQrCode){
-        EncryptedQrCode = encryptedQrCode;
-    }
-
     public void setScanType(String ScanType){
         scanType = ScanType;
     }
-
     public String getScanType(){
         return scanType;
+    }
+
+    public void setEncryptedQrCode(String encryptedQrCode){
+        EncryptedQrCode = encryptedQrCode;
+    }
+    /***********************************************************
+     * QrCode is decrypted to get the original value
+     * */
+    public String decryptedQrCodeValue(){
+        String decyptedQrCode = poEncrypt.Decrypt(EncryptedQrCode, EncryptionKEY);
+        return decyptedQrCode;
     }
 
     /**
@@ -60,7 +65,6 @@ public class CodeGenerator {
         }
         return bitmap;
     }
-
     public Bitmap GeneratePanaloRebateRedemptionQC(PanaloRewards rewards){
         Bitmap bitmap = null;
         String UnEncryptedString =
@@ -84,7 +88,6 @@ public class CodeGenerator {
         }
         return bitmap;
     }
-
     public Bitmap GeneratePanaloOtherRedemptionQC(PanaloRewards rewards){
         Bitmap bitmap = null;
         String UnEncryptedString =
@@ -107,7 +110,6 @@ public class CodeGenerator {
         }
         return bitmap;
     }
-
     public static Bitmap CreateRaffleEntryQrCode(String Transact, String ReferNo, String UserID, String DateTime) throws Exception{
         String lsEncrypt = Transact + ";" + ReferNo + ";" + UserID + ";" + DateTime;
         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
@@ -116,7 +118,6 @@ public class CodeGenerator {
         return barcodeEncoder.createBitmap(bitMatrix);
 
     }
-
     public Bitmap generateGCardCodex(String SOURCE,
                                      String DeviceImei,
                                      String CardNumber,
@@ -138,29 +139,17 @@ public class CodeGenerator {
             return GcardCodex;
         }
     }
-
     public String generateSecureNo(String SecureNo){
         poEncrypt = new MySQLAESCrypt();
         String lsValue = poEncrypt.Encrypt(SecureNo, EncryptionKEY);
         return lsValue;
     }
-
     public String encryptPassword(String Password){
         return poEncrypt.Encrypt(Password, EncryptionKEY);
     }
-
     public String decryptPassword(String EncryptedPassword){
         return poEncrypt.Encrypt(EncryptedPassword, EncryptionKEY);
     }
-
-    /***********************************************************
-     * QrCode is decrypted to get the original value
-     * */
-    private String decryptedQrCodeValue(){
-        String decyptedQrCode = poEncrypt.Decrypt(EncryptedQrCode, EncryptionKEY);
-        return decyptedQrCode;
-    }
-
 
     /***********************************************************
      * QrCode Decrypted value is split into String array[]
@@ -177,17 +166,21 @@ public class CodeGenerator {
      * index 10 = sCardNumber
      * index 11 = sMobileNo
      * */
-    private String getKeyValueOf(String decryptedCode, int ArrayIndexPosition){
+    public String getKeyValueOf(String decryptedCode, int ArrayIndexPosition){
         String returnValue = "";
         ArrayList CodeValue = new ArrayList();
+
         try {
             String[] frstValue = decryptedCode.split(";");
             String[] scndValue;
             String[] thrdValue;
+
             if (frstValue.length >= 0) {
                 CodeValue.clear();
+
                 for (int sTransIndex = 0; sTransIndex < frstValue.length; sTransIndex++) {
                     scndValue = frstValue[0].split("»");
+
                     for (int x = 0; x < scndValue.length; x++) {
                         if (x == 6) {
                             thrdValue = scndValue[6].split("@");
@@ -202,6 +195,7 @@ public class CodeGenerator {
             }
             for (int index = 0; index < CodeValue.size(); index++) {
                 returnValue = String.valueOf(CodeValue.get(ArrayIndexPosition));
+                Log.d("CODE GENERATE", CodeValue.get(index).toString());
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -210,33 +204,26 @@ public class CodeGenerator {
         return  returnValue;
     }
 
-    /**
-     * Get Transaction Source here...
-     * Transaction Source is either ONLINE || OFFLINE
-     *
-     * */
+    /** Get Transaction Source here (ONLINE || OFFLINE) */
     public String getTransSource(){
-        String returnValue;
         try {
             String decryptedQrCode = decryptedQrCodeValue();
-            returnValue = getKeyValueOf(decryptedQrCode, 0);
+            String transSource = getKeyValueOf(decryptedQrCode, 0);
+
+            return transSource;
         } catch (Exception e){
             e.printStackTrace();
-            returnValue = null;
+            return null;
         }
-        return returnValue;
     }
 
     /**
      * Get QrCode Decrypted value
      * Transaction PIN is inside the array with @ splitter
-     * Transaction PIN is inside Array Index[7]
-     *
-     * DO NOT DISPLAY TRANSACTION PIN IF VALIDATIONS ARE NOT MET...
-     * */
+     * Transaction PIN is inside Array Index[7] */
     public String getTransactionPIN(){
         String decryptedQrCode = decryptedQrCodeValue();
-            return getKeyValueOf(decryptedQrCode,1);
+        return getKeyValueOf(decryptedQrCode,1);
     }
 
     /**
@@ -266,7 +253,6 @@ public class CodeGenerator {
         String decryptedQrCode = decryptedQrCodeValue();
             return getKeyValueOf(decryptedQrCode,5);
     }
-
     public String getTransNox(){
         String decryptedQrCode = decryptedQrCodeValue();
             return getKeyValueOf(decryptedQrCode, 6);
@@ -287,52 +273,32 @@ public class CodeGenerator {
         String decryptedQrCode = decryptedQrCodeValue();
             return getKeyValueOf(decryptedQrCode, 10);
     }
-    /**If Conditions above is not met
-     *Display an INVALID TRANSACTION...
-     *
-     *
-     * */
 
-
-    /**
-     * Encryption Functions below are use to encrypt all points in local database
-     *
-     *
-     * */
-    public String encryptPointsxx(double sPointsxx){
-        return poEncrypt.Encrypt(String.valueOf(Double.valueOf(sPointsxx)), EncryptionKEY);
-    }
-
-    public String decryptPointsxx(String encryptedPointsxx){
-        return poEncrypt.Decrypt(encryptedPointsxx, EncryptionKEY);
-    }
-
+    /**If Conditions above is not met Display an INVALID TRANSACTION.../
+    /*Encryption Functions below are use to encrypt all points in local database */
     public String generateTransNox(){
         String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         int count = 12;
         StringBuilder builder = new StringBuilder();
-            while (count-- != 0) {
-                int character = (int)(Math.random()*ALPHA_NUMERIC_STRING.length());
-                builder.append(ALPHA_NUMERIC_STRING.charAt(character));
-            }
+        while (count-- != 0) {
+            int character = (int)(Math.random()*ALPHA_NUMERIC_STRING.length());
+            builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+        }
         return builder.toString();
     }
-
     public boolean isCodeValid(){
         return !getTransSource().equalsIgnoreCase("INVALID");
     }
-
-    public boolean isDeviceValid(String MobileNo, String UserID, String GCardNumber) {
+    public boolean isDeviceValid(String MobileNo, String GCardNumber) {
         String gcard = getGCardNumber();
         String mobileNo = getMobileNumber();
-        String user = getUserID();
 
         String lsSourceCD = getTransSource();
 
         if(lsSourceCD.equalsIgnoreCase("PREORDER") ||
-            lsSourceCD.equalsIgnoreCase("REDEMPTION") ||
-            lsSourceCD.equalsIgnoreCase("ONLINE") ||
-            lsSourceCD.equalsIgnoreCase("OFFLINE")){
+                lsSourceCD.equalsIgnoreCase("REDEMPTION") ||
+                lsSourceCD.equalsIgnoreCase("ONLINE") ||
+                lsSourceCD.equalsIgnoreCase("OFFLINE")){
             return gcard.equalsIgnoreCase(GCardNumber) &&
                     mobileNo.equalsIgnoreCase(MobileNo);
         } else {
@@ -346,7 +312,7 @@ public class CodeGenerator {
 
         //
         /**
-        /**
+         /**
          * Original code
          *  mac 2020.08.21
          *      removed the validation for user id since we are not getting
@@ -357,18 +323,13 @@ public class CodeGenerator {
         //        mobileNo.equalsIgnoreCase(MobileNo) &&
         //       user.equalsIgnoreCase(UserID);
     }
-
-    public boolean isQrCodeApplication(){
-        return getTransSource().equalsIgnoreCase("APPLICATION");
-}
-
     public boolean isQrCodeTransaction(){
         return getTransSource().equalsIgnoreCase("PREORDER") ||
                 getTransSource().equalsIgnoreCase("REDEMPTION") ||
                 getTransSource().equalsIgnoreCase("ONLINE") ||
-                getTransSource().equalsIgnoreCase("OFFLINE");
+                getTransSource().equalsIgnoreCase("OFFLINE")||
+                getTransSource().equalsIgnoreCase("OTP");
     }
-
     public boolean isTransactionVoid(){
         try {
             double points = Double.parseDouble(getPointsxx());
@@ -377,5 +338,24 @@ public class CodeGenerator {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public String GetOTPCardNmbr(){
+        String decryptedQrCode = decryptedQrCodeValue();
+        return getKeyValueOf(decryptedQrCode, 1);
+    }
+    public String GetOTP(){
+        String decryptedQrCode = decryptedQrCodeValue();
+        return getKeyValueOf(decryptedQrCode, 2);
+    }
+
+    public String encryptPointsxx(double sPointsxx){
+        return poEncrypt.Encrypt(String.valueOf(Double.valueOf(sPointsxx)), EncryptionKEY);
+    }
+    public String decryptPointsxx(String encryptedPointsxx){
+        return poEncrypt.Decrypt(encryptedPointsxx, EncryptionKEY);
+    }
+    public boolean isQrCodeApplication(){
+        return getTransSource().equalsIgnoreCase("APPLICATION");
     }
 }

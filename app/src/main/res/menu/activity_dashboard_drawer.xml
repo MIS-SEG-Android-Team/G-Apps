@@ -12,13 +12,14 @@
         <item
             android:id="@+id/nav_raffle_entry"
             android:icon="@drawable/ic_raffle_ticket_24"
-            android:visible="true"
+            android:visible="false"
             android:title="@string/menu_raffle_entry"/>
 
 
         <item
             android:id="@+id/nav_promos"
             android:icon="@drawable/ic_baseline_promo_24"
+            android:visible="false"
             android:title="@string/menu_promos" />
 
         <item
@@ -35,7 +36,7 @@
         <item
             android:id="@+id/nav_applyLoan"
             android:icon="@drawable/ic_baseline_loan_24"
-            android:visible="true"
+            android:visible="false"
             android:title="@string/menu_apply_loan" />
         <item
             android:id="@+id/nav_purchases"
@@ -49,7 +50,7 @@
             android:visible="false"
             android:title="@string/menu_wishlist" />
 
-        <item android:title="@string/menu_product_inquiry"
+        <item android:title="Kita Moto"
             android:checkable="false"
             android:icon="@drawable/ic_baseline_info_24"
             android:id="@+id/product_inquiry_expanded">
@@ -58,12 +59,14 @@
                 <item
                     android:id="@+id/nav_product_inquiry"
                     android:icon="@drawable/ic_baseline_inquiry_24"
-                    android:title="Inquiry" />
+                    android:title="Submit"
+                    android:visible="false"/>
 
                 <item
                     android:id="@+id/nav_product_inquiry_history"
                     android:icon="@drawable/ic_baseline_info_24"
-                    android:title="History" />
+                    android:title="History"
+                    android:visible="false"/>
             </menu>
         </item>
 
@@ -77,34 +80,44 @@
                 <item
                     android:id="@+id/nav_scan_qrcode"
                     android:icon="@drawable/ic_baseline_qr_code_scanner_24"
-                    android:title="@string/menu_scan_gcard" />
+                    android:title="Scan QR (Online)"
+                    android:visible="false"/>
 
+                <item
+                    android:id="@+id/nav_gcard_offline"
+                    android:icon="@drawable/ic_baseline_add_card_24"
+                    android:title="Add Points (Offline)"
+                    android:visible="false"/>
 
                 <item
                     android:id="@+id/nav_redeemables"
                     android:icon="@drawable/ic_baseline_gift_24"
-                    android:title="@string/menu_redeemables" />
+                    android:title="Redeem"
+                    android:visible="false"/>
 
                 <item
                     android:id="@+id/nav_gcard_orders"
                     android:icon="@drawable/ic_baseline_package_24"
-                    android:title="@string/menu_gcard_orders" />
+                    android:title="Pre-Order"
+                    android:visible="false"/>
 
                 <item
                     android:id="@+id/nav_gcard_transactions"
                     android:icon="@drawable/ic_baseline_assignment_24"
-                    android:title="@string/menu_gcard_transactions" />
+                    android:title="History"
+                    android:visible="false"/>
 
                 <item
                     android:id="@+id/nav_pre_termination"
                     android:icon="@drawable/ic_baseline_assignment_24"
-                    android:title="@string/menu_pre_termination" />
+                    android:title="@string/menu_pre_termination"
+                    android:visible="false"/>
 
             </menu>
 
         </item>
 
-        <item android:title="@string/menu_subtitle_system">
+        <item android:title="Account">
             <menu>
                 <item
                     android:id="@+id/nav_account_settings"
@@ -112,10 +125,14 @@
                     android:title="@string/menu_account_settings" />
 
                 <item
-                    android:id="@+id/nav_customer_service"
-                    android:icon="@drawable/ic_baseline_headset_mic_24"
-                    android:title="@string/menu_customer_service" />
+                    android:id="@+id/nav_logout"
+                    android:icon="@drawable/ic_baseline_exit_to_app_24"
+                    android:title="@string/menu_logout" />
+            </menu>
+        </item>
 
+        <item android:title="Services">
+            <menu>
                 <item
                     android:id="@+id/nav_find_us"
                     android:icon="@drawable/ic_baseline_location_24"
@@ -125,11 +142,6 @@
                     android:id="@+id/nav_about"
                     android:icon="@drawable/ic_baseline_info_24"
                     android:title="@string/menu_about" />
-
-                <item
-                    android:id="@+id/nav_logout"
-                    android:icon="@drawable/ic_baseline_exit_to_app_24"
-                    android:title="@string/menu_logout" />
             </menu>
 
         </item>

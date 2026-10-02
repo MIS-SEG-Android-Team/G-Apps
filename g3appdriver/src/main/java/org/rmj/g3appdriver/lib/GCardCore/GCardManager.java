@@ -10,15 +10,18 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DGcardApp;
+import org.rmj.g3appdriver.dev.Database.DataAccessObject.DPointsRequest;
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRedeemItemInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EBranchInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EEvents;
 import org.rmj.g3appdriver.dev.Database.Entities.EGCardTransactionLedger;
 import org.rmj.g3appdriver.dev.Database.Entities.EGcardApp;
 import org.rmj.g3appdriver.dev.Database.Entities.EMCSerialRegistration;
+import org.rmj.g3appdriver.dev.Database.Entities.EPointsRequest;
 import org.rmj.g3appdriver.dev.Database.Entities.EPromo;
 import org.rmj.g3appdriver.dev.Database.Entities.ERedeemablesInfo;
 import org.rmj.g3appdriver.dev.Database.Entities.EServiceInfo;
+import org.rmj.g3appdriver.dev.Database.Entities.ESub_Events;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 import org.rmj.g3appdriver.dev.Repositories.RGCardTransactionLedger;
 import org.rmj.g3appdriver.dev.Repositories.RMCSerialRegistration;
@@ -33,6 +36,7 @@ import org.rmj.g3appdriver.lib.Account.AccountInfo;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.CartItem;
 import org.rmj.g3appdriver.lib.GCardCore.Obj.GcardCredentials;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class GCardManager implements iGCardSystem{
@@ -50,6 +54,9 @@ public class GCardManager implements iGCardSystem{
     private final RGCardTransactionLedger poLedger;
     private final GuanzonAppConfig poConfig;
     private final ServerAPIs poAPI;
+    private final AccountInfo loAccount;
+    private final DPointsRequest loPointsRequest;
+    private String message;
 
     public GCardManager(Context context) {
         this.mContext = context;
@@ -63,6 +70,95 @@ public class GCardManager implements iGCardSystem{
         this.poLedger = new RGCardTransactionLedger(mContext);
         this.poConfig = new GuanzonAppConfig(mContext);
         this.poAPI = new ServerAPIs(poConfig.getTestCase());
+        this.loAccount = new AccountInfo(mContext);
+        this.loPointsRequest = GGC_GuanzonAppDB.getInstance(mContext).GPointsRqstDao();
+    }
+    @Override
+    public LiveData<List<EGcardApp>> GetGCardList() {
+        return poGCard.getAllGCardInfo();
+    }
+    @Override
+    public LiveData<EGcardApp> hasNoGcard() {
+        return poGCard.hasNoGcard();
+    }
+    @Override
+    public LiveData<List<EGcardApp>> hasUnCheckGCard() {
+        return poGCard.hasUnCheckGCard();
+    }
+    @Override
+    public LiveData<EGcardApp> getGCardInfo() {
+        return poGCard.getGCardInfo();
+    }
+    @Override
+    public LiveData<List<EPointsRequest>> GetPointsRqsts() {
+        return loPointsRequest.GetRequests(loAccount.getUserID());
+    }
+
+    @Override
+    public LiveData<List<Double>> GetRedeemablePointsFilter() {
+        return null;
+    }
+    @Override
+    public LiveData<List<ERedeemablesInfo>> GetRedeemablesList() {
+        return null;
+    }
+    @Override
+    public LiveData<List<ERedeemablesInfo>> GetRedeemablesList(String fsVal) {
+        return null;
+    }
+    @Override
+    public LiveData<List<DRedeemItemInfo.GCardCartItem>> GetCartItems() {
+        return null;
+    }
+    @Override
+    public LiveData<Integer> GetGcardCartItemCount() {
+        return null;
+    }
+    @Override
+    public LiveData<Double> GetGCardCartItemTotalPoints() {
+        return null;
+    }
+    @Override
+    public LiveData<List<EGCardTransactionLedger>> GetGcardTransactions() {
+        return poLedger.getAllTransactionsList();
+    }
+    @Override
+    public LiveData<List<EGCardTransactionLedger>> GetPointsEntryTransactions() {
+        return poLedger.getPointsEntryTransactionsList();
+    }
+    @Override
+    public LiveData<List<EGCardTransactionLedger>> GetRedemptionTransactions() {
+        return poLedger.getRedemptionTransactionsList();
+    }
+    @Override
+    public LiveData<List<EBranchInfo>> GetMobileBranchList() {
+        return null;
+    }
+    @Override
+    public LiveData<List<EBranchInfo>> GetMotorcycleBranchList() {
+        return null;
+    }
+    @Override
+    public LiveData<List<EPromo>> GetPromotions() {
+        return null;
+    }
+    @Override
+    public LiveData<List<EEvents>> GetNewsEvents() {
+        return null;
+    }
+
+    @Override
+    public List<EGcardApp> hasActiveGcard() {
+        return poGCard.hasActiveGcard();
+    }
+    @Override
+    public List<EBranchInfo> GetMCBranchesForRedemption() {
+        return null;
+    }
+
+    @Override
+    public String GetMessage() {
+        return message;
     }
 
     @Override
@@ -75,6 +171,7 @@ public class GCardManager implements iGCardSystem{
                 callback.OnFailed("No server response.");
             } else {
                 JSONObject loResponse = new JSONObject(lsResponse);
+
                 String lsResult = loResponse.getString("result");
                 if(lsResult.equalsIgnoreCase("success")){
                     callback.OnSuccess(lsResponse);
@@ -91,65 +188,64 @@ public class GCardManager implements iGCardSystem{
             }
         }
     }
-
-    @Override
-    public LiveData<List<EGcardApp>> GetGCardList() {
-        return poGCard.getAllGCardInfo();
-    }
-
     @Override
     public void updateGCardActiveStatus(String GCardNmbr) {
         poGCard.updateGCardActiveStatus(GCardNmbr);
     }
 
     @Override
-    public List<EGcardApp> hasGcard() {
-        return poGCard.hasGcard();
-    }
+    public Boolean DownloadGcardPoints(HashMap<String, String> loParams) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("sGCardNox", loParams.get("sGCardNox"));
+            params.put("dTransact", loParams.get("dTransact"));
+            params.put("sBranchCD", loParams.get("sBranchCD"));
+            params.put("sReferNox", loParams.get("sReferNox"));
+            params.put("sSourceCd", loParams.get("sSourceCd"));
+            params.put("sOTPasswd", loParams.get("sOTPasswd"));
 
-    @Override
-    public LiveData<EGcardApp> hasNoGcard() {
-        return poGCard.hasNoGcard();
-    }
+            String lsResponse = WebClient.httpsPostJSon(poAPI.getUrlImportGcardPoints(), params.toString(), poHeaders.getHeaders());
+            if (lsResponse.isEmpty()){
+                message = "Server no response";
+                return false;
+            }
 
-    @Override
-    public LiveData<List<EGcardApp>> hasUnCheckGCard() {
-        return poGCard.hasUnCheckGCard();
-    }
+            JSONObject loResponse = new JSONObject(lsResponse);
 
-    @Override
-    public List<EGcardApp> hasActiveGcard() {
-        return poGCard.hasActiveGcard();
-    }
+            String lsResult = loResponse.getString("result");
+            
+            if (lsResult.equalsIgnoreCase("success")) {
+                message = loResponse.getString("message");
 
-    @Override
-    public List<EGcardApp> hasMultipleGCard() {
-        return poGCard.hasMultipleGCard();
-    }
+                //TODO: NO API RESULT RETURNED FOR LEDGER. FUTURE ADJUSTMENT -GUILLIER
+                /*RGCardPoints loGPoints = new RGCardPoints(mContext);
+                EGCardPoints egCardPoints = new EGCardPoints();
 
-    @Override
-    public LiveData<EGcardApp> getGCardInfo() {
-        return poGCard.getGCardInfo();
-    }
+                egCardPoints.setsUserIDxx(loAccount.getUserID());
+                egCardPoints.setsGCardNox(loParams.get("sGCardNox"));
+                egCardPoints.setdTransact(loParams.get("dTransact"));
+                egCardPoints.setsBranchCD(loParams.get("sBranchCD"));
+                egCardPoints.setsSourceCD(loParams.get("sSourceCd"));
+                egCardPoints.setsSourceDs(loParams.get("sSourceDs"));
+                egCardPoints.setsReferNox(loParams.get("sReferNox"));
+                egCardPoints.setnTranAmtx(Double.parseDouble(loParams.get("nTranAmtx")));
+                egCardPoints.setnPointsxx(Double.parseDouble(loParams.get("nPointsxx")));
+                egCardPoints.setsOTPasswd(loParams.get("sOTPasswd"));
+                egCardPoints.setcSendStat("1");
+                egCardPoints.setcTranStat("0");
+                egCardPoints.setdTimeStmp(DateTimeToday());
 
-    @Override
-    public List<EGcardApp> getAllGCard() {
-        return poGCard.getAllGCard();
-    }
-
-    @Override
-    public void updateAvailablePoints(String fsGcardNo, String fsNewPts) {
-        poGCard.updateAvailablePoints(fsGcardNo, fsNewPts);
-    }
-
-    @Override
-    public LiveData<String> getActiveGcardNo() {
-        return null;
-    }
-
-    @Override
-    public LiveData<String> getActiveGcardAvlPoints() {
-        return poGCard.getActiveGcardAvlPoints();
+                loGPoints.Save(egCardPoints);*/
+                return true;
+            } else {
+                JSONObject loError = loResponse.getJSONObject("error");
+                message = loError.getString("message");
+                return false;
+            }
+        }catch (Exception e){
+            message = e.getMessage();
+            return false;
+        }
     }
 
     @Override
@@ -158,26 +254,26 @@ public class GCardManager implements iGCardSystem{
     }
 
     @Override
-    public double getAvailableGcardPoints() {
-        return 0;
-    }
-
-    @Override
-    public double getRedeemItemPoints() {
-        return 0;
-    }
-
-    @Override
     public void updateGCardDeactiveStatus() {
         poGCard.updateGCardDeactiveStatus();
+    }
+    @Override
+    public void SavePointsRqst(EPointsRequest loRqst) {
+        loPointsRequest.SaveRequest(loRqst);
+    }
+    @Override
+    public void UpdateSendPointsRqst(String sTransNoxx) {
+        loPointsRequest.SendPointsRequest(sTransNoxx);
     }
 
     @Override
     public void AddGCardQrCode(String GCardNumber, GCardSystem.GCardSystemCallback callback) throws Exception {
         JSONObject params = new JSONObject();
         params.put("secureno", poCode.generateSecureNo(GCardNumber));
+
         String lsAddress = poAPI.getAddNewGCardAPI();
         String lsResponse = WebClient.httpsPostJSon(lsAddress, params.toString(), poHeaders.getHeaders());
+
         if(lsResponse == null){
             callback.OnFailed("No server response.");
         } else {
@@ -192,7 +288,6 @@ public class GCardManager implements iGCardSystem{
             }
         }
     }
-
     @Override
     public void ConfirmAddGCard(GcardCredentials gcardInfo, GCardSystem.GCardSystemCallback callback) throws Exception {
         gcardInfo.setsConfirmx("1");
@@ -211,11 +306,11 @@ public class GCardManager implements iGCardSystem{
             }
         }
     }
-
     @Override
     public void DownloadGcardNumbers(GCardSystem.GCardSystemCallback callback) throws Exception {
         JSONObject param = new JSONObject();
         param.put("user_id", poCode.generateSecureNo(poSession.getUserID()));
+
         String lsResponse = WebClient.httpsPostJSon(poAPI.getImportGCardAPI(), param.toString(), poHeaders.getHeaders());
         if(lsResponse == null){
             callback.OnFailed("Server no response.");
@@ -231,10 +326,10 @@ public class GCardManager implements iGCardSystem{
             }
         }
     }
-
     @Override
     public void SaveGCardInfo(JSONObject detail) throws Exception {
         poGCard.updateGCardDeactiveStatus();
+
         if(!detail.has("detail")){
             EGcardApp loGCard = new EGcardApp();
             loGCard.setGCardNox(detail.getString("sGCardNox"));
@@ -270,6 +365,44 @@ public class GCardManager implements iGCardSystem{
         }
         poGCard.updateGCardAppWithHighestPoints();
     }
+    @Override
+    public Boolean ValidateGCardInfo(String sFrstnm, String sLstnm, String sMdnm, String sSuffix, String dBirthdt, String sGCardNox) {
+        if (sGCardNox.isEmpty()) {
+            message = "GCard number scanned empty from QR.";
+            return false;
+        }else if (sFrstnm.isEmpty()){
+            message = "Firstname scanned empty from QR";
+            return false;
+        } else if (sLstnm.isEmpty()) {
+            message = "Lastname scanned empty from QR";
+            return false;
+        } else if (dBirthdt.isEmpty()) {
+            message = "Birthdate scanned empty from QR";
+            return false;
+        }
+
+        if (!sGCardNox.equalsIgnoreCase(poGCard.getCardNox())){
+            message = "GCard number not registered on this account. Please verify to complete your account.";
+            return false;
+        } else if (!sLstnm.equalsIgnoreCase(loAccount.getLastName())) {
+            message = "Firstname do not match the logged account. Please verify to complete your account.";
+            return false;
+        } else if (!sFrstnm.equalsIgnoreCase(loAccount.getFirstName())) {
+            message = "Lastname do not match the logged account. Please verify to complete your account.";
+            return false;
+        } else if (!sMdnm.equalsIgnoreCase(loAccount.getMiddleName())) {
+            message = "Middlename do not match the logged account. Please verify to complete your account.";
+            return false;
+        } else if (!sSuffix.equalsIgnoreCase(loAccount.getSuffix())) {
+            message = "Suffix name do not match the logged account. Please verify to complete your account.";
+            return false;
+        } else if (!dBirthdt.equalsIgnoreCase(loAccount.getBirthdate())) {
+            message = "Birthdate do not match the logged account. Please verify to complete your account.";
+            return false;
+        }
+
+        return true;
+    }
 
     @Override
     public Bitmap GenerateGCardQrCode() {
@@ -279,14 +412,17 @@ public class GCardManager implements iGCardSystem{
         String lsUserID = poSession.getUserID();
         String lsMobNox = poDevicex.getMobilNumbers();
         String lsDateTm = new AppConstants().GCARD_DATE_TIME;
+
         double lsCardPt;
         if(poGCard.getRedeemItemPoints() > 0){
             lsCardPt = Math.abs(poGCard.getAvailableGcardPoints() - poGCard.getRedeemItemPoints());
         } else {
             lsCardPt = poGCard.getAvailableGcardPoints();
         }
+
         String lsModelx = Build.MODEL;
         String lsTransN = "";
+
         return poCode.generateGCardCodex(lsSource,
                 lsDevcID,
                 lsCardNo,
@@ -297,105 +433,132 @@ public class GCardManager implements iGCardSystem{
                 lsModelx,
                 lsTransN);
     }
-
     @Override
-    public void ParseQrCode(String val, GCardSystem.ParseQrCodeCallback callback) throws Exception {
+    public void ParseQrCode(String val, GCardSystem.ParseQrCodeCallback callback){
         poCode.setEncryptedQrCode(val);
-        String lsMobileNo = new AccountInfo(mContext).getMobileNo();
-        String lsUserIDxx = new AccountInfo(mContext).getUserID();
-        String lsGcardNox = poGCard.getCardNo();
+
+        String src = poCode.getTransSource();
+
+        String lsUserIDxx = loAccount.getUserID();
+        String lsMobileNo = loAccount.getMobileNo();
+
         if(poConfig.getTestCase() && lsMobileNo.isEmpty()){
             lsMobileNo = "09171870011";
         }
-        if(poGCard.getCardNox() == null){
-            callback.OnFailed("No Gcard number detected");
-        } else if(!poCode.isCodeValid()){
-            callback.OnFailed("Invalid Qr Code");
-        } else if (poCode.isQrCodeTransaction()){
-            if(poCode.isTransactionVoid()){
-                callback.TransactionResult(poCode.getTransactionPIN());
-            } else if(lsUserIDxx.isEmpty()){
-                callback.OnFailed("No user account detected. Please make sure you login account before proceeding.");
-            } else if(lsMobileNo.isEmpty()){
-                callback.OnFailed("Unable to retrieve device mobile no. Please make sure your device has mobile no.");
-            } else if(lsGcardNox.isEmpty()){
-                callback.OnFailed("No GCard number is registered or active in this account. Please make sure a GCard is active.");
-            } else if(poCode.isDeviceValid(lsMobileNo, lsUserIDxx, lsGcardNox)) {
-                callback.TransactionResult(poCode.getTransactionPIN());
+
+        if (ValidateQR(lsUserIDxx, lsMobileNo)){
+            if (poCode.isQrCodeTransaction()){
+                //TODO: GET ANY ACTIVE GCARD NUMBERS ON ACCOUNT
+                String lsGcardNox = poGCard.getCardNo();
+
+                //TODO: VALIDATE ACTIVE GCARD NUMBER
+                if(!lsGcardNox.isEmpty()){
+                    //TODO: VALIDATE AND DISPLAY OTP
+                    if (src.equalsIgnoreCase("OTP")){
+                        if (poGCard.getCardNmbr(poCode.GetOTPCardNmbr()) == null || poGCard.getCardNmbr(poCode.GetOTPCardNmbr()).isEmpty()){
+                            callback.OnFailed("GCard Number is not registered on this account.");
+                        }else {
+                            callback.TransactionResult(src, poCode.GetOTP());
+                        }
+                    }else {
+                        if(poCode.isTransactionVoid()){
+                            //TODO: POINTS SHOULD BE EMPTY
+                            callback.TransactionResult(src, poCode.getTransactionPIN());
+                        } else if(poCode.isDeviceValid(lsMobileNo, lsGcardNox)) {
+                            //TODO: GCARD AND MOBILE, SHOULD BE SAME WITH USER ACCOUNT
+                            callback.TransactionResult(src, poCode.getTransactionPIN());
+                        } else {
+                            callback.OnFailed("Mobile Number or Account is not valid to confirm this transaction");
+                        }
+                    }
+
+                }else {
+                    callback.OnFailed("No GCard number is active in this account. Please make sure a GCard is active.");
+                }
             } else {
-                callback.OnFailed("Mobile Number or Account is not valid to confirm this transaction");
+                if (src.equals("TDS")){
+                    HashMap<String, String> params = ScanTDS();
+                    if (ValidateGCardInfo(params.get("sFrstName"), params.get("sLastName"), params.get("sMiddName"),
+                            params.get("sSuffixNm"), params.get("dBirthDte"), params.get("sGCardNox"))){
+
+                        callback.ApplicationResult(src, params);
+                    }else {
+                        callback.OnFailed(message);
+                    }
+                }else {
+                    callback.ApplicationResult(src, poCode.getGCardNumber());
+                }
             }
-        } else {
-            if(lsUserIDxx.isEmpty()){
-                callback.OnFailed("No user account detected. Please make sure you login account before proceeding.");
-            } else if(lsMobileNo.isEmpty()){
-                callback.OnFailed("Unable to retrieve device mobile no. Please make sure your device has mobile no.");
-            } else {
-                callback.ApplicationResult(poCode.getGCardNumber());
-            }
+        }else {
+            callback.OnFailed(message);
         }
+    }
+
+    @Override
+    public HashMap<String, String> ScanTDS() {
+        String decryptval = poCode.decryptedQrCodeValue();
+
+        HashMap<String, String> params = new HashMap<>();
+
+        params.put("sBranchCD", poCode.getKeyValueOf(decryptval, 1));
+        params.put("sReferNox", poCode.getKeyValueOf(decryptval, 2));
+        params.put("sSourceCd", poCode.getKeyValueOf(decryptval, 3));
+        params.put("dTransact", poCode.getKeyValueOf(decryptval, 4));
+        params.put("nTranAmtx", poCode.getKeyValueOf(decryptval, 5));
+        params.put("nPointsxx", poCode.getKeyValueOf(decryptval, 6));
+        params.put("sOTPasswd", poCode.getKeyValueOf(decryptval, 7));
+        params.put("sLastName", poCode.getKeyValueOf(decryptval, 8));
+        params.put("sFrstName", poCode.getKeyValueOf(decryptval, 9));
+        params.put("sMiddName", poCode.getKeyValueOf(decryptval, 10));
+        params.put("sSuffixNm", poCode.getKeyValueOf(decryptval, 11));
+        params.put("dBirthDte", poCode.getKeyValueOf(decryptval, 12));
+        params.put("sBirthPlc", poCode.getKeyValueOf(decryptval, 13));
+        params.put("sSourceDs", poCode.getKeyValueOf(decryptval, 14));
+        params.put("sGCardNox", poCode.getKeyValueOf(decryptval, 15));
+
+        return params;
+    }
+
+    @Override
+    public Boolean ValidateQR(String sUserIDxx, String sMobileNoxx) {
+        if(poGCard.getCardNox() == null){ //Validate GCARD NO
+            message = "No Gcard number detected";
+            return false;
+        }else if(!poCode.isCodeValid()) { //Validate QR Code
+            message = "Invalid Qr Code";
+            return false;
+        }if(sUserIDxx.isEmpty()){
+            message = "No user account detected. Please make sure you login account before proceeding.";
+            return false;
+        } else if(sMobileNoxx.isEmpty()){
+            message = "Unable to retrieve device mobile no. Please make sure your device has mobile no.";
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     public void DownloadRedeemables(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveRedeemables(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
 
     @Override
-    public LiveData<List<Double>> GetRedeemablePointsFilter() {
-        return null;
-    }
-
-    @Override
-    public LiveData<List<ERedeemablesInfo>> GetRedeemablesList() {
-        return null;
-    }
-
-    @Override
-    public LiveData<List<ERedeemablesInfo>> GetRedeemablesList(String fsVal) {
-        return null;
-    }
-
-    @Override
     public void AddToCart(CartItem item, GCardSystem.GCardSystemCallback callback) {
         throw new NullPointerException();
     }
-
     @Override
     public void UpdateCartItem(CartItem item, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
-    @Override
-    public LiveData<List<DRedeemItemInfo.GCardCartItem>> GetCartItems() {
-        return null;
-    }
-
-    @Override
-    public List<EBranchInfo> GetMCBranchesForRedemption() {
-        return null;
-    }
-
-    @Override
-    public LiveData<Integer> GetGcardCartItemCount() {
-        return null;
-    }
-
-    @Override
-    public LiveData<Double> GetGCardCartItemTotalPoints() {
-        return null;
-    }
-
     @Override
     public void DeleteItemCart(String fsVal) {
         throw new NullPointerException();
     }
-
     @Override
     public void PlaceOrder(List<DRedeemItemInfo.GCardCartItem> redeemables, String BranchCD, GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
@@ -411,10 +574,12 @@ public class GCardManager implements iGCardSystem{
         try {
             JSONObject params = new JSONObject();
             params.put("secureno", poCode.generateSecureNo(poGCard.getCardNo()));
+
             String[] Ledger_Address = {poAPI.getImportOfflineTransAPI(),
                     poAPI.getImportOnlineTransAPI(),
                     poAPI.getImportPreOrderAPI(),
                     poAPI.getImportReedemptionsAPI()};
+
             for (String ledger_address : Ledger_Address) {
                 String lsResponse = WebClient.httpsPostJSon(ledger_address, params.toString(), poHeaders.getHeaders());
                 if (lsResponse == null) {
@@ -436,7 +601,6 @@ public class GCardManager implements iGCardSystem{
             callback.OnFailed("Failed downloading transactions. " + e.getMessage());
         }
     }
-
     @Override
     public void SaveTransactions(JSONObject detail) throws Exception {
         RGCardTransactionLedger loLedger = new RGCardTransactionLedger(mContext);
@@ -461,32 +625,20 @@ public class GCardManager implements iGCardSystem{
     }
 
     @Override
-    public LiveData<List<EGCardTransactionLedger>> GetGcardTransactions() {
-        return poLedger.getAllTransactionsList();
-    }
-
-    @Override
-    public LiveData<List<EGCardTransactionLedger>> GetPointsEntryTransactions() {
-        return poLedger.getPointsEntryTransactionsList();
-    }
-
-    @Override
-    public LiveData<List<EGCardTransactionLedger>> GetRedemptionTransactions() {
-        return poLedger.getRedemptionTransactionsList();
-    }
-
-    @Override
     public void DownloadMCServiceInfo(GCardSystem.GCardSystemCallback callback) throws Exception {
-        JSONObject params = new JSONObject();
         String lsGcardNo = poGCard.getCardNo();
         String lsSecureNo = new CodeGenerator().generateSecureNo(lsGcardNo);
+
+        JSONObject params = new JSONObject();
         params.put("secureno", lsSecureNo);
+
         String lsResponse = WebClient.httpsPostJSon(poAPI.getServiceInfoAPI(), params.toString(), poHeaders.getHeaders());
         if (lsResponse == null) {
             callback.OnFailed("Server no response");
         } else {
             JSONObject loResponse = new JSONObject(lsResponse);
             String lsResult = loResponse.getString("result");
+
             if (lsResult.equalsIgnoreCase("success")) {
                 callback.OnSuccess(loResponse.toString());
             } else {
@@ -496,13 +648,13 @@ public class GCardManager implements iGCardSystem{
             }
         }
     }
-
-
     @Override
     public void DownloadRegistrationInfo(GCardSystem.GCardSystemCallback callback) throws Exception {
-        JSONObject params = new JSONObject();
         String lsSecureNo = new CodeGenerator().generateSecureNo(poGCard.getCardNo());
+
+        JSONObject params = new JSONObject();
         params.put("secureno", lsSecureNo);
+
         String lsResponse = WebClient.httpsPostJSon(poAPI.getMCRegistrationAPI(), params.toString(), poHeaders.getHeaders());
         if (lsResponse == null) {
             callback.OnFailed("Server no response");
@@ -526,6 +678,7 @@ public class GCardManager implements iGCardSystem{
             for (int x = 0; x < laJson.length(); x++) {
                 JSONObject loJson = laJson.getJSONObject(x);
                 EServiceInfo loService = new EServiceInfo();
+
                 loService.setGCardNox(poGCard.getCardNox());
                 loService.setSerialID(loJson.getString("sSerialID"));
                 loService.setEngineNo(loJson.getString("sEngineNo"));
@@ -538,13 +691,13 @@ public class GCardManager implements iGCardSystem{
                 loService.setWhitexxx(loJson.getInt("nWhitexxx"));
                 loService.setMIlAgexx(loJson.getInt("nMilagexx"));
                 loService.setNxtRmnds(loJson.getString("dNxtRmndS"));
+
                 poService.insert(loService);
             }
         }
     }
-
     @Override
-    public void SaveRegistrationInfo(JSONObject detail) throws Exception {
+    public void SaveRegistrationInfo(JSONObject detail) throws Exception{
         JSONArray laJson = detail.getJSONArray("detail");
         if(laJson.length() > 0) {
             for (int x = 0; x < laJson.length(); x++) {
@@ -564,44 +717,24 @@ public class GCardManager implements iGCardSystem{
 
     @Override
     public void ScheduleNextServiceDate(String date, GCardSystem.GCardSystemCallback callback) {
-
     }
-
     @Override
     public void DownloadBranchesList(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveBranchesList(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
 
     @Override
-    public LiveData<List<EBranchInfo>> GetMobileBranchList() {
-        return null;
-    }
-
-    @Override
-    public LiveData<List<EBranchInfo>> GetMotorcycleBranchList() {
-        return null;
-    }
-
-    @Override
     public void DownloadPromotions(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SavePromotions(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
-
-    @Override
-    public LiveData<List<EPromo>> GetPromotions() {
-        return null;
-    }
-
     @Override
     public EPromo CheckPromo() {
         return null;
@@ -611,24 +744,35 @@ public class GCardManager implements iGCardSystem{
     public void DownloadNewsEvents(GCardSystem.GCardSystemCallback callback) throws Exception {
         throw new NullPointerException();
     }
-
     @Override
     public void SaveNewsEvents(JSONObject detail) throws Exception {
         throw new NullPointerException();
     }
 
     @Override
-    public LiveData<List<EEvents>> GetNewsEvents() {
+    public void ImportSubEvents() throws Exception {}
+
+    @Override
+    public void ImportCandidates() throws Exception {}
+
+    @Override
+    public List<EEvents> CheckEvents() {
         return null;
     }
 
     @Override
-    public EEvents CheckEvents() {
-        return null;
+    public LiveData<List<ESub_Events>> GetEventCategories() {return null;}
+
+    @Override
+    public void ImportVoteLogs() throws Exception {
+
     }
 
     @Override
-    public void ActivateGcard(String GcardNo) throws Exception {
-
+    public Boolean SubmitVote(String sGroupIDxx) throws Exception {
+        return false;
     }
+
+    @Override
+    public void ActivateGcard(String GcardNo) throws Exception {}
 }

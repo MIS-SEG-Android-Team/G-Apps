@@ -17,9 +17,9 @@ public class EItemCart {
     private String BuyNowxx = "0";
 
     @ColumnInfo(name = "nQuantity")
-    private Integer Quantity = 0;
+    private int Quantity = 0;
     @ColumnInfo(name = "nAvlQtyxx")
-    private Integer AvlQtyxx = 0;
+    private int AvlQtyxx = 0;
     @ColumnInfo(name = "dCreatedx")
     private String Createdx;
     @ColumnInfo(name = "cTranStat")

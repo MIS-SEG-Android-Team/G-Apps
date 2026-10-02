@@ -37,26 +37,21 @@ public class Fragment_Notification extends Fragment {
     public Fragment_Notification() {
     }
 
-//    @Override
-//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-//                             @Nullable Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.fragment__notification, container, false);
-//
-//
-//        return view;
-//    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment__notification, container, false);
+
         mViewModel = new ViewModelProvider(getActivity()).get(VMNotifications.class);
         recyclerView = view.findViewById(R.id.recycler_view_notifications);
         ln_empty = view.findViewById(R.id.ln_empty);
+
         LinearLayoutManager loManager = new LinearLayoutManager(requireActivity());
         loManager.setOrientation(RecyclerView.VERTICAL);
+
         recyclerView.setLayoutManager(loManager);
         recyclerView.setHasFixedSize(true);
+
         mViewModel.GetRegularMessagesSystemNotifs().observe(getActivity(), notif -> {
             if (notif.size() > 0) {
                 ln_empty.setVisibility(View.GONE);
@@ -78,6 +73,7 @@ public class Fragment_Notification extends Fragment {
                 recyclerView.setVisibility(View.GONE);
             }
         });
+
         return view;
     }
 }

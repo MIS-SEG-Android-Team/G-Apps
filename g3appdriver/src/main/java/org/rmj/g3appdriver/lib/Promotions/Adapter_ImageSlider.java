@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Adapter_ImageSlider extends SliderViewAdapter<Adapter_ImageSlider.SliderAdapterVH> {
-
     private List<HomeImageSliderModel> oSlideLst = new ArrayList<>();
     private final OnImageSliderClickListener mListener;
 
@@ -33,7 +32,6 @@ public class Adapter_ImageSlider extends SliderViewAdapter<Adapter_ImageSlider.S
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_image_slider, null);
         return new SliderAdapterVH(inflate);
     }
-
     @Override
     public void onBindViewHolder(SliderAdapterVH viewHolder, final int position) {
         HomeImageSliderModel loSlide = oSlideLst.get(position);
@@ -46,28 +44,12 @@ public class Adapter_ImageSlider extends SliderViewAdapter<Adapter_ImageSlider.S
             mListener.OnClick(position);
         });
     }
-
     @Override
     public int getCount() {
         return oSlideLst.size();
     }
 
-    public void renewItems(List<HomeImageSliderModel> sliderItems) {
-        this.oSlideLst = sliderItems;
-        notifyDataSetChanged();
-    }
-
-    public void deleteItem(int position) {
-        this.oSlideLst.remove(position);
-        notifyDataSetChanged();
-    }
-
-    public void addItem(HomeImageSliderModel sliderItem) {
-        this.oSlideLst.add(sliderItem);
-        notifyDataSetChanged();
-    }
-
-    static class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
+    public static class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
 
         View itemView;
         ImageView imageViewBackground;

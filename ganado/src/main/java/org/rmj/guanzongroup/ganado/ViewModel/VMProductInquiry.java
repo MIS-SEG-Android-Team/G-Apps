@@ -61,15 +61,9 @@ public class VMProductInquiry extends AndroidViewModel implements GanadoUI {
     public InquiryInfo getModel() {
         return poModel;
     }
-
     public void setBrandID(String args) {
         this.psBrandID.setValue(args);
     }
-
-    public LiveData<String> GetBrandID() {
-        return psBrandID;
-    }
-
     public void setModelID(String args) {
         this.psModelID.setValue(args);
     }
@@ -83,43 +77,10 @@ public class VMProductInquiry extends AndroidViewModel implements GanadoUI {
     public LiveData<List<EMCColor>> GetModelColor(String ModelID){
         return poApp.GetModelColor(ModelID);
     }
-
-    public void setModelAmortization(DGanadoOnline.McAmortization args) {
-        this.poAmort.setValue(args);
-    }
-
-    public LiveData<List<EMcBrand>> GetAllMcBrand() {
-        return poApp.GetMotorcycleBrands();
-    }
-
-    public String[] GetPaymentForm() {
-        return poApp.getPaymentForm();
-    }
-
-    public DGanadoOnline.McAmortization GetMonthlyPayment(String args, int args1) {
-        return poApp.GetMonthlyPayment(args, args1);
-    }
-
     public LiveData<EMcModel> GetModelBrand(String BrandID, String ModelID){
         return poApp.GetModel(BrandID, ModelID);
     }
-    public DGanadoOnline.CashPrice GetCashInfo(String ModelID){
-        return poApp.GetCashInfo(ModelID);
-    }
 
-//
-//    public double GetMonthlyPayment(double args1) {
-//        return poApp.GetMonthlyAmortization(poModel.getModelIDxx(),poModel.getAccTermxx(), args1);
-//    }
-
-    public double GetMonthlyPayment(double args1) {
-        return poApp.GetMonthlyAmortization(poAmort.getValue(), args1);
-    }
-
-    public DGanadoOnline.McDownpayment GetInstallmentPlanDetail(String args) {
-        return poApp.GetInstallmentPlanDetail(args);
-    }
-//
     public void GetMinimumDownpayment(String ModelID, OnRetrieveInstallmentInfo listener) {
         TaskExecutor.Execute(null, new OnDoBackgroundTaskListener() {
             @Override
@@ -203,7 +164,6 @@ public class VMProductInquiry extends AndroidViewModel implements GanadoUI {
 
     @Override
     public void SaveData(OnSaveInfoListener listener) {
-//        new CreateNewApplicationTask(listener).execute(poModel);
         TaskExecutor.Execute(listener, new OnTaskExecuteListener() {
             @Override
             public void OnPreExecute() {

@@ -39,10 +39,13 @@ public class Dialog_Loading {
     }
 
     public void initDialog(String foTitlexx, String fsMessage){
+
         View view = LayoutInflater.from(poContext).inflate(R.layout.dialog_loading ,
                 null, false);
+
         AlertDialog.Builder loBuilder = new AlertDialog.Builder(poContext);
         loBuilder.setView(view).setCancelable(false);
+        
         poDialogx = loBuilder.create();
         poDialogx.setCancelable(false);
 

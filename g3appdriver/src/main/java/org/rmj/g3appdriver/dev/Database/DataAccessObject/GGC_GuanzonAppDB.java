@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.rmj.g3appdriver.dev.Database.Entities.EAddressInfo;
@@ -89,7 +90,7 @@ import org.rmj.g3appdriver.dev.Database.Entities.EUserInfo;
         EMcModelPrice.class,
         EMCModelCashPrice.class,
         EMcCategory.class,
-        EMcTermCategory.class}, version = 3, exportSchema = true)
+        EMcTermCategory.class}, version = 3, exportSchema = false)
 public abstract class GGC_GuanzonAppDB extends RoomDatabase {
     private static final String TAG = "GuanzonApp_DB_Manager";
     private static GGC_GuanzonAppDB instance;
@@ -131,6 +132,7 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
                     GGC_GuanzonAppDB.class, "GGC_ISysDBF.db")
                     .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
+                    .addMigrations(MIGRATION_V1)
                     .addCallback(roomCallBack)
                     .build();
         }
@@ -142,6 +144,26 @@ public abstract class GGC_GuanzonAppDB extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
             Log.e(TAG, "Local database has been created.");
+        }
+    };
+
+    private static final Migration MIGRATION_V1 = new Migration(0, 1){
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+
+            database.execSQL("CREATE TABLE " +
+                    "MarketPlace_Cart_New(sUserIDxx TEXT NOT NULL, sListIDxx TEXT NOT NULL, cBuyNowxx TEXT NOT NULL, " +
+                    "nQuantity INT, nAvlQtyxx INT, dCreatedx TEXT, cTranStat TEXT, cCheckOut TEXT, dTimeStmp TEXT)");
+
+            database.execSQL("INSERT INTO MarketPlace_Cart_New(" +
+                    "sUserIDxx, sListIDxx, cBuyNowxx, nQuantity, nAvlQtyxx, dCreatedx, cTranStat, cCheckOut, dTimeStmp) " +
+                    "SELECT sUserIDxx, sListIDxx, cBuyNowxx, nQuantity, nAvlQtyxx, dCreatedx, cTranStat, cCheckOut, dTimeStmp " +
+                    "FROM MarketPlace_Cart");
+
+            database.execSQL("DROP TABLE MarketPlace_Cart");
+            database.execSQL("ALTER TABLE MarketPlace_Cart_New RENAME TO MarketPlace_Cart");
+
         }
     };
 }

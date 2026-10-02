@@ -10,43 +10,26 @@
  */
 
 package org.rmj.g3appdriver.dev.Repositories;
-
-import android.annotation.SuppressLint;
 import android.app.Application;
-import android.os.AsyncTask;
-
 import org.rmj.g3appdriver.dev.Database.DataAccessObject.DRawDao;
 import org.rmj.g3appdriver.dev.Database.Entities.ETokenInfo;
 import org.rmj.g3appdriver.dev.Database.GGC_GuanzonAppDB;
 
 
 public class AppTokenManager {
-
     private final DRawDao dao;
-
     public AppTokenManager(Application instance){
         GGC_GuanzonAppDB db = GGC_GuanzonAppDB.getInstance(instance);
         this.dao = db.RawDao();
     }
-
     public void setTokenInfo(ETokenInfo tokenInfo){
-        new InsertTokenTask().execute(tokenInfo);
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class InsertTokenTask extends AsyncTask<ETokenInfo, Void, String> {
-
-        @Override
-        protected String doInBackground(ETokenInfo... eTokenInfos) {
-            if(dao.getTokenInfo() != null) {
-                if(dao.getTokenInfo().equalsIgnoreCase("sAppToken")) {
-                    dao.clearTokenInfo();
-                    dao.insertTokenInfo(eTokenInfos[0]);
-                }
-            } else {
-                dao.insertTokenInfo(eTokenInfos[0]);
+        if(dao.getTokenInfo() != null) {
+            if(dao.getTokenInfo().equalsIgnoreCase("sAppToken")) {
+                dao.clearTokenInfo();
+                dao.insertTokenInfo(tokenInfo);
             }
-            return "";
+        } else {
+            dao.insertTokenInfo(tokenInfo);
         }
     }
 }

@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textview.MaterialTextView;
 
 import org.rmj.guanzongroup.digitalgcard.R;
 
@@ -20,8 +22,7 @@ public class Dialog_TransactionPIN {
     public Dialog_TransactionPIN(Context context) {
         this.context = context;
     }
-
-    public void initDialog(String fsArgs){
+    public void initDialog(String fsArgs, String message){
         AlertDialog.Builder loBuilder = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_confirmation_pin, null, false);
         loBuilder.setCancelable(false)
@@ -31,6 +32,8 @@ public class Dialog_TransactionPIN {
 
         TextInputEditText tieOtp = view.findViewById(R.id.tie_otp);
         tieOtp.setText(fsArgs);
+        TextView lbl_message = view.findViewById(R.id.lbl_message);
+        lbl_message.setText(message);
         view.findViewById(R.id.btnCloseDialog).setOnClickListener(v -> poDialogx.dismiss());
 
 

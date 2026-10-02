@@ -23,9 +23,6 @@ public interface DGcardApp {
     @Update
     void update(EGcardApp gCardApp);
 
-    @Query("DELETE FROM GCard_App_Master")
-    void deleteGCard();
-
     @Query("UPDATE Gcard_App_Master SET cActvStat = '0'")
     void updateGCardDeactiveStatus();
 
@@ -34,9 +31,6 @@ public interface DGcardApp {
 
     @Query("UPDATE Gcard_App_Master SET cActvStat = '1' WHERE sCardNmbr = (SELECT sCardNmbr FROM Gcard_App_Master WHERE sTotPoint IN (SELECT MAX(sTotPoint) FROM Gcard_App_Master))")
     void updateGCardAppWithHighestPoints();
-
-    @Query("SELECT * FROM GCard_App_Master ")
-    List<EGcardApp> hasGcard();
 
     @Query("SELECT * FROM GCard_App_Master WHERE cActvStat = '1' ")
     LiveData<EGcardApp> hasNoGcard();
@@ -53,9 +47,8 @@ public interface DGcardApp {
     @Query("SELECT sGCardNox FROM Gcard_App_Master WHERE cActvStat = '1'")
     String getCardNox();
 
-    @Query("SELECT * FROM GCard_App_Master ")
-    List<EGcardApp> hasMultipleGCard();
-
+    @Query("SELECT sCardNmbr FROM Gcard_App_Master WHERE sCardNmbr = :gCardNo")
+    String getCardNmbr(String gCardNo);
 
     @Query("SELECT * FROM GCard_App_Master WHERE cActvStat = '1'")
     LiveData<EGcardApp> getGCardInfo();
@@ -63,23 +56,11 @@ public interface DGcardApp {
     @Query("SELECT * FROM GCard_App_Master")
     LiveData<List<EGcardApp>> getAllGCardInfo();
 
-    @Query("SELECT * FROM GCard_App_Master")
-    List<EGcardApp> getAllGCard();
-
     @Query("SELECT sAvlPoint FROM Gcard_App_Master WHERE sCardNmbr =:CardNmbr")
     double getGCardTotPoints(String CardNmbr);
 
     @Query("SELECT SUM(nPointsxx) FROM redeem_item WHERE sGCardNox =:GCardNox AND cTranStat IN ('0', '1')")
     double getOrderPoints(String GCardNox);
-
-    @Query("UPDATE GCard_App_Master SET sAvlPoint = :fsNewPts WHERE sGCardNox = :fsGcardNo")
-    void updateAvailablePoints(String fsGcardNo, String fsNewPts);
-
-    @Query("SELECT sGCardNox FROM Gcard_App_Master WHERE cActvStat = '1'")
-    LiveData<String> getActiveGcardNo();
-
-    @Query("SELECT sAvlPoint FROM GCard_App_Master WHERE cActvStat ='1'")
-    LiveData<String> getActiveGcardAvlPoints();
 
     @Query("SELECT (SELECT sAvlPoint FROM GCard_App_Master WHERE cActvStat = '1') - " +
             "(SELECT nPointsxx FROM Redeem_Item WHERE sGCardNox = " +

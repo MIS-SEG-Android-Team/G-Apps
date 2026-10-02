@@ -4,30 +4,28 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.rmj.g3appdriver.etc.FragmentAdapter;
-import org.rmj.g3appdriver.etc.NonSwipeableViewPager;
-import org.rmj.g3appdriver.utils.Dialogs.Dialog_DoubleButton;
+import org.rmj.g3appdriver.etc.MessageBox;
 import org.rmj.guanzongroup.useraccount.Fragment.Fragment_EditAccountInfo;
 import org.rmj.guanzongroup.useraccount.Fragment.Fragment_EditAddress;
 import org.rmj.guanzongroup.useraccount.Fragment.Fragment_EditPersonalInfo;
 import org.rmj.guanzongroup.useraccount.R;
-import org.rmj.guanzongroup.useraccount.ViewModel.VMAccountDetails;
 
 import java.util.Objects;
 
 public class Activity_EditAccountDetails extends AppCompatActivity {
 
     private static Activity_EditAccountDetails instance;
-    private VMAccountDetails mViewModel;
     private Toolbar toolbar;
-    private NonSwipeableViewPager viewPager;
-    private Dialog_DoubleButton poDialogx;
+    private ViewPager2 viewPager;
+    private MessageBox poDialogx;
     private int index;
 
     private Fragment[] poPages = new Fragment[] {
@@ -40,13 +38,15 @@ public class Activity_EditAccountDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_acount_details);
+
         instance = Activity_EditAccountDetails.this;
-        mViewModel = new ViewModelProvider(Activity_EditAccountDetails.this)
-                .get(VMAccountDetails.class);
         index = getIntent().getIntExtra("index", 0);
+
         initViews();
         setUpToolbar();
         moveToPageNumber(index);
+
+        poDialogx.initDialog();
     }
 
     @Override
@@ -66,15 +66,18 @@ public class Activity_EditAccountDetails extends AppCompatActivity {
         return instance;
     }
 
-    // Initialize this first before anything else.
     private void initViews() {
+
         toolbar = findViewById(R.id.toolbar);
         viewPager = findViewById(R.id.viewpager_signup);
-        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), poPages));
-        poDialogx = new Dialog_DoubleButton(Activity_EditAccountDetails.this);
+        poDialogx = new MessageBox(Activity_EditAccountDetails.this);
+
+        FragmentAdapter loAdapter = new FragmentAdapter(getSupportFragmentManager(), getLifecycle());
+        loAdapter.initFragments(poPages);
+
+        viewPager.setAdapter(loAdapter);
     }
 
-    // Initialize initViews() before this method.
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -86,20 +89,28 @@ public class Activity_EditAccountDetails extends AppCompatActivity {
     }
 
     private void popUpCloseConfirmationDialog() {
-        poDialogx.setButtonText("Yes", "No");
-        poDialogx.initDialog("Edit Account Details", "Are you sure you want to cancel editing?", new Dialog_DoubleButton.OnDialogConfirmation() {
+
+        poDialogx.setIcon(R.drawable.baseline_contact_support_24);
+        poDialogx.setTitle("Edit Account Details");
+        poDialogx.setMessage("Are you sure you want to cancel editing?");
+
+        poDialogx.setPositiveButton("Yes", new MessageBox.DialogButton() {
             @Override
-            public void onConfirm(AlertDialog dialog) {
+            public void OnButtonClick(View view, AlertDialog dialog) {
                 dialog.dismiss();
                 finish();
             }
+        });
 
+        poDialogx.setNegativeButton("No", new MessageBox.DialogButton() {
             @Override
-            public void onCancel(AlertDialog dialog) {
+            public void OnButtonClick(View view, AlertDialog dialog) {
                 dialog.dismiss();
             }
         });
+
         poDialogx.show();
+
     }
 
 }

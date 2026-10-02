@@ -71,9 +71,8 @@ public class ClientInfoScanner {
     private boolean SaveGCardTransaction() throws Exception{
         DGcardApp loGcard = GGC_GuanzonAppDB.getInstance(mContext).EGcardAppDao();
         String lsMobile = new Telephony(mContext).getMobilNumbers();
-        String lsUserID = new AccountInfo(mContext).getUserID();
         String lsCardNm = loGcard.getCardNo();
-        if(!loCodeGen.isDeviceValid(lsMobile, lsUserID, lsCardNm)){
+        if(!loCodeGen.isDeviceValid(lsMobile, lsCardNm)){
             message = "Mobile Number or Account is not valid to confirm this transaction";
             return false;
         } else {

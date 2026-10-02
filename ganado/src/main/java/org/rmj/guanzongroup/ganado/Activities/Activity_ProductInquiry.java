@@ -41,22 +41,25 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Activity_ProductInquiry extends AppCompatActivity {
+
     private VMProductInquiry mViewModel;
     private MessageBox poMessage;
-    private MaterialTextView txtBranchNm, txtBrandNm, txtModelNm, txtModelCd, txtMinDP;
+    private MaterialTextView txtBrandNm, txtModelNm, txtModelCd, txtMinDP;
     private TextInputEditText txtDownPymnt,txtDownPymnt1, txtAmort, txtDTarget,txtCashPrice;
     private MaterialAutoCompleteTextView spn_color, spnPayment, spnPayment1, spnAcctTerm;
     private LinearLayout linearInstallment;
-    private MaterialButton btnContinue,btnCalculate;
+    private MaterialButton btnContinue;
     private ShapeableImageView imgMC;
     private TextView myMP;
-    private String MP;
-    private String lsModelID, lsBrandID, lsImgLink, lsBrandNm,Buwanan;
+    private String lsModelID, lsBrandID, lsImgLink;
+
     private double minimumDownpayment, lnInput;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_inquiry);
+
         initWidgets();
 
         spnPayment.setText(GConstants.PAYMENT_FORM[0]);
@@ -65,33 +68,34 @@ public class Activity_ProductInquiry extends AppCompatActivity {
         spnPayment.setOnItemClickListener(new OnItemClickListener(spnPayment));
         spnAcctTerm.setText(GConstants.INSTALLMENT_TERM[0]);
         spnAcctTerm.setAdapter(GConstants.getAdapter(Activity_ProductInquiry.this, GConstants.INSTALLMENT_TERM));
+
         mViewModel.setBrandID(getIntent().getStringExtra("lsBrandID"));
         mViewModel.setModelID(getIntent().getStringExtra("lsModelID"));
+
         lsBrandID = getIntent().getStringExtra("lsBrandID");
         lsModelID = getIntent().getStringExtra("lsModelID");
         lsImgLink = getIntent().getStringExtra("lsImgLink");
-        lsBrandNm = getIntent().getStringExtra("lsBrandNm");
-        Log.e("sBrandIDx",lsBrandID);
-        Log.e("sModelIDx",lsModelID);
 
         mViewModel.getModel().setBrandIDx(lsBrandID);
         mViewModel.getModel().setModelIDx(lsModelID);
         mViewModel.getModel().setTermIDxx("36");
         mViewModel.getModel().setPaymForm("0");
-//        mViewModel.getModel().getCashPrce();
+
         mViewModel.GetModelColor(lsModelID).observe(Activity_ProductInquiry.this, colorList->{
-        mViewModel.getModel().setColorIDx(colorList.get(0).getColorIDx());
+            mViewModel.getModel().setColorIDx(colorList.get(0).getColorIDx());
 
         });
+
+
         mViewModel.GetModelBrand(lsBrandID, lsModelID).observe(Activity_ProductInquiry.this, eMcModel -> {
             try {
                 txtModelCd.setText(eMcModel.getModelCde());
                 txtModelNm.setText(eMcModel.getModelNme());
                 txtBrandNm.setText(getIntent().getStringExtra("lsBrandNm"));
-                String imgLink = (lsImgLink == null)? "": lsImgLink;
 
+                //TODO: LOAD IMAGE
                 ImageFileManager.LoadImageToView(lsImgLink, imgMC);
-                Log.d("image mo ito",lsImgLink);
+
             }catch (NullPointerException e){
                 e.printStackTrace();
             }catch (Exception e){
@@ -118,22 +122,23 @@ public class Activity_ProductInquiry extends AppCompatActivity {
             }
         });
         spn_color.setSelection(0);
+
         spn_color.setOnItemClickListener(new OnItemClickListener(spn_color));
+
         spnAcctTerm.setOnItemClickListener(new OnItemClickListener(spnAcctTerm));
+
         txtDownPymnt.addTextChangedListener(new FormatUIText.CurrencyFormat(txtDownPymnt));
+
         txtDownPymnt1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    // The EditText lost focus, perform your action here
-                    // For example, you can validate the input or save the data
-                    // into a database.
-                    // Your code here...
                     if(txtDownPymnt1.getText().toString().trim().isEmpty()){
                         poMessage.initDialog();
-                        poMessage.setTitle("Ganado");
+                        poMessage.setIcon(R.drawable.baseline_error_24);
+                        poMessage.setTitle("Kita Moto");
                         poMessage.setMessage("Downpayment field is required!");
-                        poMessage.setPositiveButton("Okay", new MessageBox.DialogButton() {
+                        poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                             @Override
                             public void OnButtonClick(View view, AlertDialog dialog) {
                                 dialog.dismiss();
@@ -141,10 +146,10 @@ public class Activity_ProductInquiry extends AppCompatActivity {
                         });
                     }
                     Calculate();
-
                 }
             }
         });
+
         txtDTarget.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -155,7 +160,6 @@ public class Activity_ProductInquiry extends AppCompatActivity {
             }
         });
 
-
         mViewModel.GetModelID().observe(Activity_ProductInquiry.this, modelID -> {
             try{
                 mViewModel.GetCashPrice(modelID).observe(this, cashPrice -> {
@@ -163,40 +167,14 @@ public class Activity_ProductInquiry extends AppCompatActivity {
                     mViewModel.getModel().setPricexxx(cashPrice.Pricedxx);
                     txtCashPrice.setText(FormatUIText.getCurrencyUIFormat(String.valueOf(cashPrice.CashPrce)));
                 });
-//                mViewModel.GetCashInfo(modelID).observe(this, cashPrice -> {
-//                    Log.e("cashPrice",cashPrice.CashPrce + "");
-////                    if(cashPrice.CashPrce != null){
-////                        txtCashPrice.setText(FormatUIText.getCurrencyUIFormat(String.valueOf(cashPrice.CashPrce)));
-////                    }
-//                });
-//                if(mViewModel.GetCashInfo(modelID) !=  null){
-//                    Log.e("cashPrice",FormatUIText.getCurrencyUIFormat(String.valueOf(mViewModel.GetCashInfo(modelID).CashPrce)) + "");
-//                    txtCashPrice.setText(FormatUIText.getCurrencyUIFormat(String.valueOf(mViewModel.GetCashInfo(modelID).CashPrce)));
-//                    mViewModel.getModel().setCashPrce(cashPrice.CashPrce);
-//                    mViewModel.getModel().setPricexxx(cashPrice.Pricedxx);
-//                    txtCashPrce.setText(FormatUIText.getCurrencyUIFormat(String.valueOf(cashPrice.CashPrce)));
-//                }else{
-//                    txtCashPrice.setText(FormatUIText.getCurrencyUIFormat("0.0"));
-//                    Log.e("cashPrice",FormatUIText.getCurrencyUIFormat("0.0"));
-//                }
                 mViewModel.GetMinimumDownpayment(modelID, new VMProductInquiry.OnRetrieveInstallmentInfo() {
                     @Override
                     public void OnRetrieve(InstallmentInfo loResult) {
-                        Log.e("getMonthlyAmortization",FormatUIText.getCurrencyUIFormat(String.valueOf(loResult.getMonthlyAmortization())) + "");
-                        Log.e("getMonthlyAmortization",FormatUIText.getCurrencyUIFormat(String.valueOf(loResult.getMinimumDownpayment())) + "");
-                        //txtDownPymnt.setText(String.valueOf(loResult.getMinimumDownpayment()));
                         txtDownPymnt1.setText(String.valueOf(loResult.getMinimumDownpayment()));
-                        txtMinDP.setText("The required Minimum Downpayment is at least " + String.valueOf(loResult.getMinimumDownpayment()) + " Pesos");
-//                        mViewModel.getModel().setMonthAmr(String.valueOf(loResult.getMonthlyAmortization()));
-//                        txtAmort.setText(FormatUIText.getCurrencyUIFormat(String.valueOf(loResult.getMonthlyAmortization())));
-
+                        txtMinDP.setText("The required Minimum DP is at least ₱" + String.valueOf(loResult.getMinimumDownpayment()) + ".\n" +
+                                "Note: Registration fee is not included in the down payment.");
                         minimumDownpayment = loResult.getMinimumDownpayment();
-//                        double mnmDPInput = Double.parseDouble(FormatUIText.getCurrencyUIFormat(String.valueOf(txtDownPymnt1.getText())));
-                        //lnInput = Double.parseDouble(FormatUIText.getCurrencyUIFormat(String.valueOf(txtDownPymnt1.getText())));
-                         //mViewModel.getModel().setDownPaym(String.valueOf(FormatUIText.getCurrencyUIFormat(lsInput)));
-                        Log.d("input DP", String.valueOf(txtDownPymnt1.getText()));
                     }
-
                     @Override
                     public void OnFailed(String message) {
 
@@ -208,41 +186,7 @@ public class Activity_ProductInquiry extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-//        txtDTarget.setOnClickListener(v -> {
-//            final Calendar newCalendar = Calendar.getInstance();
-//            @SuppressLint("SimpleDateFormat") final SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM dd, yyyy");
-//
-//            // Set the maximum date to one month from the current date
-//            newCalendar.add(Calendar.MONTH, 1);
-//            long maxDateInMillis = newCalendar.getTimeInMillis();
-//
-//            final DatePickerDialog StartTime = new DatePickerDialog(Activity_ProductInquiry.this,
-//                    android.R.style.Theme_Holo_Dialog, (view131, year, monthOfYear, dayOfMonth) -> {
-//                try {
-//                    Calendar newDate = Calendar.getInstance();
-//                    newDate.set(year, monthOfYear, dayOfMonth);
-//
-//                    // Check if the selected date is within one month from the current date
-//                    if (newDate.getTimeInMillis() <= maxDateInMillis) {
-//                        String lsDate = dateFormatter.format(newDate.getTime());
-//                        txtDTarget.setText(lsDate);
-//                        Date loDate = new SimpleDateFormat("MMMM dd, yyyy").parse(lsDate);
-//                        lsDate = new SimpleDateFormat("yyyy-MM-dd").format(loDate);
-//                        mViewModel.getModel().setTargetxx(lsDate);
-//                    } else {
-//                        // Show an error message or handle the case when the selected date is outside the allowed range
-//                        Toast.makeText(Activity_ProductInquiry.this, "Please select a date within one month from the current date", Toast.LENGTH_SHORT).show();
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-//
-//            StartTime.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-//            StartTime.getDatePicker().setMaxDate(maxDateInMillis); // Set the maximum date
-//
-//            StartTime.show();
-//        });
+
         txtDTarget.setOnClickListener(v -> {
             final Calendar newCalendar = Calendar.getInstance();
             @SuppressLint("SimpleDateFormat") final SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM dd, yyyy");
@@ -289,90 +233,67 @@ public class Activity_ProductInquiry extends AppCompatActivity {
 
         });
 
-
-//        txtDTarget.setOnClickListener(v -> {
-//            final Calendar newCalendar = Calendar.getInstance();
-//            @SuppressLint("SimpleDateFormat") final SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM dd, yyyy");
-//            final DatePickerDialog StartTime = new DatePickerDialog(Activity_ProductInquiry.this,
-//                    android.R.style.Theme_Holo_Dialog, (view131, year, monthOfYear, dayOfMonth) -> {
-//                try {
-//                    Calendar newDate = Calendar.getInstance();
-//                    newDate.set(year, monthOfYear, dayOfMonth);
-//                    String lsDate = dateFormatter.format(newDate.getTime());
-//                    txtDTarget.setText(lsDate);
-//                    Date loDate = new SimpleDateFormat("MMMM dd, yyyy").parse(lsDate);
-//                    lsDate = new SimpleDateFormat("yyyy-MM-dd").format(loDate);
-//                    mViewModel.getModel().setTargetxx(lsDate);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-//            StartTime.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-//            StartTime.show();
-//        });
-
-//        btnCalculate.setOnClickListener(view -> {
-//            String lsInput = txtDownPymnt.getText().toString().trim();
-////
-//            Double lnInput = FormatUIText.getParseDouble(lsInput);
-//            mViewModel.CalculateNewDownpayment(lsModelID, Integer.parseInt(mViewModel.getModel().getTermIDxx()), lnInput, new VMProductInquiry.OnCalculateNewDownpayment() {
-//                @Override
-//                public void OnCalculate(double lnResult) {
-//                    txtAmort.setText(FormatUIText.getCurrencyUIFormat(String.valueOf(lnResult)));
-//                }
-//
-//                @Override
-//                public void OnFailed(String message) {
-//                    poMessage.initDialog();
-//                    poMessage.setTitle("Product Inquiry");
-//                    poMessage.setMessage(message);
-//                    poMessage.setPositiveButton("Okay", (view1, dialog) -> dialog.dismiss());
-//                    poMessage.show();
-//                    txtAmort.setText("0");
-//                }
-//            });
-//        });
-
-
         btnContinue.setOnClickListener(view ->{
-
 
             lnInput = Double.parseDouble(txtDownPymnt1.getText().toString().trim());
 
-                Calculate();
-                //mViewModel.getModel().setMonthAmr(String.valueOf(txtAmort.getText()));
-            Log.d("after calc", String.valueOf(String.valueOf(myMP.getText())));
-                mViewModel.SaveData(new OnSaveInfoListener() {
-                    @Override
-                    public void OnSave(String args) {
+            if (lnInput <= 0.00){
 
-                        Log.e("TransNox", args);
-                        Intent loIntent = new Intent(Activity_ProductInquiry.this, Activity_ClientInfo.class);
-                        loIntent.putExtra("sTransNox", args);
-                        startActivity(loIntent);
-                        overridePendingTransition(R.anim.anim_intent_slide_in_right, R.anim.anim_intent_slide_out_left);
-                        finish();
-                    }
-
+                poMessage.initDialog();
+                poMessage.setIcon(R.drawable.baseline_error_24);
+                poMessage.setTitle("Kita Moto");
+                poMessage.setMessage("0 minimum downpayment detected!");
+                poMessage.setPositiveButton("Dismiss", new MessageBox.DialogButton() {
                     @Override
-                    public void OnFailed(String message) {
-                        poMessage.initDialog();
-                        poMessage.setTitle("Product Inquiry");
-                        poMessage.setMessage(message);
-                        poMessage.setPositiveButton("Okay", (view1, dialog) -> dialog.dismiss());
-                        poMessage.show();
+                    public void OnButtonClick(View view, AlertDialog dialog) {
+                        dialog.dismiss();
                     }
                 });
+
+                poMessage.show();
+
+                return;
+            }
+
+            Calculate();
+
+            mViewModel.SaveData(new OnSaveInfoListener() {
+                @Override
+                public void OnSave(String args) {
+
+                    Log.e("TransNox", args);
+
+                    Intent loIntent = new Intent(Activity_ProductInquiry.this, Activity_ClientInfo.class);
+                    loIntent.putExtra("sTransNox", args);
+
+                    startActivity(loIntent);
+
+                    overridePendingTransition(R.anim.anim_intent_slide_in_right, R.anim.anim_intent_slide_out_left);
+                    finish();
+                }
+
+                @Override
+                public void OnFailed(String message) {
+                    poMessage.initDialog();
+                    poMessage.setIcon(R.drawable.baseline_error_24);
+                    poMessage.setTitle("Kita Moto");
+                    poMessage.setMessage(message);
+                    poMessage.setPositiveButton("Dismiss", (view1, dialog) -> dialog.dismiss());
+                    poMessage.show();
+                }
+            });
         });
     }
 
     private void initWidgets(){
         mViewModel = new ViewModelProvider(Activity_ProductInquiry.this).get(VMProductInquiry.class);
         poMessage = new MessageBox(Activity_ProductInquiry.this);
+
         MaterialToolbar toolbar = findViewById(R.id.toolbar_Inquiry);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-//
+
         linearInstallment = findViewById(R.id.linearInstallment);
         myMP = findViewById(R.id.lblMonthly);
         txtBrandNm = findViewById(R.id.lblBrand);
@@ -391,24 +312,26 @@ public class Activity_ProductInquiry extends AppCompatActivity {
         txtMinDP = findViewById(R.id.txtyourmnmdp);
 
         btnContinue = findViewById(R.id.btnContinue);
-        btnCalculate = findViewById(R.id.btnCalculate);
+
         loadInstallment(View.GONE);
+
         txtDownPymnt1.setEnabled(false);
     }
+
     private  void  msgBox(){
         if (lnInput<minimumDownpayment){
             poMessage.initDialog();
-            poMessage.setTitle("Product Inquiry");
+            poMessage.setIcon(R.drawable.baseline_error_24);
+            poMessage.setTitle("Kita Moto");
             poMessage.setMessage("The minimum down payment is less than the required minimum amount.");
-            poMessage.setPositiveButton("Okay", (view1, dialog) -> dialog.dismiss());
+            poMessage.setPositiveButton("Dismiss", (view1, dialog) -> dialog.dismiss());
             poMessage.show();
             txtDownPymnt1.setText(String.valueOf(minimumDownpayment));
-//            Calculate();
         }
     }
+
     private void loadInstallment(int isLoad){
         linearInstallment.setVisibility(isLoad);
-
     }
 
     @Override
@@ -491,32 +414,27 @@ public class Activity_ProductInquiry extends AppCompatActivity {
                         myMP.setText("0");
                     }
                 });
-
-
             }
-//            Calculate();
         }
     }
+
     private void Calculate(){
         String lsInput = Objects.requireNonNull(txtDownPymnt1.getText()).toString().trim();
         lnInput = FormatUIText.getParseDouble(lsInput);
+
         mViewModel.getModel().setDownPaym(String.valueOf(lnInput));
 
         msgBox();
+
         mViewModel.CalculateNewDownpayment(lsModelID, Integer.parseInt(mViewModel.getModel().getTermIDxx()), lnInput, new VMProductInquiry.OnCalculateNewDownpayment() {
 
             public void OnCalculate(double lnResult) {
                 myMP.setText(String.valueOf(lnResult));
                 mViewModel.getModel().setMonthAmr(String.valueOf(lnResult));
-                Log.d("MONTHLY PAYM", String.valueOf(lnResult));
             }
-
-
             public void OnFailed(String message) {
                 txtAmort.setText("0");
                 mViewModel.getModel().setMonthAmr("0.0");
-
-                Log.d("ito false", String.valueOf(myMP.getText()));
             }
 
         });

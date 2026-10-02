@@ -18,6 +18,8 @@ public class GuanzonAppConfig {
     private static final String FIRST_LAUNCH = "sFrstlnch";
     private static final String MESSAGING_TOKEN = "sMsgToken";
     private static final String PERMISSIONS_GRANT = "cPrmnGrnt";
+    private static final String APPVERSION_CODE = "sVsrnCd";
+    private static final String APPVERSION_NAME = "sVsrnNm";
 
     public GuanzonAppConfig(Context context){
         pref = context.getSharedPreferences(ACCOUNT_CREDENTIALS, Context.MODE_PRIVATE);
@@ -86,5 +88,19 @@ public class GuanzonAppConfig {
 
     public String getClientID(){
         return pref.getString(CLIENT_ID, "");
+    }
+    public void setAppversionCode(String appversionCode){
+        editor.putString(APPVERSION_CODE, appversionCode);
+        editor.commit();
+    }
+    public String getAppversionCode(){
+        return pref.getString(APPVERSION_CODE, "");
+    }
+    public void setAppversionName(String appversionName){
+        editor.putString(APPVERSION_NAME, appversionName);
+        editor.commit();
+    }
+    public String getAppversionName(){
+        return pref.getString(APPVERSION_NAME, "");
     }
 }
